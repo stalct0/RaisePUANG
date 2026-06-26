@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public enum GamePhase
 {
     Playing,
+    MiniGame,
     SemesterResult,
     Finished
 }
@@ -29,6 +30,7 @@ public class CampusLifeGameManager : MonoBehaviour
     [SerializeField] private string dialogue = "푸앙이가 대학생활을 시작했다.";
 
     private GamePhase currentPhase = GamePhase.Playing;
+    private GamePhase previousPhaseBeforeMiniGame = GamePhase.Playing;
 
     public event Action OnGameStateChanged;
 
@@ -41,6 +43,7 @@ public class CampusLifeGameManager : MonoBehaviour
     public GamePhase CurrentPhase => currentPhase;
 
     public bool IsPlaying => currentPhase == GamePhase.Playing;
+    public bool IsMiniGame => currentPhase == GamePhase.MiniGame;
     public bool IsShowingSemesterResult => currentPhase == GamePhase.SemesterResult;
     public bool IsFinished => currentPhase == GamePhase.Finished;
 
@@ -63,6 +66,7 @@ public class CampusLifeGameManager : MonoBehaviour
     private void Update()
     {
         HandleDebugInput();
+
         if (currentPhase != GamePhase.Playing)
             return;
 
@@ -73,18 +77,15 @@ public class CampusLifeGameManager : MonoBehaviour
             ShowSemesterResult();
         }
     }
+
     private void HandleDebugInput()
     {
 #if UNITY_EDITOR
-        if (Keyboard.current == null)
-            return;
+        if (Keyboard.current == null) return;
 
-        if (Keyboard.current.f1Key.wasPressedThisFrame)
+        if (Keyboard.current.f1Key.wasPressedThisFrame && currentPhase == GamePhase.Playing)
         {
-            if (currentPhase == GamePhase.Playing)
-            {
-                ShowSemesterResult();
-            }
+            ShowSemesterResult();
         }
 #endif
     }
@@ -106,10 +107,8 @@ public class CampusLifeGameManager : MonoBehaviour
 
     public bool TryApplyActivity(string activityName, CampusLifeStatDelta delta)
     {
-        if (currentPhase != GamePhase.Playing)
-        {
+        if (currentPhase != GamePhase.Playing && currentPhase != GamePhase.MiniGame)
             return false;
-        }
 
         if (!CanApplyDelta(delta, out string failReason))
         {
@@ -120,12 +119,12 @@ public class CampusLifeGameManager : MonoBehaviour
 
         currentStats.Apply(delta);
         dialogue = BuildActivityDialogue(activityName, delta);
-
         NotifyChanged();
+
         return true;
     }
 
-    private bool CanApplyDelta(CampusLifeStatDelta delta, out string failReason)
+    public bool CanApplyDelta(CampusLifeStatDelta delta, out string failReason)
     {
         if (currentStats.money + delta.money < 0)
         {
@@ -155,6 +154,27 @@ public class CampusLifeGameManager : MonoBehaviour
         return true;
     }
 
+    public void EnterMiniGame()
+    {
+        if (currentPhase != GamePhase.Playing)
+            return;
+
+        previousPhaseBeforeMiniGame = currentPhase;
+        currentPhase = GamePhase.MiniGame;
+        Time.timeScale = 0f;
+        NotifyChanged();
+    }
+
+    public void ExitMiniGame()
+    {
+        if (currentPhase != GamePhase.MiniGame)
+            return;
+
+        currentPhase = previousPhaseBeforeMiniGame;
+        Time.timeScale = 1f;
+        NotifyChanged();
+    }
+
     private void ShowSemesterResult()
     {
         currentTime = semesterDuration;
@@ -166,7 +186,7 @@ public class CampusLifeGameManager : MonoBehaviour
             $"컨디션: {currentStats.condition}\n" +
             $"성적: {currentStats.grades}\n" +
             $"친구관계: {currentStats.relationship}\n\n" +
-            $"아무 키나 눌러서 계속하기";
+            "SPACE를 눌러 계속하기";
 
         Time.timeScale = 0f;
         NotifyChanged();
@@ -200,7 +220,7 @@ public class CampusLifeGameManager : MonoBehaviour
         dialogue =
             "8학기 종료. 대학생활이 끝났다.\n" +
             $"최종 결과: {GetEndingName()}\n\n" +
-            "아무 키나 눌러 다시 시작";
+            "SPACE를 눌러 다시 시작";
 
         Time.timeScale = 0f;
         NotifyChanged();
@@ -214,11 +234,15 @@ public class CampusLifeGameManager : MonoBehaviour
         StartNewGame();
     }
 
+    public string GetSemesterName()
+    {
+        return GetSemesterName(currentSemester);
+    }
+
     private string GetSemesterName(int semester)
     {
         int grade = ((semester - 1) / 2) + 1;
         int term = ((semester - 1) % 2) + 1;
-
         return $"{grade}-{term}";
     }
 

@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("HUD Text")]
+    [Header("HUD")]
     [SerializeField] private TMP_Text moneyText;
     [SerializeField] private TMP_Text conditionText;
     [SerializeField] private TMP_Text gradesText;
     [SerializeField] private TMP_Text relationshipText;
-    [SerializeField] private Image timeBar;
     [SerializeField] private TMP_Text semesterText;
+    [SerializeField] private Image timeBarFill;
 
     [Header("Dialogue")]
     [SerializeField] private GameObject dialoguePanel;
@@ -34,19 +34,16 @@ public class UIManager : MonoBehaviour
         }
 
         if (semesterResultPanel != null)
-        {
             semesterResultPanel.SetActive(false);
-        }
     }
 
     private void Update()
     {
         if (gameManager == null) return;
 
-        RefreshTime();
+        RefreshTimeBar();
 
-        if (Keyboard.current == null)
-            return;
+        if (Keyboard.current == null) return;
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -64,9 +61,7 @@ public class UIManager : MonoBehaviour
     private void OnDestroy()
     {
         if (gameManager != null)
-        {
             gameManager.OnGameStateChanged -= RefreshAll;
-        }
     }
 
     private void RefreshAll()
@@ -86,22 +81,26 @@ public class UIManager : MonoBehaviour
         conditionText.text = $"컨디션: {stats.condition}";
         gradesText.text = $"성적: {stats.grades}";
         relationshipText.text = $"친구관계: {stats.relationship}";
-        semesterText.text = $"학기: {GetSemesterName(gameManager.CurrentSemester)}";
+        semesterText.text = $"학기: {gameManager.GetSemesterName()}";
 
-        RefreshTime();
+        RefreshTimeBar();
+    }
+
+    private void RefreshTimeBar()
+    {
+        if (timeBarFill == null || gameManager == null) return;
+
+        float progress = gameManager.CurrentTime / gameManager.SemesterDuration;
+        timeBarFill.fillAmount = Mathf.Clamp01(progress);
     }
 
     private void RefreshDialogue()
     {
         if (dialogueText != null)
-        {
             dialogueText.text = gameManager.Dialogue;
-        }
 
         if (dialoguePanel != null)
-        {
             dialoguePanel.SetActive(gameManager.IsPlaying);
-        }
     }
 
     private void RefreshSemesterResultPanel()
@@ -109,14 +108,10 @@ public class UIManager : MonoBehaviour
         if (semesterResultPanel == null || semesterResultText == null)
             return;
 
-        bool shouldShow =
-            gameManager.IsShowingSemesterResult ||
-            gameManager.IsFinished;
+        bool showPanel = gameManager.IsShowingSemesterResult || gameManager.IsFinished;
+        semesterResultPanel.SetActive(showPanel);
 
-        semesterResultPanel.SetActive(shouldShow);
-
-        if (!shouldShow)
-            return;
+        if (!showPanel) return;
 
         CampusLifeStats stats = gameManager.Stats;
 
@@ -133,30 +128,12 @@ public class UIManager : MonoBehaviour
         else
         {
             semesterResultText.text =
-                $"{GetSemesterName(gameManager.CurrentSemester)} 종료\n\n" +
+                $"{gameManager.GetSemesterName()} 종료\n\n" +
                 $"현재 돈: {stats.money}\n" +
                 $"컨디션: {stats.condition}\n" +
                 $"성적: {stats.grades}\n" +
                 $"친구관계: {stats.relationship}\n\n" +
-                "SPACE를 눌러서 계속하기";
+                "SPACE를 눌러 계속하기";
         }
-    }
-
-    private void RefreshTime()
-    {
-        if (gameManager == null || timeBar == null)
-            return;
-
-        float progress = gameManager.CurrentTime / gameManager.SemesterDuration;
-
-        timeBar.fillAmount = Mathf.Clamp01(progress);
-    }
-
-    private string GetSemesterName(int semester)
-    {
-        int grade = ((semester - 1) / 2) + 1;
-        int term = ((semester - 1) % 2) + 1;
-
-        return $"{grade}-{term}";
     }
 }
