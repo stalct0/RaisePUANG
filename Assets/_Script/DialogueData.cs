@@ -3,9 +3,9 @@ using UnityEngine;
 [System.Serializable]
 public struct DialogueLine
 {
-    public string name;       
-    [TextArea(3, 5)] 
-    public string sentence;   
+    public string name;
+    [TextArea(3, 5)]
+    public string sentence;
 }
 
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create New Dialogue")]
@@ -18,5 +18,13 @@ public class DialogueData : ScriptableObject
     public int friendshipChange;
 
     [Header("--- 대사 리스트 ---")]
-    public DialogueLine[] lines; 
+    public DialogueLine[] lines;
+
+    [Header("--- 선택지 ---")]
+    public string choiceTextA;
+    public DialogueData nextDialogueA;
+    public string choiceTextB;
+    public DialogueData nextDialogueB;
+
+    public bool HasChoices => nextDialogueA != null || nextDialogueB != null;
 }
