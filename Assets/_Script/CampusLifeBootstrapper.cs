@@ -5,16 +5,21 @@ public static class CampusLifeBootstrapper
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
     {
-        CampusLifeGameManager manager = Object.FindFirstObjectByType<CampusLifeGameManager>();
+        CampusLifeGameManager manager = Object.FindAnyObjectByType<CampusLifeGameManager>();
         if (manager == null)
         {
             GameObject runtimeRoot = new GameObject("CampusLifeRuntime");
             manager = runtimeRoot.AddComponent<CampusLifeGameManager>();
         }
 
-        if (Object.FindFirstObjectByType<CampusLifeHud>() == null)
+        if (Object.FindAnyObjectByType<CampusLifeHud>() == null)
         {
             manager.gameObject.AddComponent<CampusLifeHud>();
+        }
+
+        if (Object.FindAnyObjectByType<CourseRegistrationMinigameController>() == null)
+        {
+            manager.gameObject.AddComponent<CourseRegistrationMinigameController>();
         }
     }
 }

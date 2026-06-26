@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public sealed class CampusLifeGameManager : MonoBehaviour
 {
@@ -21,6 +20,8 @@ public sealed class CampusLifeGameManager : MonoBehaviour
     [SerializeField] private List<EndingDefinition> endingDefinitions = new List<EndingDefinition>();
 
     private readonly List<SemesterReport> semesterReports = new List<SemesterReport>();
+    private readonly HashSet<string> completedSemesterActivities =
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     private bool hasFinishedRun;
     private string lastSummary = string.Empty;
 
@@ -59,10 +60,35 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         currentStats = startingStats.Clone();
         currentStats.Clamp();
         semesterReports.Clear();
+        completedSemesterActivities.Clear();
         hasFinishedRun = false;
         lastSummary = "Semester 1 has started. Other minigames can now push stat changes into this manager.";
 
         NotifyStateChanged();
+    }
+
+    public bool CanStartSemesterActivity(string activityId, out string failureReason)
+    {
+        if (hasFinishedRun)
+        {
+            failureReason = "The 8-semester run is already over.";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(activityId))
+        {
+            failureReason = "Invalid semester activity id.";
+            return false;
+        }
+
+        if (completedSemesterActivities.Contains(activityId))
+        {
+            failureReason = "This activity is already completed for the current semester.";
+            return false;
+        }
+
+        failureReason = string.Empty;
+        return true;
     }
 
     public bool CanApplyActivity(CampusLifeStatDelta delta, out string failureReason)
@@ -97,9 +123,26 @@ public sealed class CampusLifeGameManager : MonoBehaviour
 
     public bool TryApplyActivityResult(string activityName, CampusLifeStatDelta delta)
     {
+        return TryApplyActivityResult(activityName, delta, string.Empty, string.Empty);
+    }
+
+    public bool TryApplyActivityResult(
+        string activityName,
+        CampusLifeStatDelta delta,
+        string detailSummary,
+        string semesterActivityId)
+    {
         if (hasFinishedRun)
         {
             lastSummary = "The 8-semester run is already over. Restart the run before applying more actions.";
+            NotifyStateChanged();
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(semesterActivityId) &&
+            !CanStartSemesterActivity(semesterActivityId, out string activityFailureReason))
+        {
+            lastSummary = $"{activityName} is unavailable. {activityFailureReason}";
             NotifyStateChanged();
             return false;
         }
@@ -112,7 +155,13 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         }
 
         ApplyDelta(delta);
-        lastSummary = BuildActivitySummary(activityName, delta);
+
+        if (!string.IsNullOrWhiteSpace(semesterActivityId))
+        {
+            completedSemesterActivities.Add(semesterActivityId);
+        }
+
+        lastSummary = BuildActivitySummary(activityName, delta, detailSummary);
         NotifyStateChanged();
         return true;
     }
@@ -147,6 +196,7 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         }
 
         currentSemester++;
+        completedSemesterActivities.Clear();
         lastSummary = $"{summary}\nSemester {currentSemester} begins.";
         NotifyStateChanged();
     }
@@ -163,7 +213,23 @@ public sealed class CampusLifeGameManager : MonoBehaviour
     }
 
     
-    private string BuildActivitySummary(string activityName, CampusLifeStatDelta delta)
+    private string BuildActivitySummary(string activityName, CampusLifeStatDelta delta, string detailSummary)
+    {
+        string deltaSummary = BuildDeltaSummary(delta);
+        if (string.IsNullOrWhiteSpace(detailSummary))
+        {
+            return $"{activityName} applied.\n{deltaSummary}";
+        }
+
+        if (delta.IsZero)
+        {
+            return $"{activityName}\n{detailSummary}";
+        }
+
+        return $"{activityName}\n{detailSummary}\n{deltaSummary}";
+    }
+
+    private string BuildDeltaSummary(CampusLifeStatDelta delta)
     {
         List<string> fragments = new List<string>();
 
@@ -177,7 +243,7 @@ public sealed class CampusLifeGameManager : MonoBehaviour
             fragments.Add("No stat changes.");
         }
 
-        return $"{activityName} applied.\n{string.Join(", ", fragments)}";
+        return string.Join(", ", fragments);
     }
 
     private static void AppendDeltaFragment(List<string> fragments, string label, int value)

@@ -11,14 +11,19 @@ public sealed class CampusLifeHud : MonoBehaviour
     private Text statsText;
     private Text endingText;
     private Text summaryText;
+    private Text courseRegistrationHintText;
     private Text buttonLabel;
+    private Text courseRegistrationButtonLabel;
     private Button endSemesterButton;
+    private Button courseRegistrationButton;
     private CampusLifeGameManager manager;
+    private CourseRegistrationMinigameController courseRegistrationMinigame;
     private Font hudFont;
 
     private void Start()
     {
-        manager = CampusLifeGameManager.Instance ?? FindFirstObjectByType<CampusLifeGameManager>();
+        manager = CampusLifeGameManager.Instance ?? FindAnyObjectByType<CampusLifeGameManager>();
+        courseRegistrationMinigame = EnsureCourseRegistrationMinigame();
         EnsureUi();
         SceneManager.sceneLoaded += OnSceneLoaded;
         Subscribe();
@@ -40,21 +45,38 @@ public sealed class CampusLifeHud : MonoBehaviour
     {
         if (manager == null)
         {
-            return;
+            manager = CampusLifeGameManager.Instance ?? FindAnyObjectByType<CampusLifeGameManager>();
         }
 
-        manager.StateChanged -= Refresh;
-        manager.StateChanged += Refresh;
+        if (manager != null)
+        {
+            manager.StateChanged -= Refresh;
+            manager.StateChanged += Refresh;
+        }
+
+        if (courseRegistrationMinigame == null)
+        {
+            courseRegistrationMinigame = EnsureCourseRegistrationMinigame();
+        }
+
+        if (courseRegistrationMinigame != null)
+        {
+            courseRegistrationMinigame.StateChanged -= Refresh;
+            courseRegistrationMinigame.StateChanged += Refresh;
+        }
     }
 
     private void Unsubscribe()
     {
-        if (manager == null)
+        if (manager != null)
         {
-            return;
+            manager.StateChanged -= Refresh;
         }
 
-        manager.StateChanged -= Refresh;
+        if (courseRegistrationMinigame != null)
+        {
+            courseRegistrationMinigame.StateChanged -= Refresh;
+        }
     }
 
     private void EnsureUi()
@@ -169,6 +191,49 @@ public sealed class CampusLifeHud : MonoBehaviour
             TextAnchor.UpperLeft,
             string.Empty);
 
+        RectTransform courseRegistrationPanel = CreatePanel(
+            "CourseRegistrationPanel",
+            canvas.transform,
+            new Vector2(1f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(-232f, 112f),
+            new Vector2(-24f, 248f),
+            new Color(0.09f, 0.12f, 0.17f, 0.9f));
+
+        courseRegistrationHintText = CreateText(
+            "CourseRegistrationHint",
+            courseRegistrationPanel,
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(14f, -58f),
+            new Vector2(-14f, -12f),
+            15,
+            FontStyle.Italic,
+            TextAnchor.UpperLeft,
+            string.Empty);
+        courseRegistrationHintText.resizeTextForBestFit = true;
+        courseRegistrationHintText.resizeTextMinSize = 10;
+        courseRegistrationHintText.resizeTextMaxSize = 15;
+        courseRegistrationHintText.lineSpacing = 0.92f;
+
+        courseRegistrationButton = CreateButton(
+            "CourseRegistrationButton",
+            courseRegistrationPanel,
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(14f, 14f),
+            new Vector2(-14f, 62f));
+
+        courseRegistrationButtonLabel = courseRegistrationButton.GetComponentInChildren<Text>();
+        courseRegistrationButtonLabel.font = hudFont;
+        courseRegistrationButtonLabel.fontSize = 18;
+        courseRegistrationButtonLabel.fontStyle = FontStyle.Bold;
+        courseRegistrationButtonLabel.alignment = TextAnchor.MiddleCenter;
+        courseRegistrationButtonLabel.resizeTextForBestFit = true;
+        courseRegistrationButtonLabel.resizeTextMinSize = 11;
+        courseRegistrationButtonLabel.resizeTextMaxSize = 18;
+        courseRegistrationButton.onClick.AddListener(OnCourseRegistrationClicked);
+
         endSemesterButton = CreateButton(
             "EndSemesterButton",
             canvas.transform,
@@ -182,12 +247,15 @@ public sealed class CampusLifeHud : MonoBehaviour
         buttonLabel.fontSize = 24;
         buttonLabel.fontStyle = FontStyle.Bold;
         buttonLabel.alignment = TextAnchor.MiddleCenter;
+        buttonLabel.resizeTextForBestFit = true;
+        buttonLabel.resizeTextMinSize = 12;
+        buttonLabel.resizeTextMaxSize = 24;
         endSemesterButton.onClick.AddListener(OnEndSemesterClicked);
     }
 
     private void EnsureEventSystem()
     {
-        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
+        EventSystem eventSystem = FindAnyObjectByType<EventSystem>();
         if (eventSystem == null)
         {
             GameObject eventSystemObject = new GameObject("EventSystem");
@@ -213,7 +281,7 @@ public sealed class CampusLifeHud : MonoBehaviour
     {
         if (manager == null)
         {
-            manager = CampusLifeGameManager.Instance ?? FindFirstObjectByType<CampusLifeGameManager>();
+            manager = CampusLifeGameManager.Instance ?? FindAnyObjectByType<CampusLifeGameManager>();
             Subscribe();
         }
 
@@ -225,11 +293,39 @@ public sealed class CampusLifeHud : MonoBehaviour
         manager.EndCurrentSemester();
     }
 
+    private void OnCourseRegistrationClicked()
+    {
+        if (courseRegistrationMinigame == null)
+        {
+            courseRegistrationMinigame = EnsureCourseRegistrationMinigame();
+            Subscribe();
+        }
+
+        if (courseRegistrationMinigame == null)
+        {
+            return;
+        }
+
+        if (courseRegistrationMinigame.IsOpen)
+        {
+            courseRegistrationMinigame.Close();
+            return;
+        }
+
+        courseRegistrationMinigame.Open();
+    }
+
     private void Refresh()
     {
         if (manager == null)
         {
-            manager = CampusLifeGameManager.Instance ?? FindFirstObjectByType<CampusLifeGameManager>();
+            manager = CampusLifeGameManager.Instance ?? FindAnyObjectByType<CampusLifeGameManager>();
+            Subscribe();
+        }
+
+        if (courseRegistrationMinigame == null)
+        {
+            courseRegistrationMinigame = EnsureCourseRegistrationMinigame();
             Subscribe();
         }
 
@@ -257,6 +353,40 @@ public sealed class CampusLifeHud : MonoBehaviour
 
         summaryText.text = manager.LastSummary;
         buttonLabel.text = manager.HasFinishedRun ? "Restart Run" : "End Semester";
+
+        string courseRegistrationReason = "Course registration minigame is unavailable.";
+        bool canOpenCourseRegistration = courseRegistrationMinigame != null &&
+                                         courseRegistrationMinigame.CanOpen(out courseRegistrationReason);
+        bool isCourseRegistrationOpen = courseRegistrationMinigame != null &&
+                                        courseRegistrationMinigame.IsOpen;
+
+        if (courseRegistrationButton != null)
+        {
+            courseRegistrationButton.interactable = canOpenCourseRegistration || isCourseRegistrationOpen;
+        }
+
+        if (courseRegistrationButtonLabel != null)
+        {
+            courseRegistrationButtonLabel.text = isCourseRegistrationOpen
+                ? "Close Course Reg"
+                : "Course Reg";
+        }
+
+        if (courseRegistrationHintText != null)
+        {
+            if (isCourseRegistrationOpen)
+            {
+                courseRegistrationHintText.text = "Open now.\nPress Escape to close.";
+            }
+            else if (canOpenCourseRegistration)
+            {
+                courseRegistrationHintText.text = "Temp start: button or R\nOnce per semester";
+            }
+            else
+            {
+                courseRegistrationHintText.text = courseRegistrationReason;
+            }
+        }
     }
 
     private RectTransform CreatePanel(
@@ -360,5 +490,35 @@ public sealed class CampusLifeHud : MonoBehaviour
             "End Semester");
 
         return button;
+    }
+
+    private CourseRegistrationMinigameController EnsureCourseRegistrationMinigame()
+    {
+        CourseRegistrationMinigameController minigame =
+            CourseRegistrationMinigameController.Instance ??
+            FindAnyObjectByType<CourseRegistrationMinigameController>();
+
+        if (minigame != null)
+        {
+            return minigame;
+        }
+
+        if (manager == null)
+        {
+            manager = CampusLifeGameManager.Instance ?? FindAnyObjectByType<CampusLifeGameManager>();
+        }
+
+        if (manager == null)
+        {
+            return null;
+        }
+
+        minigame = manager.GetComponent<CourseRegistrationMinigameController>();
+        if (minigame != null)
+        {
+            return minigame;
+        }
+
+        return manager.gameObject.AddComponent<CourseRegistrationMinigameController>();
     }
 }
