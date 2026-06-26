@@ -1,17 +1,22 @@
 using UnityEngine;
 
-// 대사 한 줄의 정보를 담는 구조체
 [System.Serializable]
 public struct DialogueLine
 {
-    public string name;       // 캐릭터 이름
+    public string name;       
     [TextArea(3, 5)] 
-    public string sentence;   // 대사 본문
+    public string sentence;   
 }
 
-// 유니티 에디터 메뉴에 등록
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create New Dialogue")]
 public class DialogueData : ScriptableObject
 {
-    public DialogueLine[] lines; // 대사 배열
+    [Header("--- 이 스토리가 시작될 때 변화할 스탯 값 ---")]
+    public int moneyChange;
+    public int conditionChange;
+    public int gradeChange;
+    public int friendshipChange;
+
+    [Header("--- 대사 리스트 ---")]
+    public DialogueLine[] lines; 
 }
