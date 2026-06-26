@@ -1,5 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+public enum GamePhase
+{
+    Playing,
+    SemesterResult,
+    Finished
+}
 
 public class CampusLifeGameManager : MonoBehaviour
 {
@@ -10,18 +18,17 @@ public class CampusLifeGameManager : MonoBehaviour
     [SerializeField] private int currentSemester = 1;
 
     [Header("Time")]
-    [SerializeField] private float semesterDuration = 180f; // 3분
+    [SerializeField] private float semesterDuration = 180f;
     [SerializeField] private float currentTime = 0f;
 
     [Header("Stats")]
     [SerializeField] private CampusLifeStats startingStats = new CampusLifeStats();
     [SerializeField] private CampusLifeStats currentStats = new CampusLifeStats();
 
-    [Header("State")]
-    [SerializeField] private bool isGameFinished = false;
-
     [Header("Dialogue")]
     [SerializeField] private string dialogue = "푸앙이가 대학생활을 시작했다.";
+
+    private GamePhase currentPhase = GamePhase.Playing;
 
     public event Action OnGameStateChanged;
 
@@ -29,9 +36,13 @@ public class CampusLifeGameManager : MonoBehaviour
     public int MaxSemester => maxSemester;
     public float CurrentTime => currentTime;
     public float SemesterDuration => semesterDuration;
-    public bool IsGameFinished => isGameFinished;
     public CampusLifeStats Stats => currentStats;
     public string Dialogue => dialogue;
+    public GamePhase CurrentPhase => currentPhase;
+
+    public bool IsPlaying => currentPhase == GamePhase.Playing;
+    public bool IsShowingSemesterResult => currentPhase == GamePhase.SemesterResult;
+    public bool IsFinished => currentPhase == GamePhase.Finished;
 
     private void Awake()
     {
@@ -42,9 +53,6 @@ public class CampusLifeGameManager : MonoBehaviour
         }
 
         Instance = this;
-
-        // 자동 생성 / 씬 유지 방식 안 씀
-        // DontDestroyOnLoad(gameObject); 일부러 제거
     }
 
     private void Start()
@@ -54,36 +62,52 @@ public class CampusLifeGameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameFinished) return;
+        HandleDebugInput();
+        if (currentPhase != GamePhase.Playing)
+            return;
 
         currentTime += Time.deltaTime;
 
         if (currentTime >= semesterDuration)
         {
-            EndSemester();
+            ShowSemesterResult();
         }
+    }
+    private void HandleDebugInput()
+    {
+#if UNITY_EDITOR
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.f1Key.wasPressedThisFrame)
+        {
+            if (currentPhase == GamePhase.Playing)
+            {
+                ShowSemesterResult();
+            }
+        }
+#endif
     }
 
     public void StartNewGame()
     {
         currentSemester = 1;
         currentTime = 0f;
-        isGameFinished = false;
+        currentPhase = GamePhase.Playing;
 
         currentStats = startingStats.Clone();
         currentStats.Clamp();
 
-        dialogue = "1학기 시작. 푸앙이가 청룡탕에서 깨어났다.";
+        dialogue = "1-1 시작. 푸앙이가 청룡탕에서 깨어났다.";
 
+        Time.timeScale = 1f;
         NotifyChanged();
     }
 
     public bool TryApplyActivity(string activityName, CampusLifeStatDelta delta)
     {
-        if (isGameFinished)
+        if (currentPhase != GamePhase.Playing)
         {
-            dialogue = "이미 모든 학기가 끝났다.";
-            NotifyChanged();
             return false;
         }
 
@@ -131,11 +155,27 @@ public class CampusLifeGameManager : MonoBehaviour
         return true;
     }
 
-    public void EndSemester()
+    private void ShowSemesterResult()
     {
-        if (isGameFinished) return;
+        currentTime = semesterDuration;
+        currentPhase = GamePhase.SemesterResult;
 
-        dialogue = $"{currentSemester}학기가 종료되었다.";
+        dialogue =
+            $"{GetSemesterName(currentSemester)} 종료\n" +
+            $"현재 돈: {currentStats.money}\n" +
+            $"컨디션: {currentStats.condition}\n" +
+            $"성적: {currentStats.grades}\n" +
+            $"친구관계: {currentStats.relationship}\n\n" +
+            $"아무 키나 눌러서 계속하기";
+
+        Time.timeScale = 0f;
+        NotifyChanged();
+    }
+
+    public void ContinueAfterSemesterResult()
+    {
+        if (currentPhase != GamePhase.SemesterResult)
+            return;
 
         if (currentSemester >= maxSemester)
         {
@@ -145,30 +185,50 @@ public class CampusLifeGameManager : MonoBehaviour
 
         currentSemester++;
         currentTime = 0f;
+        currentPhase = GamePhase.Playing;
 
-        dialogue += $"\n{currentSemester}학기가 시작되었다.";
+        dialogue = $"{GetSemesterName(currentSemester)} 시작.";
 
+        Time.timeScale = 1f;
         NotifyChanged();
     }
 
     private void FinishGame()
     {
-        isGameFinished = true;
-        currentTime = semesterDuration;
+        currentPhase = GamePhase.Finished;
 
-        dialogue += "\n8학기 종료. 대학생활이 끝났다.";
-        dialogue += $"\n최종 결과: {GetEndingName()}";
+        dialogue =
+            "8학기 종료. 대학생활이 끝났다.\n" +
+            $"최종 결과: {GetEndingName()}\n\n" +
+            "아무 키나 눌러 다시 시작";
 
+        Time.timeScale = 0f;
         NotifyChanged();
+    }
+
+    public void RestartIfFinished()
+    {
+        if (currentPhase != GamePhase.Finished)
+            return;
+
+        StartNewGame();
+    }
+
+    private string GetSemesterName(int semester)
+    {
+        int grade = ((semester - 1) / 2) + 1;
+        int term = ((semester - 1) % 2) + 1;
+
+        return $"{grade}-{term}";
     }
 
     private string GetEndingName()
     {
-        if (currentStats.grades >= 80 && currentStats.condition >= 40)
-            return "하닉 취업 엔딩";
-
         if (currentStats.grades >= 90)
             return "대학원생 엔딩";
+
+        if (currentStats.grades >= 80 && currentStats.condition >= 40)
+            return "하닉 취업 엔딩";
 
         if (currentStats.relationship >= 80)
             return "인싸 졸업 엔딩";
