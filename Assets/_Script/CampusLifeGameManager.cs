@@ -16,10 +16,7 @@ public sealed class CampusLifeGameManager : MonoBehaviour
 
     [Header("Runtime Stats")]
     [SerializeField] private CampusLifeStats currentStats = new CampusLifeStats();
-
-    [Header("Stress Rule")]
-    [SerializeField] private int stressCrisisThreshold = 85;
-
+    
     [Header("Ending Rules")]
     [SerializeField] private List<EndingDefinition> endingDefinitions = new List<EndingDefinition>();
 
@@ -129,11 +126,7 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         }
 
         string summary = $"Semester {currentSemester} is now closed.";
-        string stressSummary = ResolveStressCrisisIfNeeded();
-        if (!string.IsNullOrEmpty(stressSummary))
-        {
-            summary = $"{summary}\n{stressSummary}";
-        }
+
 
         EndingDefinition previewEnding = EvaluateEnding(currentStats);
         summary = $"{summary}\nEnding hint: {previewEnding.displayName} - {previewEnding.description}";
@@ -169,40 +162,7 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         currentStats.Clamp();
     }
 
-    private string ResolveStressCrisisIfNeeded()
-    {
-        if (currentStats.stress < stressCrisisThreshold)
-        {
-            return string.Empty;
-        }
-
-        int consequence = Random.Range(0, 3);
-        switch (consequence)
-        {
-            case 0:
-                ApplyDelta(new CampusLifeStatDelta
-                {
-                    money = -15,
-                    stress = -15
-                });
-                return "Stress crisis: emergency spending burns 15 money, but stress drops a little.";
-            case 1:
-                ApplyDelta(new CampusLifeStatDelta
-                {
-                    condition = -20,
-                    stress = -10
-                });
-                return "Stress crisis: Puang crashes from exhaustion and loses 20 condition.";
-            default:
-                ApplyDelta(new CampusLifeStatDelta
-                {
-                    relationship = -12,
-                    stress = -12
-                });
-                return "Stress crisis: a messy semester hurts relationships and shakes the social circle.";
-        }
-    }
-
+    
     private string BuildActivitySummary(string activityName, CampusLifeStatDelta delta)
     {
         List<string> fragments = new List<string>();
@@ -211,7 +171,6 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         AppendDeltaFragment(fragments, "Condition", delta.condition);
         AppendDeltaFragment(fragments, "Grades", delta.grades);
         AppendDeltaFragment(fragments, "Relationship", delta.relationship);
-        AppendDeltaFragment(fragments, "Stress", delta.stress);
 
         if (fragments.Count == 0)
         {
@@ -273,7 +232,6 @@ public sealed class CampusLifeGameManager : MonoBehaviour
                 displayName = "Burnout",
                 description = "Stress wins the final race and graduation ends in survival mode.",
                 priority = 10,
-                minimumStress = 90
             },
             new EndingDefinition
             {
@@ -285,7 +243,6 @@ public sealed class CampusLifeGameManager : MonoBehaviour
                 minimumCondition = 45,
                 minimumGrades = 75,
                 minimumRelationship = 35,
-                maximumStress = 70
             },
             new EndingDefinition
             {
@@ -297,7 +254,6 @@ public sealed class CampusLifeGameManager : MonoBehaviour
                 minimumCondition = 30,
                 minimumGrades = 85,
                 minimumRelationship = 20,
-                maximumStress = 85
             },
             new EndingDefinition
             {
@@ -309,7 +265,6 @@ public sealed class CampusLifeGameManager : MonoBehaviour
                 minimumCondition = 35,
                 minimumGrades = 40,
                 minimumRelationship = 80,
-                maximumStress = 75
             },
             new EndingDefinition
             {

@@ -8,7 +8,6 @@ public class CampusLifeStats
     [Range(0, 100)] public int condition = 70;
     [Range(0, 100)] public int grades = 30;
     [Range(0, 100)] public int relationship = 45;
-    [Range(0, 100)] public int stress = 15;
 
     public CampusLifeStats Clone()
     {
@@ -17,8 +16,7 @@ public class CampusLifeStats
             money = money,
             condition = condition,
             grades = grades,
-            relationship = relationship,
-            stress = stress
+            relationship = relationship
         };
     }
 
@@ -28,7 +26,6 @@ public class CampusLifeStats
         condition += delta.condition;
         grades += delta.grades;
         relationship += delta.relationship;
-        stress += delta.stress;
     }
 
     public void Clamp()
@@ -37,7 +34,6 @@ public class CampusLifeStats
         condition = Mathf.Clamp(condition, 0, 100);
         grades = Mathf.Clamp(grades, 0, 100);
         relationship = Mathf.Clamp(relationship, 0, 100);
-        stress = Mathf.Clamp(stress, 0, 100);
     }
 }
 
@@ -48,14 +44,12 @@ public struct CampusLifeStatDelta
     public int condition;
     public int grades;
     public int relationship;
-    public int stress;
 
     public bool IsZero =>
         money == 0 &&
         condition == 0 &&
         grades == 0 &&
-        relationship == 0 &&
-        stress == 0;
+        relationship == 0;
 }
 
 [Serializable]
@@ -81,22 +75,16 @@ public class EndingDefinition
     [Range(0, 100)] public int minimumCondition;
     [Range(0, 100)] public int minimumGrades;
     [Range(0, 100)] public int minimumRelationship;
-    [Range(0, 100)] public int minimumStress;
-    [Range(0, 100)] public int maximumStress = 100;
     public bool alwaysAvailable;
 
     public bool Matches(CampusLifeStats stats)
     {
         if (alwaysAvailable)
-        {
             return true;
-        }
 
         return stats.money >= minimumMoney &&
                stats.condition >= minimumCondition &&
                stats.grades >= minimumGrades &&
-               stats.relationship >= minimumRelationship &&
-               stats.stress >= minimumStress &&
-               stats.stress <= maximumStress;
+               stats.relationship >= minimumRelationship;
     }
 }

@@ -247,8 +247,7 @@ public sealed class CampusLifeHud : MonoBehaviour
             $"Money: {stats.money}\n" +
             $"Condition: {stats.condition}\n" +
             $"Grades: {stats.grades}\n" +
-            $"Relationships: {stats.relationship}\n" +
-            $"Stress: {stats.stress}";
+            $"Relationships: {stats.relationship}\n";
 
         EndingDefinition preview = manager.CurrentEndingPreview;
         endingText.text =
