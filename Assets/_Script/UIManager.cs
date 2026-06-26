@@ -1,61 +1,76 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro; 
 
 public class UIManager : MonoBehaviour
 {
-    public int money = 25000;
-    public int condition = 130;
-    public int grade = 470;
-    public int friendship = 500;
+    [Header("Stats Text")]
+    [SerializeField] private TMP_Text moneyText;
+    [SerializeField] private TMP_Text conditionText;
+    [SerializeField] private TMP_Text gradesText;
+    [SerializeField] private TMP_Text relationshipText;
 
+    [Header("Time Text")]
+    [SerializeField] private TMP_Text timeText;
 
-    public int currentGrade = 1;
-    public int currentSemester = 1; 
-    public string currentArea = "광장"; 
+    [Header("Semester Text")]
+    [SerializeField] private TMP_Text semesterText;
 
-   
-    public TextMeshProUGUI moneyText;
-    public TextMeshProUGUI conditionText;
-    public TextMeshProUGUI gradeText;
-    public TextMeshProUGUI friendshipText;
-    public TextMeshProUGUI semesterText;
-    public TextMeshProUGUI areaNameText;
+    [Header("Dialogue Text")]
+    [SerializeField] private TMP_Text dialogueText;
 
-    void Start()
+    private CampusLifeGameManager gameManager;
+
+    private void Start()
     {
-        UpdateUI();
-    }
+        gameManager = CampusLifeGameManager.Instance;
 
-    // 스탯 및 정보를 UI에 반영하는 메서드
-    public void UpdateUI()
-    {
-        moneyText.text = money.ToString();
-        conditionText.text = condition.ToString();
-        gradeText.text = grade.ToString();
-        friendshipText.text = friendship.ToString();
-        
-        semesterText.text = $"{currentGrade}학년 {currentSemester}학기";
-        areaNameText.text = currentArea;
-    }
-
-    public void ExecuteAction(string areaName, int moneyCost, int conditionChange, int gradeChange, int friendshipChange)
-    {
-        // 돈이 부족하면 행동 불가 처리
-        if (money + moneyCost < 0)
+        if (gameManager != null)
         {
-            Debug.LogWarning($"[경고] 돈이 부족하여 '{areaName}' 행동을 할 수 없습니다! (필요 금액: {-moneyCost})");
-            return; 
+            gameManager.OnGameStateChanged += RefreshAll;
+            RefreshAll();
         }
+    }
 
-        money += moneyCost;
-        condition += conditionChange;
-        grade += gradeChange;
-        friendship += friendshipChange;
+    private void Update()
+    {
+        RefreshTime();
+    }
 
-        currentArea = areaName;
+    private void OnDestroy()
+    {
+        if (gameManager != null)
+        {
+            gameManager.OnGameStateChanged -= RefreshAll;
+        }
+    }
 
-        UpdateUI();
-        Debug.Log($"[{areaName}] /소모 비용: {moneyCost}");
+    private void RefreshAll()
+    {
+        if (gameManager == null) return;
+
+        CampusLifeStats stats = gameManager.Stats;
+
+        moneyText.text = $"돈: {stats.money}";
+        conditionText.text = $"컨디션: {stats.condition}";
+        gradesText.text = $"성적: {stats.grades}";
+        relationshipText.text = $"친구관계: {stats.relationship}";
+
+        semesterText.text = $"학기: {gameManager.CurrentSemester} / {gameManager.MaxSemester}";
+        dialogueText.text = gameManager.Dialogue;
+
+        RefreshTime();
+    }
+
+    private void RefreshTime()
+    {
+        if (gameManager == null) return;
+
+        float remainTime = gameManager.SemesterDuration - gameManager.CurrentTime;
+        remainTime = Mathf.Max(0f, remainTime);
+
+        int minute = Mathf.FloorToInt(remainTime / 60f);
+        int second = Mathf.FloorToInt(remainTime % 60f);
+
+        timeText.text = $"시간: {minute:00}:{second:00}";
     }
 }

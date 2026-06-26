@@ -3,13 +3,6 @@ using UnityEngine.InputSystem;
 
 public class ZoneActivityApplier : MonoBehaviour
 {
-    private CampusLifeGameManager gameManager;
-
-    private void Start()
-    {
-        gameManager = CampusLifeGameManager.Instance;
-    }
-
     private void Update()
     {
         if (Keyboard.current == null) return;
@@ -22,28 +15,21 @@ public class ZoneActivityApplier : MonoBehaviour
 
     private void ApplyCurrentZoneActivity()
     {
-        if (gameManager == null)
-        {
-            gameManager = CampusLifeGameManager.Instance;
-        }
+        if (CampusLifeGameManager.Instance == null) return;
+        if (ZoneManager.Instance == null) return;
 
-        if (gameManager == null || ZoneManager.Instance == null)
-            return;
+        ZoneType zone = ZoneManager.Instance.CurrentZone;
 
-        ZoneType currentZone = ZoneManager.Instance.CurrentZone;
+        CampusLifeStatDelta delta = GetDelta(zone);
 
-        CampusLifeStatDelta delta = GetDeltaByZone(currentZone);
+        if (delta.IsZero) return;
 
-        if (delta.IsZero)
-        {
-            Debug.Log("적용할 행동이 없는 구역입니다.");
-            return;
-        }
+        string activityName = GetActivityName(zone);
 
-        gameManager.TryApplyActivityResult(currentZone.ToString(), delta);
+        CampusLifeGameManager.Instance.TryApplyActivity(activityName, delta);
     }
 
-    private CampusLifeStatDelta GetDeltaByZone(ZoneType zone)
+    private CampusLifeStatDelta GetDelta(ZoneType zone)
     {
         switch (zone)
         {
@@ -71,6 +57,24 @@ public class ZoneActivityApplier : MonoBehaviour
 
             default:
                 return new CampusLifeStatDelta();
+        }
+    }
+
+    private string GetActivityName(ZoneType zone)
+    {
+        switch (zone)
+        {
+            case ZoneType.Classroom:
+                return "수업 듣기";
+
+            case ZoneType.Drink:
+                return "술자리 가기";
+
+            case ZoneType.TeamProjectRoom:
+                return "팀플하기";
+
+            default:
+                return "아무것도 안 하기";
         }
     }
 }

@@ -1,38 +1,37 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-public sealed class CampusLifeGameManager : MonoBehaviour
+public class CampusLifeGameManager : MonoBehaviour
 {
     public static CampusLifeGameManager Instance { get; private set; }
 
-    [Header("Semester Loop")]
-    [SerializeField] private int maxSemesters = 8;
+    [Header("Semester")]
+    [SerializeField] private int maxSemester = 8;
     [SerializeField] private int currentSemester = 1;
 
-    [Header("Starting Stats")]
+    [Header("Time")]
+    [SerializeField] private float semesterDuration = 180f; // 3분
+    [SerializeField] private float currentTime = 0f;
+
+    [Header("Stats")]
     [SerializeField] private CampusLifeStats startingStats = new CampusLifeStats();
-
-    [Header("Runtime Stats")]
     [SerializeField] private CampusLifeStats currentStats = new CampusLifeStats();
-    
-    [Header("Ending Rules")]
-    [SerializeField] private List<EndingDefinition> endingDefinitions = new List<EndingDefinition>();
 
-    private readonly List<SemesterReport> semesterReports = new List<SemesterReport>();
-    private bool hasFinishedRun;
-    private string lastSummary = string.Empty;
+    [Header("State")]
+    [SerializeField] private bool isGameFinished = false;
 
-    public event Action StateChanged;
+    [Header("Dialogue")]
+    [SerializeField] private string dialogue = "푸앙이가 대학생활을 시작했다.";
 
-    public CampusLifeStats Stats => currentStats;
+    public event Action OnGameStateChanged;
+
     public int CurrentSemester => currentSemester;
-    public int MaxSemesters => maxSemesters;
-    public bool HasFinishedRun => hasFinishedRun;
-    public string LastSummary => lastSummary;
-    public IReadOnlyList<SemesterReport> SemesterReports => semesterReports;
-    public EndingDefinition CurrentEndingPreview => EvaluateEnding(currentStats);
+    public int MaxSemester => maxSemester;
+    public float CurrentTime => currentTime;
+    public float SemesterDuration => semesterDuration;
+    public bool IsGameFinished => isGameFinished;
+    public CampusLifeStats Stats => currentStats;
+    public string Dialogue => dialogue;
 
     private void Awake()
     {
@@ -43,258 +42,164 @@ public sealed class CampusLifeGameManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
-        EnsureData();
-        BuildDefaultEndingsIfNeeded();
-        ResetRun();
+        // 자동 생성 / 씬 유지 방식 안 씀
+        // DontDestroyOnLoad(gameObject); 일부러 제거
     }
 
-    public void ResetRun()
+    private void Start()
     {
-        EnsureData();
-        BuildDefaultEndingsIfNeeded();
+        StartNewGame();
+    }
 
+    private void Update()
+    {
+        if (isGameFinished) return;
+
+        currentTime += Time.deltaTime;
+
+        if (currentTime >= semesterDuration)
+        {
+            EndSemester();
+        }
+    }
+
+    public void StartNewGame()
+    {
         currentSemester = 1;
+        currentTime = 0f;
+        isGameFinished = false;
+
         currentStats = startingStats.Clone();
         currentStats.Clamp();
-        semesterReports.Clear();
-        hasFinishedRun = false;
-        lastSummary = "Semester 1 has started. Other minigames can now push stat changes into this manager.";
 
-        NotifyStateChanged();
+        dialogue = "1학기 시작. 푸앙이가 청룡탕에서 깨어났다.";
+
+        NotifyChanged();
     }
 
-    public bool CanApplyActivity(CampusLifeStatDelta delta, out string failureReason)
+    public bool TryApplyActivity(string activityName, CampusLifeStatDelta delta)
+    {
+        if (isGameFinished)
+        {
+            dialogue = "이미 모든 학기가 끝났다.";
+            NotifyChanged();
+            return false;
+        }
+
+        if (!CanApplyDelta(delta, out string failReason))
+        {
+            dialogue = $"{activityName} 실패: {failReason}";
+            NotifyChanged();
+            return false;
+        }
+
+        currentStats.Apply(delta);
+        dialogue = BuildActivityDialogue(activityName, delta);
+
+        NotifyChanged();
+        return true;
+    }
+
+    private bool CanApplyDelta(CampusLifeStatDelta delta, out string failReason)
     {
         if (currentStats.money + delta.money < 0)
         {
-            failureReason = "Not enough money.";
+            failReason = "돈이 부족하다.";
             return false;
         }
 
         if (currentStats.condition + delta.condition < 0)
         {
-            failureReason = "Not enough condition.";
+            failReason = "컨디션이 부족하다.";
             return false;
         }
 
         if (currentStats.grades + delta.grades < 0)
         {
-            failureReason = "Grades cannot go below zero.";
+            failReason = "성적이 너무 낮다.";
             return false;
         }
 
         if (currentStats.relationship + delta.relationship < 0)
         {
-            failureReason = "Relationship cannot go below zero.";
+            failReason = "친구관계가 부족하다.";
             return false;
         }
 
-        failureReason = string.Empty;
+        failReason = "";
         return true;
     }
 
-    public bool TryApplyActivityResult(string activityName, CampusLifeStatDelta delta)
+    public void EndSemester()
     {
-        if (hasFinishedRun)
+        if (isGameFinished) return;
+
+        dialogue = $"{currentSemester}학기가 종료되었다.";
+
+        if (currentSemester >= maxSemester)
         {
-            lastSummary = "The 8-semester run is already over. Restart the run before applying more actions.";
-            NotifyStateChanged();
-            return false;
-        }
-
-        if (!CanApplyActivity(delta, out string failureReason))
-        {
-            lastSummary = $"{activityName} is unavailable. {failureReason}";
-            NotifyStateChanged();
-            return false;
-        }
-
-        ApplyDelta(delta);
-        lastSummary = BuildActivitySummary(activityName, delta);
-        NotifyStateChanged();
-        return true;
-    }
-
-    public void EndCurrentSemester()
-    {
-        if (hasFinishedRun)
-        {
-            ResetRun();
-            return;
-        }
-
-        string summary = $"Semester {currentSemester} is now closed.";
-
-
-        EndingDefinition previewEnding = EvaluateEnding(currentStats);
-        summary = $"{summary}\nEnding hint: {previewEnding.displayName} - {previewEnding.description}";
-
-        semesterReports.Add(new SemesterReport
-        {
-            semesterNumber = currentSemester,
-            summary = summary
-        });
-
-        if (currentSemester >= maxSemesters)
-        {
-            hasFinishedRun = true;
-            EndingDefinition finalEnding = EvaluateEnding(currentStats);
-            lastSummary = $"{summary}\nFinal ending: {finalEnding.displayName}\n{finalEnding.description}";
-            NotifyStateChanged();
+            FinishGame();
             return;
         }
 
         currentSemester++;
-        lastSummary = $"{summary}\nSemester {currentSemester} begins.";
-        NotifyStateChanged();
+        currentTime = 0f;
+
+        dialogue += $"\n{currentSemester}학기가 시작되었다.";
+
+        NotifyChanged();
     }
 
-    public bool IsFinalSemester()
+    private void FinishGame()
     {
-        return currentSemester >= maxSemesters;
+        isGameFinished = true;
+        currentTime = semesterDuration;
+
+        dialogue += "\n8학기 종료. 대학생활이 끝났다.";
+        dialogue += $"\n최종 결과: {GetEndingName()}";
+
+        NotifyChanged();
     }
 
-    private void ApplyDelta(CampusLifeStatDelta delta)
+    private string GetEndingName()
     {
-        currentStats.Apply(delta);
-        currentStats.Clamp();
+        if (currentStats.grades >= 80 && currentStats.condition >= 40)
+            return "하닉 취업 엔딩";
+
+        if (currentStats.grades >= 90)
+            return "대학원생 엔딩";
+
+        if (currentStats.relationship >= 80)
+            return "인싸 졸업 엔딩";
+
+        if (currentStats.money >= 100)
+            return "알바왕 엔딩";
+
+        return "무난한 졸업 엔딩";
     }
 
-    
-    private string BuildActivitySummary(string activityName, CampusLifeStatDelta delta)
+    private string BuildActivityDialogue(string activityName, CampusLifeStatDelta delta)
     {
-        List<string> fragments = new List<string>();
+        string result = $"{activityName} 완료.";
 
-        AppendDeltaFragment(fragments, "Money", delta.money);
-        AppendDeltaFragment(fragments, "Condition", delta.condition);
-        AppendDeltaFragment(fragments, "Grades", delta.grades);
-        AppendDeltaFragment(fragments, "Relationship", delta.relationship);
+        if (delta.money != 0)
+            result += $"\n돈 {(delta.money > 0 ? "+" : "")}{delta.money}";
 
-        if (fragments.Count == 0)
-        {
-            fragments.Add("No stat changes.");
-        }
+        if (delta.condition != 0)
+            result += $"\n컨디션 {(delta.condition > 0 ? "+" : "")}{delta.condition}";
 
-        return $"{activityName} applied.\n{string.Join(", ", fragments)}";
+        if (delta.grades != 0)
+            result += $"\n성적 {(delta.grades > 0 ? "+" : "")}{delta.grades}";
+
+        if (delta.relationship != 0)
+            result += $"\n친구관계 {(delta.relationship > 0 ? "+" : "")}{delta.relationship}";
+
+        return result;
     }
 
-    private static void AppendDeltaFragment(List<string> fragments, string label, int value)
+    private void NotifyChanged()
     {
-        if (value == 0)
-        {
-            return;
-        }
-
-        string sign = value > 0 ? "+" : string.Empty;
-        fragments.Add($"{label} {sign}{value}");
-    }
-
-    private EndingDefinition EvaluateEnding(CampusLifeStats stats)
-    {
-        EndingDefinition bestMatch = null;
-
-        for (int i = 0; i < endingDefinitions.Count; i++)
-        {
-            EndingDefinition candidate = endingDefinitions[i];
-            if (!candidate.Matches(stats))
-            {
-                continue;
-            }
-
-            if (bestMatch == null || candidate.priority > bestMatch.priority)
-            {
-                bestMatch = candidate;
-            }
-        }
-
-        if (bestMatch != null)
-        {
-            return bestMatch;
-        }
-
-        return endingDefinitions[endingDefinitions.Count - 1];
-    }
-
-    private void BuildDefaultEndingsIfNeeded()
-    {
-        if (endingDefinitions.Count > 0)
-        {
-            return;
-        }
-
-        endingDefinitions = new List<EndingDefinition>
-        {
-            new EndingDefinition
-            {
-                id = "burnout",
-                displayName = "Burnout",
-                description = "Stress wins the final race and graduation ends in survival mode.",
-                priority = 10,
-            },
-            new EndingDefinition
-            {
-                id = "hynix_job",
-                displayName = "Hynix Job",
-                description = "Strong grades and stable self-management open the door to a dream offer.",
-                priority = 8,
-                minimumMoney = 35,
-                minimumCondition = 45,
-                minimumGrades = 75,
-                minimumRelationship = 35,
-            },
-            new EndingDefinition
-            {
-                id = "graduate_school",
-                displayName = "Graduate Student",
-                description = "Top grades pull Puang deeper into the lab and into the next academic chapter.",
-                priority = 7,
-                minimumMoney = 10,
-                minimumCondition = 30,
-                minimumGrades = 85,
-                minimumRelationship = 20,
-            },
-            new EndingDefinition
-            {
-                id = "campus_connector",
-                displayName = "Campus Connector",
-                description = "Friendships and campus presence become Puang's biggest long-term asset.",
-                priority = 6,
-                minimumMoney = 15,
-                minimumCondition = 35,
-                minimumGrades = 40,
-                minimumRelationship = 80,
-            },
-            new EndingDefinition
-            {
-                id = "steady_graduate",
-                displayName = "Steady Graduate",
-                description = "Puang clears all eight semesters and graduates with a workable balance.",
-                priority = 0,
-                alwaysAvailable = true
-            }
-        };
-    }
-
-    private void EnsureData()
-    {
-        if (startingStats == null)
-        {
-            startingStats = new CampusLifeStats();
-        }
-
-        if (currentStats == null)
-        {
-            currentStats = new CampusLifeStats();
-        }
-
-        startingStats.Clamp();
-        currentStats.Clamp();
-    }
-
-    private void NotifyStateChanged()
-    {
-        StateChanged?.Invoke();
+        OnGameStateChanged?.Invoke();
     }
 }
