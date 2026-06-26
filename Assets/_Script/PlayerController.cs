@@ -1,49 +1,60 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move Settings")]
-    public float moveSpeed = 5f;
+    [Header("Movement")]
+    [SerializeField] private float maxSpeed = 6f;
+    [SerializeField] private float acceleration = 25f;
+    [SerializeField] private float deceleration = 35f;
 
     private Rigidbody2D rb;
-    private Vector2 moveInput;
+
+    private Vector2 input;
+    private Vector2 currentVelocity;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
     }
 
     private void Update()
     {
-        Keyboard keyboard = Keyboard.current;
+        input = Vector2.zero;
 
-        if (keyboard == null)
-        {
-            moveInput = Vector2.zero;
-            return;
-        }
-
-        float moveX = 0f;
-        float moveY = 0f;
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
 
         if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed)
-            moveX -= 1f;
+            input.x--;
 
         if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed)
-            moveX += 1f;
-
-        if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed)
-            moveY += 1f;
+            input.x++;
 
         if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed)
-            moveY -= 1f;
+            input.y--;
 
-        moveInput = new Vector2(moveX, moveY).normalized;
+        if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed)
+            input.y++;
+
+        input = input.normalized;
     }
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = moveInput * moveSpeed;
+        Vector2 targetVelocity = input * maxSpeed;
+
+        float accel = input.sqrMagnitude > 0.01f ? acceleration : deceleration;
+
+        currentVelocity = Vector2.MoveTowards(
+            currentVelocity,
+            targetVelocity,
+            accel * Time.fixedDeltaTime);
+
+        rb.linearVelocity = currentVelocity;
     }
 }
