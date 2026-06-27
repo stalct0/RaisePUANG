@@ -32505,6 +32505,12 @@ MonoBehaviour:
   - {fileID: 230362275}
   - {fileID: 1462127117}
   - {fileID: 32354399}
+  waitSprite: {fileID: -429761384069143921, guid: 059df358db86b3744ab83d694d7e76aa, type: 3}
+  clickSprite: {fileID: 3165783131921901973, guid: dfef3ce69c2063645a767e311c84e00d, type: 3}
+  successSprite: {fileID: 0}
+  wrongSprite: {fileID: 0}
+  missedSprite: {fileID: 0}
+  hideCellButtonLabels: 1
   resultText: {fileID: 242495124}
   closeButton: {fileID: 1722543563}
   debugOpenKey: 32
