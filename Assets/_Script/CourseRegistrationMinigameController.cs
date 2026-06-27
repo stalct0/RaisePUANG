@@ -25,6 +25,21 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private Button[] cellButtons;
 
+    [Header("Cell Sprites")]
+    [Tooltip("평소 대기 상태 3x3 칸 이미지")]
+    [SerializeField] private Sprite waitSprite;
+    [Tooltip("클릭해야 하는 활성 칸 이미지")]
+    [SerializeField] private Sprite clickSprite;
+    [Tooltip("성공했을 때 이미지. 비워두면 Click Sprite를 그대로 씁니다.")]
+    [SerializeField] private Sprite successSprite;
+    [Tooltip("잘못 누른 칸 이미지. 비워두면 Wait Sprite를 그대로 씁니다.")]
+    [SerializeField] private Sprite wrongSprite;
+    [Tooltip("시간 초과/놓친 칸 이미지. 비워두면 Click Sprite를 그대로 씁니다.")]
+    [SerializeField] private Sprite missedSprite;
+
+    [Tooltip("3x3 버튼 안이나 주변에 남아 있는 기본 'Button' 텍스트를 자동으로 숨깁니다.")]
+    [SerializeField] private bool hideCellButtonLabels = true;
+
     [Header("Result UI")]
     [SerializeField] private TMP_Text resultText;
     [SerializeField] private Button closeButton;
@@ -72,12 +87,6 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     private float totalReactionTime;
     private float bestReactionTime = float.MaxValue;
 
-    private readonly Color idleColor = new Color(0.18f, 0.22f, 0.31f, 1f);
-    private readonly Color activeColor = new Color(0.95f, 0.79f, 0.27f, 1f);
-    private readonly Color successColor = new Color(0.25f, 0.68f, 0.37f, 1f);
-    private readonly Color wrongColor = new Color(0.75f, 0.29f, 0.29f, 1f);
-    private readonly Color missedColor = new Color(0.91f, 0.52f, 0.30f, 1f);
-
     public bool IsOpen => isOpen;
 
     private void Awake()
@@ -102,6 +111,9 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
     private void Update()
     {
+        if (hideCellButtonLabels)
+            HideCellButtonLabels();
+
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null) return;
 
@@ -144,8 +156,13 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         for (int i = 0; i < cellButtons.Length; i++)
         {
-            if (cellButtons[i] != null)
-                cellImages[i] = cellButtons[i].GetComponent<Image>();
+            if (cellButtons[i] == null)
+                continue;
+
+            cellImages[i] = cellButtons[i].GetComponent<Image>();
+
+            if (cellImages[i] == null)
+                Debug.LogError($"Cell Button {i}에 Image 컴포넌트가 없습니다.", cellButtons[i]);
         }
     }
 
@@ -157,16 +174,91 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (closeButton != null)
             closeButton.onClick.AddListener(Close);
 
+        HideCellButtonLabels();
+
         for (int i = 0; i < cellButtons.Length; i++)
         {
             int index = i;
 
             if (cellButtons[i] != null)
             {
+                DisableLabelsUnder(cellButtons[i].transform);
+
                 cellButtons[i].onClick.RemoveAllListeners();
                 cellButtons[i].onClick.AddListener(() => OnCellClicked(index));
             }
         }
+    }
+
+    private void HideCellButtonLabels()
+    {
+        if (!hideCellButtonLabels || cellButtons == null)
+            return;
+
+        Transform commonParent = null;
+
+        for (int i = 0; i < cellButtons.Length; i++)
+        {
+            if (cellButtons[i] == null)
+                continue;
+
+            DisableLabelsUnder(cellButtons[i].transform);
+
+            if (commonParent == null)
+                commonParent = cellButtons[i].transform.parent;
+        }
+
+        if (commonParent != null)
+            DisableDefaultButtonLabelsUnder(commonParent);
+    }
+
+    private void DisableLabelsUnder(Transform root)
+    {
+        if (root == null)
+            return;
+
+        TMP_Text[] tmpLabels = root.GetComponentsInChildren<TMP_Text>(true);
+        for (int i = 0; i < tmpLabels.Length; i++)
+        {
+            if (tmpLabels[i] != null)
+                tmpLabels[i].gameObject.SetActive(false);
+        }
+
+        Text[] legacyLabels = root.GetComponentsInChildren<Text>(true);
+        for (int i = 0; i < legacyLabels.Length; i++)
+        {
+            if (legacyLabels[i] != null)
+                legacyLabels[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void DisableDefaultButtonLabelsUnder(Transform root)
+    {
+        if (root == null)
+            return;
+
+        TMP_Text[] tmpLabels = root.GetComponentsInChildren<TMP_Text>(true);
+        for (int i = 0; i < tmpLabels.Length; i++)
+        {
+            if (tmpLabels[i] != null && IsDefaultButtonLabel(tmpLabels[i].text))
+                tmpLabels[i].gameObject.SetActive(false);
+        }
+
+        Text[] legacyLabels = root.GetComponentsInChildren<Text>(true);
+        for (int i = 0; i < legacyLabels.Length; i++)
+        {
+            if (legacyLabels[i] != null && IsDefaultButtonLabel(legacyLabels[i].text))
+                legacyLabels[i].gameObject.SetActive(false);
+        }
+    }
+
+    private bool IsDefaultButtonLabel(string labelText)
+    {
+        if (string.IsNullOrWhiteSpace(labelText))
+            return false;
+
+        string trimmed = labelText.Trim();
+        return trimmed == "Button" || trimmed == "CellButton";
     }
 
     public void Open()
@@ -208,6 +300,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             closeButton.gameObject.SetActive(false);
         
         SetCellsInteractable(false);
+        HideCellButtonLabels();
     }
 
     private void StartSession()
@@ -233,6 +326,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         SetCellsInteractable(true);
         ResetCells();
+        HideCellButtonLabels();
 
         if (statusText != null)
             statusText.text = "수강신청 전쟁 시작.";
@@ -275,9 +369,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             yield break;
 
         activeCellIndex = Random.Range(0, cellImages.Length);
-
-        if (cellImages[activeCellIndex] != null)
-            cellImages[activeCellIndex].color = activeColor;
+        SetCellSprite(activeCellIndex, clickSprite);
 
         waitingForCue = false;
         waitingForClick = true;
@@ -295,8 +387,8 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (!roundResolved)
         {
-            if (activeCellIndex >= 0 && cellImages[activeCellIndex] != null)
-                cellImages[activeCellIndex].color = missedColor;
+            if (activeCellIndex >= 0)
+                SetCellSprite(activeCellIndex, GetSpriteOrFallback(missedSprite, clickSprite));
 
             ResolveRound(false, "늦었습니다. 자리가 찼습니다.", 0f);
         }
@@ -311,8 +403,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (waitingForCue)
         {
-            if (cellImages[index] != null)
-                cellImages[index].color = wrongColor;
+            SetCellSprite(index, GetSpriteOrFallback(wrongSprite, waitSprite));
 
             ResolveRound(false, $"{attempt}: 너무 빨리 눌렀습니다.", 0f);
             return;
@@ -323,11 +414,10 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (index != activeCellIndex)
         {
-            if (cellImages[index] != null)
-                cellImages[index].color = wrongColor;
+            SetCellSprite(index, GetSpriteOrFallback(wrongSprite, waitSprite));
 
-            if (activeCellIndex >= 0 && cellImages[activeCellIndex] != null)
-                cellImages[activeCellIndex].color = missedColor;
+            if (activeCellIndex >= 0)
+                SetCellSprite(activeCellIndex, GetSpriteOrFallback(missedSprite, clickSprite));
 
             ResolveRound(false, $"{attempt}: 잘못된 칸입니다.", 0f);
             return;
@@ -335,8 +425,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         float reaction = Time.unscaledTime - cueShownAt;
 
-        if (cellImages[index] != null)
-            cellImages[index].color = successColor;
+        SetCellSprite(index, GetSpriteOrFallback(successSprite, clickSprite));
 
         ResolveRound(true, $"{attempt}: 성공! {reaction * 1000f:0}ms", reaction);
     }
@@ -511,9 +600,32 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         for (int i = 0; i < cellImages.Length; i++)
         {
-            if (cellImages[i] != null)
-                cellImages[i].color = idleColor;
+            SetCellSprite(i, waitSprite);
         }
+    }
+
+    private void SetCellSprite(int index, Sprite sprite)
+    {
+        if (cellImages == null)
+            return;
+
+        if (index < 0 || index >= cellImages.Length)
+            return;
+
+        Image image = cellImages[index];
+        if (image == null)
+            return;
+
+        if (sprite != null)
+            image.sprite = sprite;
+
+        image.color = Color.white;
+        image.preserveAspect = true;
+    }
+
+    private Sprite GetSpriteOrFallback(Sprite preferred, Sprite fallback)
+    {
+        return preferred != null ? preferred : fallback;
     }
 
     private void SetCellsInteractable(bool value)
@@ -564,6 +676,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         ResetSession();
         ResetCells();
+        HideCellButtonLabels();
 
         if (dimPanel != null)
             dimPanel.SetActive(false);
