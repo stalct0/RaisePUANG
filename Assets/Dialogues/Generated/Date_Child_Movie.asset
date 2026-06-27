@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14ba248080591843a816c52cec034f3, type: 3}
+  m_Name: Date_Child_Movie
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueId: Date_Child_Movie
+  storyKind: 1
+  datingCharacter: 1
+  datingLocation: 1
+  startSceneId: 0
+  scenes:
+  - sceneId: 0
+    lines:
+    - speaker: "\uD478\uC559"
+      text: "\uC624\uB298 \uC2DC\uAC04 \uAD1C\uCC2E\uC544?"
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uAC11\uC790\uAE30 \uC65C? \uB610 \uC774\uC0C1\uD55C \uAC70 \uD558\uB824\uB294
+        \uAC70 \uC544\uB2C8\uC9C0?"
+    hasChoice: 1
+    choiceTextA: "\uC601\uD654 \uBCF4\uB7EC \uAC00\uC790"
+    nextSceneA: 1
+    affectionA: 1
+    choiceTextB: "\uADF8\uB0E5 \uC9D1\uC5D0 \uC788\uC790"
+    nextSceneB: 2
+    affectionB: -1
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 0
+  - sceneId: 1
+    lines:
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uC601\uD654? \uB098\uC058\uC9C0 \uC54A\uC740\uB370."
+    - speaker: "\uD478\uC559"
+      text: "\uADF8\uB7FC \uB0B4\uAC00 \uC608\uB9E4\uD560\uAC8C."
+    hasChoice: 1
+    choiceTextA: "\uD31D\uCF58\uB3C4 \uC0AC\uC900\uB2E4"
+    nextSceneA: 3
+    affectionA: 1
+    choiceTextB: "\uD31D\uCF58\uC740 \uAC01\uC790 \uC0B0\uB2E4"
+    nextSceneB: 4
+    affectionB: -1
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 0
+  - sceneId: 2
+    lines:
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uBB50\uC57C, \uBD80\uB978 \uC0AC\uB78C\uC774 \uC9D1\uC5D0 \uC788\uC790\uACE0
+        \uD558\uBA74 \uC5B4\uB5A1\uD574."
+    hasChoice: 1
+    choiceTextA: "\uBBF8\uC548\uD558\uB2E4 \uD558\uACE0 \uB2E4\uC2DC \uC601\uD654
+      \uC81C\uC548"
+    nextSceneA: 1
+    affectionA: 1
+    choiceTextB: "\uADF8\uB0E5 \uB2E4\uC74C\uC5D0 \uBCF4\uC790"
+    nextSceneB: 5
+    affectionB: -1
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 0
+  - sceneId: 3
+    lines:
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uC624, \uC6EC\uC77C\uB85C \uC13C\uC2A4 \uC788\uB124."
+    - speaker: "\uD478\uC559"
+      text: "\uC624\uB298\uC740 \uB0B4\uAC00 \uC880 \uC900\uBE44\uD588\uB2E4."
+    - speaker: System
+      text: "\uC624\uB298 \uB370\uC774\uD2B8\uB294 \uAF64 \uC131\uACF5\uC801\uC774\uC5C8\uB358
+        \uAC83 \uAC19\uB2E4."
+    hasChoice: 0
+    choiceTextA: 
+    nextSceneA: -1
+    affectionA: 0
+    choiceTextB: 
+    nextSceneB: -1
+    affectionB: 0
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 1
+  - sceneId: 4
+    lines:
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uAC01\uC790? \uADF8\uB798 \uBB50... \uD569\uB9AC\uC801\uC774\uAE34
+        \uD558\uB124."
+    - speaker: System
+      text: "\uC624\uB298 \uB370\uC774\uD2B8\uB294 \uBB34\uB09C\uD558\uAC8C \uC9C0\uB098\uAC04
+        \uAC83 \uAC19\uB2E4."
+    hasChoice: 0
+    choiceTextA: 
+    nextSceneA: -1
+    affectionA: 0
+    choiceTextB: 
+    nextSceneB: -1
+    affectionB: 0
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 1
+  - sceneId: 5
+    lines:
+    - speaker: "\uC18C\uAFC9\uCE5C\uAD6C"
+      text: "\uADF8\uB798. \uB2E4\uC74C\uC5D4 \uC9C4\uC9DC\uB85C \uACC4\uD68D\uD558\uACE0
+        \uBD88\uB7EC."
+    - speaker: System
+      text: "\uC624\uB298 \uB370\uC774\uD2B8\uB294 \uC870\uAE08 \uC544\uC26C\uC6E0\uB358
+        \uAC83 \uAC19\uB2E4."
+    hasChoice: 0
+    choiceTextA: 
+    nextSceneA: -1
+    affectionA: 0
+    choiceTextB: 
+    nextSceneB: -1
+    affectionB: 0
+    moneyChange: 0
+    conditionChange: 0
+    gradeChange: 0
+    friendshipChange: 0
+    completesDate: 1

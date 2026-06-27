@@ -1,45 +1,68 @@
+using System;
 using UnityEngine;
 
-[System.Serializable]
-public struct DialogueLine
+[Serializable]
+public class DialogueLine
 {
-    public string name;
-    [TextArea(3, 5)]
-    public string sentence;
+    public string speaker;
 
-    [Header("변경할 배경 이미지 파일명 (비어있으면 이전 배경 유지)")]
-    public string backgroundName;
+    [TextArea(2, 5)]
+    public string text;
 }
 
-[CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create New Dialogue")]
-public class DialogueData : ScriptableObject
+[Serializable]
+public class DialogueScene
 {
-    [Header("--- 스토리 타입 ---")]
-    public NovelStoryKind storyKind = NovelStoryKind.Normal;
-    public DatingCharacter datingCharacter = DatingCharacter.None;
-    public DatingLocation datingLocation = DatingLocation.None;
-    public bool completesDate;
-    public bool completesMeeting;
+    public int sceneId;
 
-    [Header("--- 이 스토리가 시작될 때 변화할 스탯 값 ---")]
+    [Header("Lines")]
+    public DialogueLine[] lines;
+
+    [Header("Choice")]
+    public bool hasChoice;
+
+    public string choiceTextA;
+    public int nextSceneA = -1;
+    public int affectionA;
+
+    public string choiceTextB;
+    public int nextSceneB = -1;
+    public int affectionB;
+
+    [Header("Stat Change")]
     public int moneyChange;
     public int conditionChange;
     public int gradeChange;
     public int friendshipChange;
 
-    [Header("--- 연출 정보 ---")]
-    [Range(0, 3)] public int visibleCharacterCount = 1;
+    [Header("End")]
+    public bool completesDate;
+}
 
-    [Header("--- 대사 리스트 ---")]
-    public DialogueLine[] lines;
+[CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create Dialogue Data")]
+public class DialogueData : ScriptableObject
+{
+    [Header("Basic")]
+    public string dialogueId;
 
-    [Header("--- 선택지 ---")]
-    public string choiceTextA;
-    public DialogueData nextDialogueA;
-    public int choiceAffectionA;
-    public string choiceTextB;
-    public DialogueData nextDialogueB;
-    public int choiceAffectionB;
+    public NovelStoryKind storyKind = NovelStoryKind.Normal;
+    public DatingCharacter datingCharacter = DatingCharacter.None;
+    public DatingLocation datingLocation = DatingLocation.None;
 
-    public bool HasChoices => nextDialogueA != null || nextDialogueB != null;
+    [Header("Scene")]
+    public int startSceneId = 0;
+    public DialogueScene[] scenes;
+
+    public DialogueScene GetScene(int sceneId)
+    {
+        if (scenes == null) return null;
+
+        for (int i = 0; i < scenes.Length; i++)
+        {
+            if (scenes[i].sceneId == sceneId)
+                return scenes[i];
+        }
+
+        return null;
+    }
 }

@@ -26,14 +26,14 @@ public class NovelSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI choiceText1;
     [SerializeField] private TextMeshProUGUI choiceText2;
 
-    [Header("Utility Buttons")]
+    [Header("Buttons")]
     [SerializeField] private Button nextButton;
     [SerializeField] private Button logButton;
     [SerializeField] private Button autoButton;
     [SerializeField] private Button skipButton;
     [SerializeField] private Button closeButton;
 
-    [Header("Log Panel")]
+    [Header("Log")]
     [SerializeField] private GameObject logPanel;
     [SerializeField] private TextMeshProUGUI logText;
     [SerializeField] private Button logCloseButton;
@@ -54,7 +54,11 @@ public class NovelSceneManager : MonoBehaviour
     [SerializeField] private string defaultEndSentence = "오늘의 이야기는 여기까지다.";
 
     private DialogueData currentDialogueData;
+    private DialogueScene currentScene;
+
+    private int currentSceneId;
     private int currentLineIndex;
+    private int pendingAffection;
 
     private bool isOpen;
     private bool isTyping;
@@ -93,8 +97,7 @@ public class NovelSceneManager : MonoBehaviour
         }
 #endif
 
-        if (!isOpen)
-            return;
+        if (!isOpen) return;
 
         if (Keyboard.current != null && Keyboard.current[closeKey].wasPressedThisFrame)
         {
@@ -103,9 +106,7 @@ public class NovelSceneManager : MonoBehaviour
         }
 
         if (isAutoMode)
-        {
             UpdateAutoMode();
-        }
     }
 
     private void OnDestroy()
@@ -125,7 +126,7 @@ public class NovelSceneManager : MonoBehaviour
             autoButton.onClick.AddListener(ToggleAuto);
 
         if (skipButton != null)
-            skipButton.onClick.AddListener(SkipToChoiceOrEnd);
+            skipButton.onClick.AddListener(SkipCurrentScene);
 
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseDating);
@@ -146,7 +147,7 @@ public class NovelSceneManager : MonoBehaviour
             autoButton.onClick.RemoveListener(ToggleAuto);
 
         if (skipButton != null)
-            skipButton.onClick.RemoveListener(SkipToChoiceOrEnd);
+            skipButton.onClick.RemoveListener(SkipCurrentScene);
 
         if (closeButton != null)
             closeButton.onClick.RemoveListener(CloseDating);
@@ -177,16 +178,21 @@ public class NovelSceneManager : MonoBehaviour
         if (!CampusLifeGameManager.Instance.IsPlaying)
             return;
 
-        if (DatingProgressManager.Instance != null)
+        if (dialogueData.storyKind == NovelStoryKind.Date &&
+            DatingProgressManager.Instance != null &&
+            !DatingProgressManager.Instance.CanStartDate(out string reason))
         {
-            if (!DatingProgressManager.Instance.CanStartDate(out string reason))
-            {
-                Debug.Log(reason);
-                return;
-            }
+            Debug.Log(reason);
+            return;
         }
 
+        currentDialogueData = dialogueData;
+        pendingAffection = 0;
         isOpen = true;
+
+        dialogueLog.Clear();
+        CloseLog();
+        StopAuto();
 
         CampusLifeGameManager.Instance.EnterMiniGame();
 
@@ -196,16 +202,27 @@ public class NovelSceneManager : MonoBehaviour
         if (datingPanel != null)
             datingPanel.SetActive(true);
 
-        dialogueLog.Clear();
-        CloseLog();
-        StopAuto();
-
-        StartDialogue(dialogueData);
+        StartScene(dialogueData.startSceneId);
     }
 
-    public void StartDialogue(DialogueData dialogueData)
+    private void StartScene(int sceneId)
     {
-        currentDialogueData = dialogueData;
+        if (currentDialogueData == null)
+        {
+            ShowEndMessage();
+            return;
+        }
+
+        currentScene = currentDialogueData.GetScene(sceneId);
+
+        if (currentScene == null)
+        {
+            Debug.LogError($"Scene {sceneId}를 찾을 수 없습니다.");
+            ShowEndMessage();
+            return;
+        }
+
+        currentSceneId = sceneId;
         currentLineIndex = 0;
 
         isTyping = false;
@@ -213,28 +230,34 @@ public class NovelSceneManager : MonoBehaviour
         isEnd = false;
 
         HideChoices();
-
-        if (currentDialogueData == null ||
-            currentDialogueData.lines == null ||
-            currentDialogueData.lines.Length == 0)
-        {
-            ShowEndMessage();
-            return;
-        }
-
+        ApplySceneStatChange(currentScene);
         ShowNextDialogue();
+    }
+
+    private void ApplySceneStatChange(DialogueScene scene)
+    {
+        if (CampusLifeGameManager.Instance == null || scene == null)
+            return;
+
+        CampusLifeStatDelta delta = new CampusLifeStatDelta
+        {
+            money = scene.moneyChange,
+            condition = scene.conditionChange,
+            grades = scene.gradeChange,
+            relationship = scene.friendshipChange
+        };
+
+        if (!delta.IsZero)
+        {
+            CampusLifeGameManager.Instance.TryApplyActivity("연애", delta);
+        }
     }
 
     public void AdvanceDialogue()
     {
-        if (!isOpen)
-            return;
-
-        if (isLogOpen)
-            return;
-
-        if (isChoiceTime)
-            return;
+        if (!isOpen) return;
+        if (isLogOpen) return;
+        if (isChoiceTime) return;
 
         if (isEnd)
         {
@@ -254,20 +277,21 @@ public class NovelSceneManager : MonoBehaviour
 
     private void ShowNextDialogue()
     {
-        if (currentDialogueData == null ||
-            currentLineIndex >= currentDialogueData.lines.Length)
+        if (currentScene == null ||
+            currentScene.lines == null ||
+            currentLineIndex >= currentScene.lines.Length)
         {
-            TriggerChoiceSituation();
+            TriggerChoiceOrEnd();
             return;
         }
 
-        DialogueLine line = currentDialogueData.lines[currentLineIndex];
+        DialogueLine line = currentScene.lines[currentLineIndex];
 
         if (nameText != null)
-            nameText.text = line.name;
+            nameText.text = line.speaker;
 
-        completeSentence = line.sentence;
-        AddLog(line.name, line.sentence);
+        completeSentence = line.text;
+        AddLog(line.speaker, line.text);
 
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
@@ -275,20 +299,22 @@ public class NovelSceneManager : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeSentence(completeSentence));
     }
 
-    private void TriggerChoiceSituation()
+    private void TriggerChoiceOrEnd()
     {
-        if (currentDialogueData == null)
+        if (currentScene == null)
         {
             ShowEndMessage();
             return;
         }
 
-        DialogueData choiceA = currentDialogueData.nextDialogueA;
-        DialogueData choiceB = currentDialogueData.nextDialogueB;
-
-        if (choiceA == null && choiceB == null)
+        if (currentScene.completesDate)
         {
-            CompleteDatingIfNeeded();
+            CompleteDate();
+            return;
+        }
+
+        if (!currentScene.hasChoice)
+        {
             ShowEndMessage();
             return;
         }
@@ -299,16 +325,34 @@ public class NovelSceneManager : MonoBehaviour
         if (choicePanel != null)
             choicePanel.SetActive(true);
 
-        ConfigureChoice(choiceButton1, choiceText1, currentDialogueData.choiceTextA, choiceA);
-        ConfigureChoice(choiceButton2, choiceText2, currentDialogueData.choiceTextB, choiceB);
+        ConfigureChoice(
+            choiceButton1,
+            choiceText1,
+            currentScene.choiceTextA,
+            currentScene.nextSceneA,
+            currentScene.affectionA
+        );
+
+        ConfigureChoice(
+            choiceButton2,
+            choiceText2,
+            currentScene.choiceTextB,
+            currentScene.nextSceneB,
+            currentScene.affectionB
+        );
     }
 
-    private void ConfigureChoice(Button button, TextMeshProUGUI label, string choiceText, DialogueData nextDialogue)
+    private void ConfigureChoice(
+        Button button,
+        TextMeshProUGUI label,
+        string choiceText,
+        int nextSceneId,
+        int affection)
     {
         if (button == null || label == null)
             return;
 
-        bool available = nextDialogue != null;
+        bool available = nextSceneId >= 0;
         button.gameObject.SetActive(available);
 
         if (!available)
@@ -317,53 +361,61 @@ public class NovelSceneManager : MonoBehaviour
         label.text = string.IsNullOrWhiteSpace(choiceText) ? "선택" : choiceText;
 
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => OnSelectChoice(nextDialogue));
+        button.onClick.AddListener(() =>
+        {
+            pendingAffection += affection;
+            StartScene(nextSceneId);
+        });
     }
 
-    public void OnSelectChoice(DialogueData selectedDialogue)
+    private void CompleteDate()
     {
-        if (selectedDialogue == null)
+        if (currentDialogueData != null &&
+            currentDialogueData.storyKind == NovelStoryKind.Date &&
+            DatingProgressManager.Instance != null)
         {
-            Debug.LogError("선택지에 DialogueData가 없습니다.");
+            DatingProgressManager.Instance.CompleteDate(
+                currentDialogueData.datingCharacter,
+                currentDialogueData.datingLocation,
+                pendingAffection
+            );
+
+            string feedback = DatingProgressManager.Instance.GetDateFeedback(
+                currentDialogueData.datingCharacter
+            );
+
+            ShowSystemMessage("Date Result", feedback);
+            isEnd = true;
             return;
         }
 
-        ApplyDialogueReward(selectedDialogue);
-        StartDialogue(selectedDialogue);
+        ShowEndMessage();
     }
 
-    private void ApplyDialogueReward(DialogueData data)
+    private void ShowSystemMessage(string speaker, string message)
     {
-        if (CampusLifeGameManager.Instance == null)
-            return;
+        HideChoices();
+        StopAuto();
 
-        CampusLifeStatDelta delta = new CampusLifeStatDelta
-        {
-            money = data.moneyChange,
-            condition = data.conditionChange,
-            grades = data.gradeChange,
-            relationship = data.friendshipChange
-        };
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
 
-        CampusLifeGameManager.Instance.TryApplyActivity("연애", delta);
-    }
+        if (nameText != null)
+            nameText.text = speaker;
 
-    private void CompleteDatingIfNeeded()
-    {
-        if (DatingProgressManager.Instance == null)
-            return;
+        completeSentence = message;
 
-        DatingProgressManager.Instance.CompleteDate(
-            DatingCharacter.None,
-            DatingLocation.None,
-            0
-        );
+        if (dialogueText != null)
+            dialogueText.text = message;
+
+        AddLog(speaker, message);
+
+        isTyping = false;
     }
 
     private void ToggleLog()
     {
-        if (!isOpen)
-            return;
+        if (!isOpen) return;
 
         isLogOpen = !isLogOpen;
 
@@ -460,7 +512,7 @@ public class NovelSceneManager : MonoBehaviour
             : Color.white;
     }
 
-    private void SkipToChoiceOrEnd()
+    private void SkipCurrentScene()
     {
         if (!isOpen || isChoiceTime || isLogOpen)
             return;
@@ -470,14 +522,13 @@ public class NovelSceneManager : MonoBehaviour
         if (isTyping)
             FinishTypingImmediately();
 
-        if (currentDialogueData == null ||
-            currentDialogueData.lines == null)
+        if (currentScene == null || currentScene.lines == null)
         {
             ShowEndMessage();
             return;
         }
 
-        currentLineIndex = currentDialogueData.lines.Length;
+        currentLineIndex = currentScene.lines.Length;
         ShowNextDialogue();
     }
 
@@ -565,5 +616,6 @@ public class NovelSceneManager : MonoBehaviour
         isTyping = false;
         isChoiceTime = false;
         isEnd = false;
+        pendingAffection = 0;
     }
 }

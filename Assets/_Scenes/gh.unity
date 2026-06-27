@@ -1598,8 +1598,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: LOG
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2205,8 +2205,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Narrator
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
-  m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3054,8 +3054,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD074\uB9AD\uD574\uC11C \uB300\uD654\uB97C \uC9C4\uD589\uD558\uC138\uC694."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
-  m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3343,8 +3343,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: CLOSE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3480,8 +3480,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC120\uD0DD\uC9C0 A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
-  m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4908,8 +4908,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
-  m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5182,8 +5182,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: NEXT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5408,6 +5408,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1096351388}
+  - component: {fileID: 1096351390}
+  - component: {fileID: 1096351389}
   m_Layer: 5
   m_Name: MiniGameRoot
   m_TagString: Untagged
@@ -5437,6 +5439,87 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1096351389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096351387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c615e3f7168aab6468978ee998e23c8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NovelSceneManager
+  startDialogueData: {fileID: 11400000, guid: 6e5ac1f90e5ca714aa0bc5c889e4c8e4, type: 2}
+  datingPanel: {fileID: 186535440}
+  dimPanel: {fileID: 871706794}
+  nameText: {fileID: 447713515}
+  dialogueText: {fileID: 603795838}
+  choicePanel: {fileID: 959708608}
+  choiceButton1: {fileID: 732646550}
+  choiceButton2: {fileID: 1270158570}
+  choiceText1: {fileID: 698295020}
+  choiceText2: {fileID: 1153091105}
+  nextButton: {fileID: 1495443817}
+  logButton: {fileID: 1251896998}
+  autoButton: {fileID: 177884556}
+  skipButton: {fileID: 1566523642}
+  closeButton: {fileID: 1809205913}
+  logPanel: {fileID: 630938229}
+  logText: {fileID: 601052238}
+  logCloseButton: {fileID: 1766941855}
+  debugOpenKey: 18
+  closeKey: 60
+  typingSpeed: 0.035
+  autoDelay: 1.2
+  defaultEndName: System
+  defaultEndSentence: "\uC624\uB298\uC758 \uC774\uC57C\uAE30\uB294 \uC5EC\uAE30\uAE4C\uC9C0\uB2E4."
+--- !u!114 &1096351390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096351387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f7d42a263449f9a65f4f27e0e5fd14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CourseRegistrationMinigameController
+  debugOpenKey: 32
+  closeKey: 60
+  dimPanel: {fileID: 871706794}
+  miniGamePanel: {fileID: 1698641319}
+  titleText: {fileID: 1319305672}
+  statusText: {fileID: 1576107442}
+  progressText: {fileID: 1464604862}
+  resultText: {fileID: 2046601296}
+  startButton: {fileID: 578168550}
+  closeButton: {fileID: 554824188}
+  cellButtons:
+  - {fileID: 1439516371}
+  - {fileID: 932553309}
+  - {fileID: 1134390817}
+  - {fileID: 1952409073}
+  - {fileID: 944575350}
+  - {fileID: 894188441}
+  - {fileID: 2138026370}
+  - {fileID: 1185286905}
+  - {fileID: 235249776}
+  roundsPerSession: 7
+  minCueDelay: 0.65
+  maxCueDelay: 1.8
+  reactionWindow: 0.9
+  resultPause: 0.55
+  excellentGradesReward: 15
+  strongGradesReward: 10
+  decentGradesReward: 6
+  scrapeGradesReward: 2
+  excellentConditionCost: -3
+  strongConditionCost: -4
+  decentConditionCost: -5
+  scrapeConditionCost: -6
 --- !u!1 &1107233088
 GameObject:
   m_ObjectHideFlags: 0
@@ -5671,8 +5754,6 @@ GameObject:
   - component: {fileID: 1130588768}
   - component: {fileID: 1130588767}
   - component: {fileID: 1130588771}
-  - component: {fileID: 1130588772}
-  - component: {fileID: 1130588773}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -5790,87 +5871,6 @@ MonoBehaviour:
   dialogueText: {fileID: 1323822717}
   semesterResultPanel: {fileID: 42856080}
   semesterResultText: {fileID: 992850513}
---- !u!114 &1130588772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130588766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8f7d42a263449f9a65f4f27e0e5fd14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CourseRegistrationMinigameController
-  debugOpenKey: 32
-  closeKey: 60
-  dimPanel: {fileID: 871706794}
-  miniGamePanel: {fileID: 1698641319}
-  titleText: {fileID: 1319305672}
-  statusText: {fileID: 1576107442}
-  progressText: {fileID: 1464604862}
-  resultText: {fileID: 2046601296}
-  startButton: {fileID: 578168550}
-  closeButton: {fileID: 554824188}
-  cellButtons:
-  - {fileID: 1439516371}
-  - {fileID: 932553309}
-  - {fileID: 1134390817}
-  - {fileID: 1952409073}
-  - {fileID: 944575350}
-  - {fileID: 894188441}
-  - {fileID: 2138026370}
-  - {fileID: 1185286905}
-  - {fileID: 235249776}
-  roundsPerSession: 7
-  minCueDelay: 0.65
-  maxCueDelay: 1.8
-  reactionWindow: 0.9
-  resultPause: 0.55
-  excellentGradesReward: 15
-  strongGradesReward: 10
-  decentGradesReward: 6
-  scrapeGradesReward: 2
-  excellentConditionCost: -3
-  strongConditionCost: -4
-  decentConditionCost: -5
-  scrapeConditionCost: -6
---- !u!114 &1130588773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130588766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c615e3f7168aab6468978ee998e23c8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NovelSceneManager
-  startDialogueData: {fileID: 11400000, guid: bc64bc927d18f7d419e40cd5a5109b91, type: 2}
-  datingPanel: {fileID: 186535440}
-  dimPanel: {fileID: 871706794}
-  nameText: {fileID: 447713515}
-  dialogueText: {fileID: 603795838}
-  choicePanel: {fileID: 959708608}
-  choiceButton1: {fileID: 732646550}
-  choiceButton2: {fileID: 1270158570}
-  choiceText1: {fileID: 698295020}
-  choiceText2: {fileID: 1153091105}
-  nextButton: {fileID: 1495443817}
-  logButton: {fileID: 1251896998}
-  autoButton: {fileID: 177884556}
-  skipButton: {fileID: 1566523642}
-  closeButton: {fileID: 1809205913}
-  logPanel: {fileID: 630938229}
-  logText: {fileID: 601052238}
-  logCloseButton: {fileID: 1766941855}
-  debugOpenKey: 18
-  closeKey: 60
-  typingSpeed: 0.035
-  autoDelay: 1.2
-  defaultEndName: System
-  defaultEndSentence: "\uC624\uB298\uC758 \uC774\uC57C\uAE30\uB294 \uC5EC\uAE30\uAE4C\uC9C0\uB2E4."
 --- !u!1 &1134390813
 GameObject:
   m_ObjectHideFlags: 0
@@ -6090,8 +6090,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC120\uD0DD\uC9C0 B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
-  m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -27129,8 +27129,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: AUTO
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -29325,8 +29325,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SKIP
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
