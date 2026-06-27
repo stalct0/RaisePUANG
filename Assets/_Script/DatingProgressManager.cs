@@ -38,7 +38,6 @@ public sealed class DatingProgressManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
         EnsureAffectionKeys();
     }
 
