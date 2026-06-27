@@ -1,32 +1,108 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ZoneActivityApplier : MonoBehaviour
 {
+    [Header("Stat Tick")]
+    [SerializeField] private float statTickInterval = 1f;
+
+    [Header("Player Animation")]
+    [SerializeField] private Animator playerAnimator = null;
+    [SerializeField] private RuntimeAnimatorController idleController = null;
+    [SerializeField] private RuntimeAnimatorController drinkController = null;
+    [SerializeField] private RuntimeAnimatorController lectureController = null;
+    [SerializeField] private RuntimeAnimatorController teamProjectController = null;
+
+    private float statTickTimer;
+    private ZoneType appliedAnimationZone = ZoneType.None;
+    private ZoneType appliedStatZone = ZoneType.None;
+
     private void Update()
     {
-        if (Keyboard.current == null) return;
+        if (ZoneManager.Instance == null)
+            return;
 
-        if (Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            ApplyCurrentZoneActivity();
-        }
+        ZoneType currentZone = ZoneManager.Instance.CurrentZone;
+
+        UpdatePlayerAnimation(currentZone);
+        ApplyCurrentZoneActivityOverTime(currentZone);
     }
 
-    private void ApplyCurrentZoneActivity()
+    private void ApplyCurrentZoneActivityOverTime(ZoneType zone)
     {
-        if (CampusLifeGameManager.Instance == null) return;
-        if (ZoneManager.Instance == null) return;
-
-        ZoneType zone = ZoneManager.Instance.CurrentZone;
+        if (appliedStatZone != zone)
+        {
+            appliedStatZone = zone;
+            statTickTimer = 0f;
+        }
 
         CampusLifeStatDelta delta = GetDelta(zone);
 
-        if (delta.IsZero) return;
+        if (delta.IsZero)
+        {
+            statTickTimer = 0f;
+            return;
+        }
 
-        string activityName = GetActivityName(zone);
+        statTickTimer += Time.deltaTime;
 
-        CampusLifeGameManager.Instance.TryApplyActivity(activityName, delta);
+        if (statTickTimer < statTickInterval)
+            return;
+
+        statTickTimer -= statTickInterval;
+
+        if (CampusLifeGameManager.Instance == null)
+            return;
+
+        CampusLifeGameManager.Instance.TryApplyContinuousActivity(GetActivityName(zone), delta);
+    }
+
+    private void UpdatePlayerAnimation(ZoneType zone)
+    {
+        if (appliedAnimationZone == zone)
+            return;
+
+        appliedAnimationZone = zone;
+
+        switch (zone)
+        {
+            case ZoneType.Drink:
+                SetPlayerAnimation(drinkController, "drink");
+                break;
+
+            case ZoneType.Classroom:
+                SetPlayerAnimation(lectureController, "lecture");
+                break;
+
+            case ZoneType.TeamProjectRoom:
+                SetPlayerAnimation(teamProjectController, "teamproj");
+                break;
+
+            default:
+                SetPlayerAnimation(idleController, "idle1");
+                break;
+        }
+    }
+
+    private void SetPlayerAnimation(RuntimeAnimatorController controller, string stateName)
+    {
+        if (playerAnimator == null)
+        {
+            Debug.LogError("[ZoneActivityApplier] Player Animator is not assigned.");
+            return;
+        }
+
+        if (controller == null)
+        {
+            Debug.LogError($"[ZoneActivityApplier] Animator controller for '{stateName}' is not assigned.");
+            return;
+        }
+
+        if (playerAnimator.runtimeAnimatorController != controller)
+            playerAnimator.runtimeAnimatorController = controller;
+
+        playerAnimator.Rebind();
+        playerAnimator.Play(stateName, 0, 0f);
+        playerAnimator.Update(0f);
     }
 
     private CampusLifeStatDelta GetDelta(ZoneType zone)
@@ -65,16 +141,16 @@ public class ZoneActivityApplier : MonoBehaviour
         switch (zone)
         {
             case ZoneType.Classroom:
-                return "수업 듣기";
+                return "Lecture";
 
             case ZoneType.Drink:
-                return "술자리 가기";
+                return "Drink";
 
             case ZoneType.TeamProjectRoom:
-                return "팀플하기";
+                return "Team Project";
 
             default:
-                return "아무것도 안 하기";
+                return "Idle";
         }
     }
 }
