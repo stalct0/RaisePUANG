@@ -1017,149 +1017,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68865300}
   m_CullTransparentMesh: 1
---- !u!1 &82979907
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 82979908}
-  - component: {fileID: 82979912}
-  - component: {fileID: 82979911}
-  - component: {fileID: 82979910}
-  - component: {fileID: 82979909}
-  m_Layer: 5
-  m_Name: DeliveryGameArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &82979908
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82979907}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.9639599, y: 1.9639599, z: 1.9639599}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 821861421}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00068665, y: 0.00066376}
-  m_SizeDelta: {x: 506.7, y: 476.05}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &82979909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82979907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc9a1de8eb614a6d85d9a8e2f6990e3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeliverySpawner
-  minSpawnInterval: 0.1
-  maxSpawnInterval: 0.3
-  obstacleChance: 0.55
-  coinChance: 0.35
-  starChance: 0.35
-  starCooldown: 5
-  obstacleFallSpeed: 520
-  coinFallSpeed: 420
-  starFallSpeed: 600
---- !u!114 &82979910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82979907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3d2b2189f3744ada06425e7e65575c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeliveryGameManager
-  driveController: {fileID: 2113151048}
-  playArea: {fileID: 82979908}
-  spawner: {fileID: 82979909}
-  hud: {fileID: 0}
-  uiFont: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  playerPrefab: {fileID: 100000, guid: 812f2ce3160443c589121f28fc842181, type: 3}
-  obstaclePrefab: {fileID: 100000, guid: 822f2ce3160443c589121f28fc842181, type: 3}
-  coinPrefab: {fileID: 100000, guid: 823f2ce3160443c589121f28fc842181, type: 3}
-  starPrefab: {fileID: 100000, guid: 824f2ce3160443c589121f28fc842181, type: 3}
-  laneCount: 4
-  playerStartLaneIndex: 1
-  lanePadding: 120
-  playerMoveLerpSpeed: 16
-  minSpawnInterval: 0.1
-  maxSpawnInterval: 0.4
-  obstacleChance: 0.63
-  coinChance: 0.35
-  starChance: 0.05
-  obstacleFallSpeed: 520
-  coinFallSpeed: 420
-  starFallSpeed: 460
-  startLife: 3
-  gameDuration: 45
-  scorePerCoin: 10
-  moneyPerCoin: 100
-  basePay: 500
-  scoreToPayMultiplier: 20
-  lifeBonusPay: 300
-  minInvincibleSeconds: 5
-  maxInvincibleSeconds: 10
-  startOnPlay: 1
-  playerSize: {x: 72, y: 72}
-  itemSize: {x: 56, y: 56}
---- !u!114 &82979911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82979907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.08, g: 0.11, b: 0.16, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &82979912
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82979907}
-  m_CullTransparentMesh: 1
 --- !u!1 &85715981
 GameObject:
   m_ObjectHideFlags: 0
@@ -3277,6 +3134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb1aa873562454186762e5aa17fdf67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CampusLifeGameManager
+  courseRegistrationMinigame: {fileID: 0}
   maxSemester: 8
   currentSemester: 1
   semesterDuration: 180
@@ -4867,7 +4725,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 82979908}
+  - {fileID: 876698921}
   m_Father: {fileID: 862912671}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5441,6 +5299,149 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 862912670}
+  m_CullTransparentMesh: 1
+--- !u!1 &876698920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 876698921}
+  - component: {fileID: 876698925}
+  - component: {fileID: 876698924}
+  - component: {fileID: 876698923}
+  - component: {fileID: 876698922}
+  m_Layer: 5
+  m_Name: DeliveryGameArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &876698921
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876698920}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.9639599, y: 1.9639599, z: 1.9639599}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 821861421}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.0007324219, y: 0.00061035156}
+  m_SizeDelta: {x: 506.7, y: 476.05}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &876698922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876698920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9a1de8eb614a6d85d9a8e2f6990e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliverySpawner
+  minSpawnInterval: 0.1
+  maxSpawnInterval: 0.3
+  obstacleChance: 0.55
+  coinChance: 0.35
+  starChance: 0.35
+  starCooldown: 5
+  obstacleFallSpeed: 520
+  coinFallSpeed: 420
+  starFallSpeed: 600
+--- !u!114 &876698923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876698920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d2b2189f3744ada06425e7e65575c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliveryGameManager
+  driveController: {fileID: 2113151048}
+  playArea: {fileID: 876698921}
+  spawner: {fileID: 876698922}
+  hud: {fileID: 0}
+  uiFont: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  playerPrefab: {fileID: 6951027737879103073, guid: 35e9848e2a8d7b4428d26af7a655e1a4, type: 3}
+  obstaclePrefab: {fileID: 236119048152474954, guid: a00cb9b5928a79a40b36411d33533581, type: 3}
+  coinPrefab: {fileID: 5180695350853229532, guid: cab61accf5788934a862908e5eeac30d, type: 3}
+  starPrefab: {fileID: 7794084305160711748, guid: 01aca9eb407ac274e87d7d14e79fbfc4, type: 3}
+  laneCount: 4
+  playerStartLaneIndex: 1
+  lanePadding: 120
+  playerMoveLerpSpeed: 16
+  minSpawnInterval: 0.1
+  maxSpawnInterval: 0.4
+  obstacleChance: 0.63
+  coinChance: 0.35
+  starChance: 0.05
+  obstacleFallSpeed: 520
+  coinFallSpeed: 420
+  starFallSpeed: 460
+  startLife: 3
+  gameDuration: 45
+  scorePerCoin: 10
+  moneyPerCoin: 100
+  basePay: 500
+  scoreToPayMultiplier: 20
+  lifeBonusPay: 300
+  minInvincibleSeconds: 5
+  maxInvincibleSeconds: 10
+  startOnPlay: 1
+  playerSize: {x: 72, y: 72}
+  itemSize: {x: 56, y: 56}
+--- !u!114 &876698924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876698920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.08, g: 0.11, b: 0.16, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &876698925
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876698920}
   m_CullTransparentMesh: 1
 --- !u!1 &928558552
 GameObject:
@@ -32429,8 +32430,8 @@ MonoBehaviour:
   introView: {fileID: 1443545421}
   gameView: {fileID: 821861420}
   resultView: {fileID: 837484821}
-  deliveryGameArea: {fileID: 82979907}
-  deliveryGameManager: {fileID: 82979910}
+  deliveryGameArea: {fileID: 0}
+  deliveryGameManager: {fileID: 0}
   startButton: {fileID: 588907358}
   noButton: {fileID: 494515888}
   closeButton: {fileID: 1087168610}
