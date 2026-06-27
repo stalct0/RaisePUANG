@@ -13,7 +13,12 @@ public enum GamePhase
 public class CampusLifeGameManager : MonoBehaviour
 {
     public static CampusLifeGameManager Instance { get; private set; }
+    [SerializeField] private CourseRegistrationMinigameController courseRegistrationMinigame;
 
+    private CampusLifeStats semesterStartStats = new CampusLifeStats();
+    private CampusLifeStatDelta lastSemesterDelta;
+    private string lastSemesterSummaryText;
+    
     [Header("Semester")]
     [SerializeField] private int maxSemester = 8;
     [SerializeField] private int currentSemester = 1;
@@ -28,7 +33,10 @@ public class CampusLifeGameManager : MonoBehaviour
 
     [Header("Dialogue")]
     [SerializeField] private string dialogue = "푸앙이가 대학생활을 시작했다.";
-
+    
+    public CampusLifeStatDelta LastSemesterDelta => lastSemesterDelta;
+    public string LastSemesterSummaryText => lastSemesterSummaryText;
+    
     private GamePhase currentPhase = GamePhase.Playing;
     private GamePhase previousPhaseBeforeMiniGame = GamePhase.Playing;
 
@@ -98,7 +106,8 @@ public class CampusLifeGameManager : MonoBehaviour
 
         currentStats = startingStats.Clone();
         currentStats.Clamp();
-
+        semesterStartStats = currentStats.Clone();
+        
         dialogue = "1-1 시작. 푸앙이가 청룡탕에서 깨어났다.";
 
         Time.timeScale = 1f;
@@ -215,6 +224,8 @@ public class CampusLifeGameManager : MonoBehaviour
 
     private void ShowSemesterResult()
     {
+        lastSemesterDelta = CalculateSemesterDelta();
+        lastSemesterSummaryText = BuildSemesterSummaryText(lastSemesterDelta);
         currentTime = semesterDuration;
         currentPhase = GamePhase.SemesterResult;
 
@@ -245,10 +256,18 @@ public class CampusLifeGameManager : MonoBehaviour
         currentTime = 0f;
         currentPhase = GamePhase.Playing;
 
+        semesterStartStats = currentStats.Clone();
+
         dialogue = $"{GetSemesterName(currentSemester)} 시작.";
 
         Time.timeScale = 1f;
         NotifyChanged();
+
+        if (courseRegistrationMinigame == null)
+            courseRegistrationMinigame = FindFirstObjectByType<CourseRegistrationMinigameController>();
+
+        if (courseRegistrationMinigame != null)
+            courseRegistrationMinigame.Open();
     }
 
     private void FinishGame()
@@ -328,5 +347,48 @@ public class CampusLifeGameManager : MonoBehaviour
     private void NotifyChanged()
     {
         OnGameStateChanged?.Invoke();
+    }
+    
+    private CampusLifeStatDelta CalculateSemesterDelta()
+    {
+        return new CampusLifeStatDelta
+        {
+            money = currentStats.money - semesterStartStats.money,
+            condition = currentStats.condition - semesterStartStats.condition,
+            grades = currentStats.grades - semesterStartStats.grades,
+            relationship = currentStats.relationship - semesterStartStats.relationship
+        };
+    }
+
+    private string BuildSemesterSummaryText(CampusLifeStatDelta delta)
+    {
+        int bestValue = delta.money;
+        string bestName = "돈";
+
+        if (delta.condition > bestValue)
+        {
+            bestValue = delta.condition;
+            bestName = "컨디션";
+        }
+
+        if (delta.grades > bestValue)
+        {
+            bestValue = delta.grades;
+            bestName = "성적";
+        }
+
+        if (delta.relationship > bestValue)
+        {
+            bestValue = delta.relationship;
+            bestName = "친구관계";
+        }
+
+        if (bestValue > 0)
+            return $"이번 학기에는 {bestName}이 가장 많이 올랐다.";
+
+        if (bestValue == 0)
+            return "이번 학기는 큰 변화 없이 지나갔다.";
+
+        return "이번 학기는 전반적으로 손해가 컸다.";
     }
 }

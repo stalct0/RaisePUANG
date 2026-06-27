@@ -59,9 +59,9 @@ public class CampusLifeStats
     public void Clamp()
     {
         money = Mathf.Max(0, money);
-        condition = Mathf.Clamp(condition, 0, 100);
-        grades = Mathf.Clamp(grades, 0, 100);
-        relationship = Mathf.Clamp(relationship, 0, 100);
+        condition = Mathf.Max(0, condition);
+        grades = Mathf.Max(0, grades);
+        relationship = Mathf.Max(0, relationship);
     }
 }
 

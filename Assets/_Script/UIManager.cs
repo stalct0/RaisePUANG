@@ -127,13 +127,24 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            CampusLifeStatDelta delta = gameManager.LastSemesterDelta;
+
             semesterResultText.text =
                 $"{gameManager.GetSemesterName()} 종료\n\n" +
-                $"현재 돈: {stats.money}\n" +
-                $"컨디션: {stats.condition}\n" +
-                $"성적: {stats.grades}\n" +
-                $"친구관계: {stats.relationship}\n\n" +
-                "SPACE를 눌러 계속하기";
+                $"이번 학기 변화\n" +
+                $"돈: {FormatDelta(delta.money)}\n" +
+                $"컨디션: {FormatDelta(delta.condition)}\n" +
+                $"성적: {FormatDelta(delta.grades)}\n" +
+                $"친구관계: {FormatDelta(delta.relationship)}\n\n" +
+                $"{gameManager.LastSemesterSummaryText}\n\n" +
+                "SPACE를 눌러 다음 학기로";
         }
+    }
+    private string FormatDelta(int value)
+    {
+        if (value > 0)
+            return $"+{value}";
+
+        return value.ToString();
     }
 }
