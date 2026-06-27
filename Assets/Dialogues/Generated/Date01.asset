@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Date01
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   dialogueId: Date01
-  storyKind: 1
-  datingCharacter: 1
-  datingLocation: 1
+  storyKind: 0
+  datingCharacter: 0
+  datingLocation: 0
   startSceneId: 0
   scenes:
   - sceneId: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
     lines:
     - speaker: "\uBAA8\uBC94\uC0DD"
       text: "\uC6B0\uB9AC\uB3C4 \uAC19\uC774 \uBCFC\uB798?"
-      backgroundId: Cafe
+      backgroundId: cafe
       puangAppearanceId: 
       centerAppearanceId: YR_dummy
       leftAppearanceId: MJ_dummy

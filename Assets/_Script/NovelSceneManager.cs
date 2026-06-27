@@ -211,21 +211,39 @@ public class NovelSceneManager : MonoBehaviour
 
     private void ApplyCharacter(Image target, string appearanceId)
     {
-        if (target == null || visualDatabase == null) return;
-        if (string.IsNullOrWhiteSpace(appearanceId)) return;
+        if (target == null || visualDatabase == null)
+            return;
 
-        string id = appearanceId.Trim();
-
-        if (id == "hide" || id == "none" || id == "off")
+        if (string.IsNullOrWhiteSpace(appearanceId))
         {
+            target.sprite = null;
+            target.color = Color.clear;
             target.gameObject.SetActive(false);
             return;
         }
 
-        Sprite sprite = visualDatabase.GetAppearance(id);
-        if (sprite == null) return;
+        string id = appearanceId.Trim().ToLower();
+
+        if (id == "hide" || id == "none" || id == "off")
+        {
+            target.sprite = null;
+            target.color = Color.clear;
+            target.gameObject.SetActive(false);
+            return;
+        }
+
+        Sprite sprite = visualDatabase.GetAppearance(appearanceId.Trim());
+
+        if (sprite == null)
+        {
+            target.sprite = null;
+            target.color = Color.clear;
+            target.gameObject.SetActive(false);
+            return;
+        }
 
         target.sprite = sprite;
+        target.color = Color.white;
         target.gameObject.SetActive(true);
     }
 
