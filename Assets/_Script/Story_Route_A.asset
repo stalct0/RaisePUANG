@@ -12,18 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14ba248080591843a816c52cec034f3, type: 3}
   m_Name: Story_Route_A
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  storyKind: 0
+  datingCharacter: 0
+  datingLocation: 0
+  completesDate: 0
+  completesMeeting: 0
   moneyChange: -5000
   conditionChange: -15
   gradeChange: 0
+  visibleCharacterCount: 1
   friendshipChange: 35
   lines:
   - name: "푸앙"
     sentence: "조금 어색했지만 끝까지 남아 보니 웃을 일이 꽤 많았다."
+    backgroundName: ""
   - name: "동기"
     sentence: "다음 수업 같이 들으러 가자. 혼자 다니는 것보다 훨씬 재밌을 거야."
+    backgroundName: ""
   - name: "푸앙"
     sentence: "지갑은 가벼워졌지만, 이름을 부를 수 있는 사람이 늘었다."
+    backgroundName: ""
   choiceTextA: ""
   nextDialogueA: {fileID: 0}
+  choiceAffectionA: 0
   choiceTextB: ""
   nextDialogueB: {fileID: 0}
+  choiceAffectionB: 0

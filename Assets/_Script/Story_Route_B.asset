@@ -12,18 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14ba248080591843a816c52cec034f3, type: 3}
   m_Name: Story_Route_B
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  storyKind: 0
+  datingCharacter: 0
+  datingLocation: 0
+  completesDate: 0
+  completesMeeting: 0
   moneyChange: 0
   conditionChange: 20
   gradeChange: 15
+  visibleCharacterCount: 1
   friendshipChange: -5
   lines:
   - name: "푸앙"
     sentence: "아쉽지만 오늘은 몸을 먼저 챙기기로 했다. 내일도 수업은 계속되니까."
+    backgroundName: ""
   - name: "푸앙"
     sentence: "기숙사 책상에 앉아 강의 계획서를 읽다 보니 마음이 조금 가라앉았다."
+    backgroundName: ""
   - name: "푸앙"
     sentence: "조용한 밤이었다. 대신 내일을 시작할 힘은 충분히 남았다."
+    backgroundName: ""
   choiceTextA: ""
   nextDialogueA: {fileID: 0}
+  choiceAffectionA: 0
   choiceTextB: ""
   nextDialogueB: {fileID: 0}
+  choiceAffectionB: 0

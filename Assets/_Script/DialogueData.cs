@@ -6,16 +6,29 @@ public struct DialogueLine
     public string name;
     [TextArea(3, 5)]
     public string sentence;
+
+    [Header("변경할 배경 이미지 파일명 (비어있으면 이전 배경 유지)")]
+    public string backgroundName;
 }
 
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create New Dialogue")]
 public class DialogueData : ScriptableObject
 {
+    [Header("--- 스토리 타입 ---")]
+    public NovelStoryKind storyKind = NovelStoryKind.Normal;
+    public DatingCharacter datingCharacter = DatingCharacter.None;
+    public DatingLocation datingLocation = DatingLocation.None;
+    public bool completesDate;
+    public bool completesMeeting;
+
     [Header("--- 이 스토리가 시작될 때 변화할 스탯 값 ---")]
     public int moneyChange;
     public int conditionChange;
     public int gradeChange;
     public int friendshipChange;
+
+    [Header("--- 연출 정보 ---")]
+    [Range(0, 3)] public int visibleCharacterCount = 1;
 
     [Header("--- 대사 리스트 ---")]
     public DialogueLine[] lines;
@@ -23,8 +36,10 @@ public class DialogueData : ScriptableObject
     [Header("--- 선택지 ---")]
     public string choiceTextA;
     public DialogueData nextDialogueA;
+    public int choiceAffectionA;
     public string choiceTextB;
     public DialogueData nextDialogueB;
+    public int choiceAffectionB;
 
     public bool HasChoices => nextDialogueA != null || nextDialogueB != null;
 }
