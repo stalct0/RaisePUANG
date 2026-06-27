@@ -833,7 +833,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1232255488101627123, guid: 890f1891771eaa0479e1dd9e5fbba8cb, type: 3}
+  m_Sprite: {fileID: 7704525454815568601, guid: 19378d287a6ae2d4298bae6f52fa6d67, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -853,8 +853,8 @@ Transform:
   m_GameObject: {fileID: 89914664}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.32, y: 7.44, z: 0}
-  m_LocalScale: {x: 0.7612539, y: 0.8032233, z: 1}
+  m_LocalPosition: {x: 18.56, y: 7.26, z: 0}
+  m_LocalScale: {x: 0.5153227, y: 0.4617421, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1616,7 +1616,7 @@ MonoBehaviour:
   m_text: LOG
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2223,7 +2223,7 @@ MonoBehaviour:
   m_text: Narrator
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2935,7 +2935,7 @@ MonoBehaviour:
   m_text: Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3072,7 +3072,7 @@ MonoBehaviour:
   m_text: "\uD074\uB9AD\uD574\uC11C \uB300\uD654\uB97C \uC9C4\uD589\uD558\uC138\uC694."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3361,7 +3361,7 @@ MonoBehaviour:
   m_text: CLOSE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3498,7 +3498,7 @@ MonoBehaviour:
   m_text: "\uC120\uD0DD\uC9C0 A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4926,7 +4926,7 @@ MonoBehaviour:
   m_text: Button
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5200,7 +5200,7 @@ MonoBehaviour:
   m_text: NEXT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5339,7 +5339,7 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5469,8 +5469,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NovelSceneManager
   startDialogueData: {fileID: 11400000, guid: 6e5ac1f90e5ca714aa0bc5c889e4c8e4, type: 2}
+  visualDatabase: {fileID: 0}
   datingPanel: {fileID: 186535440}
   dimPanel: {fileID: 871706794}
+  backgroundImage: {fileID: 0}
+  centerCharacterImage: {fileID: 0}
+  leftCharacterImage: {fileID: 0}
+  rightCharacterImage: {fileID: 0}
   nameText: {fileID: 447713515}
   dialogueText: {fileID: 603795838}
   choicePanel: {fileID: 959708608}
@@ -5490,8 +5495,6 @@ MonoBehaviour:
   closeKey: 60
   typingSpeed: 0.035
   autoDelay: 1.2
-  defaultEndName: System
-  defaultEndSentence: "\uC624\uB298\uC758 \uC774\uC57C\uAE30\uB294 \uC5EC\uAE30\uAE4C\uC9C0\uB2E4."
 --- !u!114 &1096351390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6108,7 +6111,7 @@ MonoBehaviour:
   m_text: "\uC120\uD0DD\uC9C0 B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -25839,6 +25842,7 @@ GameObject:
   - component: {fileID: 1297219762}
   - component: {fileID: 1297219765}
   - component: {fileID: 1297219764}
+  - component: {fileID: 1297219766}
   m_Layer: 0
   m_Name: LectureZone
   m_TagString: Untagged
@@ -25895,7 +25899,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4187868644586041619, guid: cc43f84618835f046b20d1522fd01049, type: 3}
+  m_Sprite: {fileID: -3569598491518835125, guid: 3088885982f273142956375815d7dc13, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25972,7 +25976,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 24, y: 18}
+    oldSize: {x: 25.269999, y: 19.891388}
     newSize: {x: 24, y: 18}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -25980,6 +25984,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 24, y: 18}
   m_EdgeRadius: 0
+--- !u!114 &1297219766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297219761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
+  targetRenderer: {fileID: 1297219762}
+  normalStage0: {fileID: -3569598491518835125, guid: 3088885982f273142956375815d7dc13, type: 3}
+  normalStage1: {fileID: -3569598491518835125, guid: 3088885982f273142956375815d7dc13, type: 3}
+  normalStage2: {fileID: -3569598491518835125, guid: 3088885982f273142956375815d7dc13, type: 3}
+  activeStage0: {fileID: -5410690223574158617, guid: d49bf3dc8c1abb645837f8d4e6287c8f, type: 3}
+  activeStage1: {fileID: -5410690223574158617, guid: d49bf3dc8c1abb645837f8d4e6287c8f, type: 3}
+  activeStage2: {fileID: -5410690223574158617, guid: d49bf3dc8c1abb645837f8d4e6287c8f, type: 3}
+  secondsPerEvolution: 180
+  playerTag: Player
 --- !u!1 &1319305669
 GameObject:
   m_ObjectHideFlags: 0
@@ -27147,7 +27172,7 @@ MonoBehaviour:
   m_text: AUTO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -27236,6 +27261,7 @@ GameObject:
   - component: {fileID: 1538773791}
   - component: {fileID: 1538773794}
   - component: {fileID: 1538773793}
+  - component: {fileID: 1538773795}
   m_Layer: 0
   m_Name: TeamProjZone
   m_TagString: Untagged
@@ -27292,7 +27318,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5173980765327573516, guid: 4db2d7adf12fa7d429f7f87adfc2d463, type: 3}
+  m_Sprite: {fileID: -3522581051014955390, guid: c092154ca4791db45955b20a10dfab3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -27369,7 +27395,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 24, y: 18}
+    oldSize: {x: 26.57, y: 19.651371}
     newSize: {x: 24, y: 18}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -27377,6 +27403,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 24, y: 18}
   m_EdgeRadius: 0
+--- !u!114 &1538773795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538773790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
+  targetRenderer: {fileID: 1538773791}
+  normalStage0: {fileID: -3522581051014955390, guid: c092154ca4791db45955b20a10dfab3d, type: 3}
+  normalStage1: {fileID: -3522581051014955390, guid: c092154ca4791db45955b20a10dfab3d, type: 3}
+  normalStage2: {fileID: -3522581051014955390, guid: c092154ca4791db45955b20a10dfab3d, type: 3}
+  activeStage0: {fileID: -6750480608780564043, guid: 611ab1a461012b54d8582497d2336c93, type: 3}
+  activeStage1: {fileID: -6750480608780564043, guid: 611ab1a461012b54d8582497d2336c93, type: 3}
+  activeStage2: {fileID: -6750480608780564043, guid: 611ab1a461012b54d8582497d2336c93, type: 3}
+  secondsPerEvolution: 180
+  playerTag: Player
 --- !u!1 &1545997344
 GameObject:
   m_ObjectHideFlags: 0
@@ -27960,6 +28007,7 @@ GameObject:
   - component: {fileID: 1607226088}
   - component: {fileID: 1607226091}
   - component: {fileID: 1607226090}
+  - component: {fileID: 1607226092}
   m_Layer: 0
   m_Name: DrinkZone
   m_TagString: Untagged
@@ -28016,7 +28064,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2481767606805612455, guid: 7f931490c615dee45bcbaf487bc84c85, type: 3}
+  m_Sprite: {fileID: -843074986478297697, guid: f39691402e5af794090de854bca94771, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -28093,7 +28141,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 24, y: 18}
+    oldSize: {x: 26.519999, y: 19.21134}
     newSize: {x: 24, y: 18}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -28101,6 +28149,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 24, y: 18}
   m_EdgeRadius: 0
+--- !u!114 &1607226092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607226087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
+  targetRenderer: {fileID: 1607226088}
+  normalStage0: {fileID: -843074986478297697, guid: f39691402e5af794090de854bca94771, type: 3}
+  normalStage1: {fileID: -4392859014898721624, guid: a478f8f47bae6124f9b61a26d4d6800f, type: 3}
+  normalStage2: {fileID: 8267241651326284187, guid: acd8c9c67c347d7448cd906b94cb830b, type: 3}
+  activeStage0: {fileID: 1769237997149794763, guid: fb2e827481580be4aa149aba71863e4b, type: 3}
+  activeStage1: {fileID: 1769237997149794763, guid: fb2e827481580be4aa149aba71863e4b, type: 3}
+  activeStage2: {fileID: 1769237997149794763, guid: fb2e827481580be4aa149aba71863e4b, type: 3}
+  secondsPerEvolution: 180
+  playerTag: Player
 --- !u!1 &1698641319
 GameObject:
   m_ObjectHideFlags: 0
@@ -29349,7 +29418,7 @@ MonoBehaviour:
   m_text: SKIP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  m_sharedMaterial: {fileID: -9218042797988482161, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
