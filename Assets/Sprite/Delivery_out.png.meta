@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: dcef2a23569d926498e2eb9b80020e96
+guid: 19378d287a6ae2d4298bae6f52fa6d67
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1244891934795061178
-    second: Dating_pond_0
+      213: 7704525454815568601
+    second: Delivery_out_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dating_pond_0
+      name: Delivery_out_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1680
-        height: 1280
+        x: 104
+        y: 82
+        width: 2523
+        height: 1932
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 648aaca816149bee0800000000000000
-      internalID: -1244891934795061178
+      spriteID: 9d2ac31b419fbea60800000000000000
+      internalID: 7704525454815568601
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dating_pond_0: -1244891934795061178
+      Delivery_out_0: 7704525454815568601
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
