@@ -22,6 +22,7 @@ public class DriveMiniGameController : MonoBehaviour
     
     [Header("Buttons")]
     [SerializeField] private Button startButton;
+    [SerializeField] private Button noButton;
     [SerializeField] private Button closeButton;
     
     [Header("Debug")]
@@ -33,6 +34,9 @@ public class DriveMiniGameController : MonoBehaviour
     {
         if (startButton != null)
             startButton.onClick.AddListener(StartMiniGame);
+
+        if (noButton != null)
+            noButton.onClick.AddListener(CancelIntro);
 
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseMiniGame);
@@ -54,7 +58,8 @@ public class DriveMiniGameController : MonoBehaviour
     {
         if (CampusLifeGameManager.Instance == null) return;
         if (!CampusLifeGameManager.Instance.IsPlaying) return;
-
+        if (noButton != null)
+            noButton.gameObject.SetActive(true);
         isOpen = true;
 
         CampusLifeGameManager.Instance.EnterMiniGame();
@@ -83,8 +88,19 @@ public class DriveMiniGameController : MonoBehaviour
 
         if (deliveryGameManager != null)
             deliveryGameManager.StartGame();
+        if (noButton != null)
+            noButton.gameObject.SetActive(false);
     }
+    private void CancelIntro()
+    {
+        CloseImmediate();
 
+        if (CampusLifeGameManager.Instance != null &&
+            CampusLifeGameManager.Instance.IsMiniGame)
+        {
+            CampusLifeGameManager.Instance.ExitMiniGame();
+        }
+    }
     public void ShowResult(string result)
     {
         if (deliveryGameArea != null)
@@ -117,7 +133,8 @@ public class DriveMiniGameController : MonoBehaviour
     private void CloseImmediate()
     {
         isOpen = false;
-
+        if (noButton != null)
+            noButton.gameObject.SetActive(false);
         if (dimPanel != null) dimPanel.SetActive(false);
         if (drivePanel != null) drivePanel.SetActive(false);
         if (introView != null) introView.SetActive(false);

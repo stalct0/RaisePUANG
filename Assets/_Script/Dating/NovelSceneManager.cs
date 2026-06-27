@@ -8,15 +8,20 @@ using UnityEngine.UI;
 
 public class NovelSceneManager : MonoBehaviour
 {
-    [Header("Dialogue Data")]
-    [SerializeField] private DialogueData startDialogueData;
-
-    [Header("Visual Database")]
+    [Header("Data")]
     [SerializeField] private NovelVisualDatabase visualDatabase;
 
     [Header("Panel")]
-    [SerializeField] private GameObject datingPanel;
     [SerializeField] private GameObject dimPanel;
+    [SerializeField] private GameObject datingPanel;
+
+    [Header("Views")]
+    [SerializeField] private GameObject introView;
+    [SerializeField] private GameObject gameView;
+
+    [Header("Intro Buttons")]
+    [SerializeField] private Button yesButton;
+    [SerializeField] private Button noButton;
 
     [Header("Visual Images")]
     [SerializeField] private Image backgroundImage;
@@ -47,10 +52,6 @@ public class NovelSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI logText;
     [SerializeField] private Button logCloseButton;
 
-    [Header("Debug")]
-    [SerializeField] private Key debugOpenKey = Key.D;
-    [SerializeField] private Key closeKey = Key.Escape;
-
     [Header("Typing")]
     [SerializeField] private float typingSpeed = 0.035f;
 
@@ -74,38 +75,37 @@ public class NovelSceneManager : MonoBehaviour
     private string completeSentence = "";
     private Coroutine typingCoroutine;
 
-    private readonly List<string> dialogueLog = new List<string>();
+    private readonly List<string> dialogueLog = new();
+
+    private void Awake()
+    {
+        CloseImmediate();
+    }
 
     private void Start()
     {
-        if (datingPanel != null) datingPanel.SetActive(false);
-        if (choicePanel != null) choicePanel.SetActive(false);
-        if (logPanel != null) logPanel.SetActive(false);
-
         BindButtons();
+        CloseImmediate();
     }
 
     private void Update()
     {
-#if UNITY_EDITOR
-        if (!isOpen && Keyboard.current != null && Keyboard.current[debugOpenKey].wasPressedThisFrame)
-            OpenDating();
-#endif
-
         if (!isOpen) return;
-
-        if (Keyboard.current != null && Keyboard.current[closeKey].wasPressedThisFrame)
-        {
-            CloseDating();
-            return;
-        }
 
         if (isAutoMode)
             UpdateAutoMode();
     }
 
+    private void OnDestroy()
+    {
+        UnbindButtons();
+    }
+
     private void BindButtons()
     {
+        if (yesButton != null) yesButton.onClick.AddListener(OnClickYes);
+        if (noButton != null) noButton.onClick.AddListener(OnClickNo);
+
         if (nextButton != null) nextButton.onClick.AddListener(AdvanceDialogue);
         if (logButton != null) logButton.onClick.AddListener(ToggleLog);
         if (autoButton != null) autoButton.onClick.AddListener(ToggleAuto);
@@ -114,28 +114,83 @@ public class NovelSceneManager : MonoBehaviour
         if (logCloseButton != null) logCloseButton.onClick.AddListener(CloseLog);
     }
 
-    public void OpenDating()
+    private void UnbindButtons()
     {
-        OpenDating(startDialogueData);
+        if (yesButton != null) yesButton.onClick.RemoveListener(OnClickYes);
+        if (noButton != null) noButton.onClick.RemoveListener(OnClickNo);
+
+        if (nextButton != null) nextButton.onClick.RemoveListener(AdvanceDialogue);
+        if (logButton != null) logButton.onClick.RemoveListener(ToggleLog);
+        if (autoButton != null) autoButton.onClick.RemoveListener(ToggleAuto);
+        if (skipButton != null) skipButton.onClick.RemoveListener(SkipCurrentScene);
+        if (closeButton != null) closeButton.onClick.RemoveListener(CloseDating);
+        if (logCloseButton != null) logCloseButton.onClick.RemoveListener(CloseLog);
     }
 
-    public void OpenDating(DialogueData data)
+    public void OpenDatingIntro()
     {
-        if (data == null || CampusLifeGameManager.Instance == null) return;
+        if (CampusLifeGameManager.Instance == null) return;
         if (!CampusLifeGameManager.Instance.IsPlaying) return;
 
+        isOpen = true;
+        CampusLifeGameManager.Instance.EnterMiniGame();
+
+        if (dimPanel != null) dimPanel.SetActive(true);
+        if (datingPanel != null) datingPanel.SetActive(true);
+
+        if (introView != null) introView.SetActive(true);
+        if (gameView != null) gameView.SetActive(false);
+
+        HideChoices();
+        CloseLog();
+        StopAuto();
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+    }
+
+    private void OnClickYes()
+    {
+        if (DatingProgressManager.Instance == null) return;
+
+        if (!DatingProgressManager.Instance.CanStartDate(out string reason))
+        {
+            Debug.Log(reason);
+            CloseDating();
+            return;
+        }
+
+        DialogueData data = DatingProgressManager.Instance.GetCurrentDialogue();
+
+        if (data == null)
+        {
+            Debug.LogError("현재 데이트 DialogueData가 없습니다.");
+            CloseDating();
+            return;
+        }
+
+        StartDating(data);
+    }
+
+    private void OnClickNo()
+    {
+        CloseDating();
+    }
+
+    private void StartDating(DialogueData data)
+    {
         currentDialogueData = data;
         pendingAffection = 0;
-        isOpen = true;
 
         dialogueLog.Clear();
         CloseLog();
         StopAuto();
 
-        CampusLifeGameManager.Instance.EnterMiniGame();
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(true);
 
-        if (dimPanel != null) dimPanel.SetActive(true);
-        if (datingPanel != null) datingPanel.SetActive(true);
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
 
         StartScene(data.startSceneId);
     }
@@ -211,8 +266,7 @@ public class NovelSceneManager : MonoBehaviour
 
     private void ApplyCharacter(Image target, string appearanceId)
     {
-        if (target == null || visualDatabase == null)
-            return;
+        if (target == null || visualDatabase == null) return;
 
         if (string.IsNullOrWhiteSpace(appearanceId))
         {
@@ -222,7 +276,7 @@ public class NovelSceneManager : MonoBehaviour
             return;
         }
 
-        string id = appearanceId.Trim().ToLower();
+        string id = appearanceId.Trim();
 
         if (id == "hide" || id == "none" || id == "off")
         {
@@ -232,7 +286,7 @@ public class NovelSceneManager : MonoBehaviour
             return;
         }
 
-        Sprite sprite = visualDatabase.GetAppearance(appearanceId.Trim());
+        Sprite sprite = visualDatabase.GetAppearance(id);
 
         if (sprite == null)
         {
@@ -322,17 +376,9 @@ public class NovelSceneManager : MonoBehaviour
 
         ShowSystemMessage("System", resultText);
         isEnd = true;
-    }
 
-    private string GetTodayDateResultText(int affection)
-    {
-        if (affection >= 1)
-            return "오늘 데이트는 성공적이었던 것 같다.";
-
-        if (affection == 0)
-            return "오늘 데이트는 무난하게 지나간 것 같다.";
-
-        return "오늘 데이트는 조금 아쉬웠던 것 같다.";
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(true);
     }
 
     private void ApplySceneStatChange(DialogueScene scene)
@@ -370,6 +416,9 @@ public class NovelSceneManager : MonoBehaviour
     {
         ShowSystemMessage("System", "오늘의 이야기는 여기까지다.");
         isEnd = true;
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(true);
     }
 
     private IEnumerator TypeSentence(string sentence)
@@ -439,7 +488,7 @@ public class NovelSceneManager : MonoBehaviour
     {
         if (logText == null) return;
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new();
 
         foreach (string log in dialogueLog)
         {
@@ -502,37 +551,34 @@ public class NovelSceneManager : MonoBehaviour
         HideChoices();
         CloseLog();
         StopAuto();
-
-        if (datingPanel != null) datingPanel.SetActive(false);
-        if (dimPanel != null) dimPanel.SetActive(false);
+        CloseImmediate();
 
         if (CampusLifeGameManager.Instance != null &&
             CampusLifeGameManager.Instance.IsMiniGame)
         {
             CampusLifeGameManager.Instance.ExitMiniGame();
         }
+    }
+
+    private void CloseImmediate()
+    {
+        if (datingPanel != null) datingPanel.SetActive(false);
+        if (dimPanel != null) dimPanel.SetActive(false);
+
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(false);
+
+        if (choicePanel != null) choicePanel.SetActive(false);
+        if (logPanel != null) logPanel.SetActive(false);
+
+        if (closeButton != null) closeButton.gameObject.SetActive(false);
 
         isOpen = false;
         isTyping = false;
         isChoiceTime = false;
         isEnd = false;
+        isAutoMode = false;
+        isLogOpen = false;
         pendingAffection = 0;
-    }
-    public void OpenDatingFromIntro(DialogueData data)
-    {
-        if (data == null) return;
-
-        currentDialogueData = data;
-        pendingAffection = 0;
-        isOpen = true;
-
-        dialogueLog.Clear();
-        CloseLog();
-        StopAuto();
-
-        if (datingPanel != null)
-            datingPanel.SetActive(true);
-
-        StartScene(data.startSceneId);
     }
 }
