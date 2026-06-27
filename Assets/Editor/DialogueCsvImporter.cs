@@ -30,6 +30,11 @@ public static class DialogueCsvImporter
         public int conditionChange;
         public int gradeChange;
         public int friendshipChange;
+        
+        public string backgroundId;
+        public string centerAppearanceId;
+        public string leftAppearanceId;
+        public string rightAppearanceId;
 
         public NovelStoryKind storyKind;
         public DatingCharacter datingCharacter;
@@ -147,7 +152,11 @@ public static class DialogueCsvImporter
                     lines.Add(new DialogueLine
                     {
                         speaker = row.speaker,
-                        text = row.text
+                        text = row.text,
+                        backgroundId = row.backgroundId,
+                        centerAppearanceId = row.centerAppearanceId,
+                        leftAppearanceId = row.leftAppearanceId,
+                        rightAppearanceId = row.rightAppearanceId
                     });
 
                     scene.moneyChange = row.moneyChange;
@@ -218,7 +227,10 @@ public static class DialogueCsvImporter
         row.datingLocation = GetEnum(raw, "DatingLocation", DatingLocation.None);
 
         row.completesDate = GetBool(raw, "CompletesDate", false);
-
+        row.backgroundId = Get(raw, "BackgroundId");
+        row.centerAppearanceId = Get(raw, "CenterAppearanceId");
+        row.leftAppearanceId = Get(raw, "LeftAppearanceId");
+        row.rightAppearanceId = Get(raw, "RightAppearanceId");
         return row;
     }
 

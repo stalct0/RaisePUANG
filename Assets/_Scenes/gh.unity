@@ -1298,6 +1298,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 755346723}
   - {fileID: 322432052}
   - {fileID: 1138270552}
   - {fileID: 630938230}
@@ -3679,6 +3680,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732646548}
   m_CullTransparentMesh: 1
+--- !u!1 &755346722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 755346723}
+  - component: {fileID: 755346725}
+  - component: {fileID: 755346724}
+  m_Layer: 5
+  m_Name: Backgroudn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &755346723
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755346722}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 186535441}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.0037230998, y: -0.0017089844}
+  m_SizeDelta: {x: 995.13, y: 934.95}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &755346724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755346722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &755346725
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755346722}
+  m_CullTransparentMesh: 1
 --- !u!1 &782823591
 GameObject:
   m_ObjectHideFlags: 0
@@ -5451,9 +5527,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c615e3f7168aab6468978ee998e23c8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NovelSceneManager
-  startDialogueData: {fileID: 11400000, guid: 6e5ac1f90e5ca714aa0bc5c889e4c8e4, type: 2}
+  startDialogueData: {fileID: 11400000, guid: cbdd80ab4d18a2a48b7e9193c3f1f79e, type: 2}
+  visualDatabase: {fileID: 11400000, guid: c56ce630d0c25a545ba70b179273f5fb, type: 2}
   datingPanel: {fileID: 186535440}
   dimPanel: {fileID: 871706794}
+  backgroundImage: {fileID: 755346724}
+  centerCharacterImage: {fileID: 358823379}
+  leftCharacterImage: {fileID: 1873473438}
+  rightCharacterImage: {fileID: 157552259}
   nameText: {fileID: 447713515}
   dialogueText: {fileID: 603795838}
   choicePanel: {fileID: 959708608}
@@ -5473,8 +5554,6 @@ MonoBehaviour:
   closeKey: 60
   typingSpeed: 0.035
   autoDelay: 1.2
-  defaultEndName: System
-  defaultEndSentence: "\uC624\uB298\uC758 \uC774\uC57C\uAE30\uB294 \uC5EC\uAE30\uAE4C\uC9C0\uB2E4."
 --- !u!114 &1096351390
 MonoBehaviour:
   m_ObjectHideFlags: 0
