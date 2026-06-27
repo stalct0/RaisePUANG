@@ -15,14 +15,18 @@ MonoBehaviour:
   moneyChange: -5000
   conditionChange: -15
   gradeChange: 0
+  visibleCharacterCount: 1
   friendshipChange: 35
   lines:
   - name: "푸앙"
     sentence: "조금 어색했지만 끝까지 남아 보니 웃을 일이 꽤 많았다."
+    backgroundName: ""
   - name: "동기"
     sentence: "다음 수업 같이 들으러 가자. 혼자 다니는 것보다 훨씬 재밌을 거야."
+    backgroundName: ""
   - name: "푸앙"
     sentence: "지갑은 가벼워졌지만, 이름을 부를 수 있는 사람이 늘었다."
+    backgroundName: ""
   choiceTextA: ""
   nextDialogueA: {fileID: 0}
   choiceTextB: ""

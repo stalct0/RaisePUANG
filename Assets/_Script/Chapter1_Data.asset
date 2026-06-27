@@ -15,14 +15,18 @@ MonoBehaviour:
   moneyChange: 0
   conditionChange: 0
   gradeChange: 0
+  visibleCharacterCount: 2
   friendshipChange: 0
   lines:
   - name: "푸앙"
     sentence: "드디어 첫 학기가 시작됐다. 캠퍼스는 생각보다 훨씬 넓고, 사람도 많다."
+    backgroundName: ""
   - name: "선배"
     sentence: "신입생이지? 오늘 동아리 뒤풀이가 있는데 잠깐 들러볼래?"
+    backgroundName: ""
   - name: "푸앙"
     sentence: "첫날부터 선택이라니. 지금 결정이 이번 학기의 분위기를 바꿀지도 모른다."
+    backgroundName: ""
   choiceTextA: "뒤풀이에 남아서 사람들과 친해진다"
   nextDialogueA: {fileID: 11400000, guid: 3cd5b7e68dd87974ca6d021dd7b1936f, type: 2}
   choiceTextB: "컨디션을 챙기러 일찍 돌아간다"
