@@ -31,11 +31,11 @@ public sealed class DeliverySpawner : MonoBehaviour
         // 1. 스타 쿨타임 타이머 실시간 감소
         if (starTimer > 0f)
         {
-            starTimer -= Time.deltaTime;
+            starTimer -= Time.unscaledDeltaTime;
         }
 
         // 2. 전체 아이템 스폰 타이머 체크
-        spawnTimer -= Time.deltaTime;
+        spawnTimer -= Time.unscaledDeltaTime;
         if (spawnTimer > 0f) return;
 
 

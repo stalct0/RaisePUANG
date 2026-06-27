@@ -38,7 +38,11 @@ public sealed class DeliveryPlayerController : MonoBehaviour
 
         Vector2 target = RectTransform.anchoredPosition;
         target.x = GetLaneX(CurrentLaneIndex);
-        RectTransform.anchoredPosition = Vector2.Lerp(RectTransform.anchoredPosition, target, Time.deltaTime * moveLerpSpeed);
+        RectTransform.anchoredPosition = Vector2.Lerp(
+            RectTransform.anchoredPosition,
+            target,
+            Time.unscaledDeltaTime * moveLerpSpeed
+        );
     }
 
     public void Configure(RectTransform area, int lanes, float padding)

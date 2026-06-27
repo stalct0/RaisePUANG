@@ -8,20 +8,30 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 {
     public static CourseRegistrationMinigameController Instance { get; private set; }
 
-    [Header("Open Settings")]
-    [SerializeField] private Key debugOpenKey = Key.R;
-    [SerializeField] private Key closeKey = Key.Escape;
-
-    [Header("UI")]
+    [Header("Panel")]
     [SerializeField] private GameObject dimPanel;
-    [SerializeField] private GameObject miniGamePanel;
-    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private GameObject courseRegistrationPanel;
+
+    [Header("Views")]
+    [SerializeField] private GameObject introView;
+    [SerializeField] private GameObject gameView;
+    [SerializeField] private GameObject resultView;
+
+    [Header("Intro UI")]
+    [SerializeField] private Button startButton;
+
+    [Header("Game UI")]
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text progressText;
-    [SerializeField] private TMP_Text resultText;
-    [SerializeField] private Button startButton;
-    [SerializeField] private Button closeButton;
     [SerializeField] private Button[] cellButtons;
+
+    [Header("Result UI")]
+    [SerializeField] private TMP_Text resultText;
+    [SerializeField] private Button closeButton;
+
+    [Header("Debug")]
+    [SerializeField] private Key debugOpenKey = Key.R;
+    [SerializeField] private Key closeKey = Key.Escape;
 
     [Header("Rules")]
     [SerializeField] private int roundsPerSession = 7;
@@ -62,11 +72,11 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     private float totalReactionTime;
     private float bestReactionTime = float.MaxValue;
 
-    private Color idleColor = new Color(0.18f, 0.22f, 0.31f, 1f);
-    private Color activeColor = new Color(0.95f, 0.79f, 0.27f, 1f);
-    private Color successColor = new Color(0.25f, 0.68f, 0.37f, 1f);
-    private Color wrongColor = new Color(0.75f, 0.29f, 0.29f, 1f);
-    private Color missedColor = new Color(0.91f, 0.52f, 0.30f, 1f);
+    private readonly Color idleColor = new Color(0.18f, 0.22f, 0.31f, 1f);
+    private readonly Color activeColor = new Color(0.95f, 0.79f, 0.27f, 1f);
+    private readonly Color successColor = new Color(0.25f, 0.68f, 0.37f, 1f);
+    private readonly Color wrongColor = new Color(0.75f, 0.29f, 0.29f, 1f);
+    private readonly Color missedColor = new Color(0.91f, 0.52f, 0.30f, 1f);
 
     public bool IsOpen => isOpen;
 
@@ -80,6 +90,8 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         Instance = this;
         CacheCellImages();
+
+        CloseImmediate();
     }
 
     private void Start()
@@ -100,10 +112,24 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         }
 #endif
 
-        if (isOpen && keyboard[closeKey].wasPressedThisFrame)
+        if (isOpen &&
+            sessionComplete &&
+            keyboard[closeKey].wasPressedThisFrame)
         {
             Close();
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+
+        if (startButton != null)
+            startButton.onClick.RemoveListener(StartSession);
+
+        if (closeButton != null)
+            closeButton.onClick.RemoveListener(Close);
     }
 
     private void CacheCellImages()
@@ -134,8 +160,12 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         for (int i = 0; i < cellButtons.Length; i++)
         {
             int index = i;
+
             if (cellButtons[i] != null)
+            {
+                cellButtons[i].onClick.RemoveAllListeners();
                 cellButtons[i].onClick.AddListener(() => OnCellClicked(index));
+            }
         }
     }
 
@@ -158,87 +188,57 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (dimPanel != null)
             dimPanel.SetActive(true);
 
-        if (miniGamePanel != null)
-            miniGamePanel.SetActive(true);
+        if (courseRegistrationPanel != null)
+            courseRegistrationPanel.SetActive(true);
 
-        PrepareSession();
+        ShowIntroView();
     }
 
-    public void Close()
+    private void ShowIntroView()
     {
-        if (!isOpen) return;
-
         StopCoroutines();
-
-        isOpen = false;
-
-        if (dimPanel != null)
-            dimPanel.SetActive(false);
-
-        if (miniGamePanel != null)
-            miniGamePanel.SetActive(false);
-
-        if (CampusLifeGameManager.Instance != null)
-            CampusLifeGameManager.Instance.ExitMiniGame();
-    }
-
-    private void CloseImmediate()
-    {
-        isOpen = false;
-
-        if (dimPanel != null)
-            dimPanel.SetActive(false);
-
-        if (miniGamePanel != null)
-            miniGamePanel.SetActive(false);
-    }
-
-    private void PrepareSession()
-    {
         ResetSession();
         ResetCells();
 
-        if (titleText != null)
-            titleText.text = "수강신청";
+        if (introView != null) introView.SetActive(true);
+        if (gameView != null) gameView.SetActive(false);
+        if (resultView != null) resultView.SetActive(false);
 
-        if (statusText != null)
-            statusText.text = "색이 바뀌는 칸을 빠르게 클릭하세요.";
-
-        if (resultText != null)
-            resultText.text = "";
-
-        if (progressText != null)
-            progressText.text = BuildProgressText();
-
-        if (startButton != null)
-        {
-            startButton.gameObject.SetActive(true);
-            startButton.interactable = true;
-        }
-
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+        
         SetCellsInteractable(false);
     }
 
     private void StartSession()
     {
+        if (!isOpen) return;
         if (sessionStarted) return;
 
         if (cellButtons == null || cellButtons.Length == 0)
         {
-            Debug.LogError("cellButtons가 연결되지 않았습니다.");
+            Debug.LogError("Cell Buttons가 연결되지 않았습니다.");
             return;
         }
 
         sessionStarted = true;
         sessionComplete = false;
 
-        if (startButton != null)
-            startButton.gameObject.SetActive(false);
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(true);
+        if (resultView != null) resultView.SetActive(false);
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
 
         SetCellsInteractable(true);
+        ResetCells();
 
         if (statusText != null)
             statusText.text = "수강신청 전쟁 시작.";
+
+        if (progressText != null)
+            progressText.text = BuildProgressText();
 
         StartNextRound();
     }
@@ -295,7 +295,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (!roundResolved)
         {
-            if (cellImages[activeCellIndex] != null)
+            if (activeCellIndex >= 0 && cellImages[activeCellIndex] != null)
                 cellImages[activeCellIndex].color = missedColor;
 
             ResolveRound(false, "늦었습니다. 자리가 찼습니다.", 0f);
@@ -404,44 +404,67 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         bool applied = CampusLifeGameManager.Instance != null &&
                        CampusLifeGameManager.Instance.TryApplyActivity("수강신청", reward);
 
-        if (titleText != null)
-            titleText.text = "수강신청 결과";
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(false);
+        if (resultView != null) resultView.SetActive(true);
 
-        if (statusText != null)
-            statusText.text = GetPerformanceText();
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(true);
 
         if (resultText != null)
         {
             resultText.text =
+                $"수강신청 결과\n\n" +
                 $"성공: {successCount}/{roundsPerSession}\n" +
                 $"실패: {missCount}\n" +
                 $"성적: +{reward.grades}\n" +
                 $"컨디션: {reward.condition}\n\n" +
-                (applied ? "결과가 적용되었습니다." : "결과 적용 실패.");
+                GetPerformanceText() + "\n\n" +
+                (applied ? "결과가 적용되었습니다." : "결과 적용 실패.") + "\n\n" +
+                "닫기 버튼을 눌러 돌아가기";
         }
-
-        if (startButton != null)
-            startButton.gameObject.SetActive(false);
     }
 
     private CampusLifeStatDelta BuildRewardDelta()
     {
         if (successCount >= 6)
-            return new CampusLifeStatDelta { grades = excellentGradesReward, condition = excellentConditionCost };
+        {
+            return new CampusLifeStatDelta
+            {
+                grades = excellentGradesReward,
+                condition = excellentConditionCost
+            };
+        }
 
         if (successCount >= 4)
-            return new CampusLifeStatDelta { grades = strongGradesReward, condition = strongConditionCost };
+        {
+            return new CampusLifeStatDelta
+            {
+                grades = strongGradesReward,
+                condition = strongConditionCost
+            };
+        }
 
         if (successCount >= 2)
-            return new CampusLifeStatDelta { grades = decentGradesReward, condition = decentConditionCost };
+        {
+            return new CampusLifeStatDelta
+            {
+                grades = decentGradesReward,
+                condition = decentConditionCost
+            };
+        }
 
-        return new CampusLifeStatDelta { grades = scrapeGradesReward, condition = scrapeConditionCost };
+        return new CampusLifeStatDelta
+        {
+            grades = scrapeGradesReward,
+            condition = scrapeConditionCost
+        };
     }
 
     private string GetPerformanceText()
     {
         if (successCount >= 6)
-            return "올클 성공.";
+            return "올클에 가까운 시간표를 얻었습니다.";
 
         if (successCount >= 4)
             return "괜찮은 시간표를 얻었습니다.";
@@ -449,14 +472,19 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (successCount >= 2)
             return "애매한 시간표입니다.";
 
-        return "수강신청 망했습니다.";
+        return "수강신청을 망했습니다.";
     }
 
     private string BuildProgressText()
     {
+        string averageText = successCount > 0
+            ? $"{(totalReactionTime / successCount) * 1000f:0}ms 평균"
+            : "성공 기록 없음";
+
         return
             $"진행: {roundsPlayed}/{roundsPerSession}\n" +
-            $"성공: {successCount} / 실패: {missCount}";
+            $"성공: {successCount} / 실패: {missCount}\n" +
+            $"{averageText}";
     }
 
     private void ResetSession()
@@ -512,5 +540,47 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             StopCoroutine(transitionCoroutine);
             transitionCoroutine = null;
         }
+    }
+
+    public void Close()
+    {
+        if (!isOpen) return;
+        if (!sessionComplete) return;
+
+        CloseImmediate();
+
+        if (CampusLifeGameManager.Instance != null &&
+            CampusLifeGameManager.Instance.IsMiniGame)
+        {
+            CampusLifeGameManager.Instance.ExitMiniGame();
+        }
+    }
+
+    private void CloseImmediate()
+    {
+        StopCoroutines();
+
+        isOpen = false;
+
+        ResetSession();
+        ResetCells();
+
+        if (dimPanel != null)
+            dimPanel.SetActive(false);
+
+        if (courseRegistrationPanel != null)
+            courseRegistrationPanel.SetActive(false);
+
+        if (introView != null)
+            introView.SetActive(false);
+
+        if (gameView != null)
+            gameView.SetActive(false);
+
+        if (resultView != null)
+            resultView.SetActive(false);
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
     }
 }

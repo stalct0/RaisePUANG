@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public sealed class DeliveryGameManager : MonoBehaviour
 {
+    [SerializeField] private DriveMiniGameController driveController;
+    public string LastResultText { get; private set; }
+    
     [Header("--- Game References ---")]
     public RectTransform playArea;
     public DeliverySpawner spawner;
@@ -74,10 +77,11 @@ public sealed class DeliveryGameManager : MonoBehaviour
     {
         if (!IsRunning) return;
 
-        remainingTime -= Time.deltaTime;
-        invincibleRemaining = Mathf.Max(0f, invincibleRemaining - Time.deltaTime);
-
+        remainingTime -= Time.unscaledDeltaTime;
+        invincibleRemaining = Mathf.Max(0f, invincibleRemaining - Time.unscaledDeltaTime);
+        CheckItemCollisions();
         hud.Refresh(life, score, remainingTime, invincibleRemaining > 0f, invincibleRemaining);
+
 
         if (life <= 0 || remainingTime <= 0f)
         {
@@ -140,6 +144,42 @@ public sealed class DeliveryGameManager : MonoBehaviour
     {
         RemoveItem(item);
     }
+    
+    private void CheckItemCollisions()
+    {
+        if (player == null) return;
+
+        Rect playerRect = GetWorldRect(player.RectTransform);
+
+        for (int i = activeItems.Count - 1; i >= 0; i--)
+        {
+            DeliveryFallingItem item = activeItems[i];
+            if (item == null) continue;
+
+            Rect itemRect = GetWorldRect(item.RectTransform);
+
+            if (playerRect.Overlaps(itemRect))
+            {
+                HandleItemCollision(item);
+            }
+        }
+    }
+
+    private Rect GetWorldRect(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+
+        Vector3 bottomLeft = corners[0];
+        Vector3 topRight = corners[2];
+
+        return new Rect(
+            bottomLeft.x,
+            bottomLeft.y,
+            topRight.x - bottomLeft.x,
+            topRight.y - bottomLeft.y
+        );
+    }
 
     private void EnsureRuntimeObjects()
     {
@@ -182,16 +222,6 @@ public sealed class DeliveryGameManager : MonoBehaviour
                 enabled = false;
                 return;
             }
-
-            DeliveryCollisionReceiver collisionReceiver = playerObject.GetComponent<DeliveryCollisionReceiver>();
-            if (collisionReceiver == null)
-            {
-                Debug.LogError($"{playerPrefab.name} needs DeliveryCollisionReceiver.");
-                enabled = false;
-                return;
-            }
-
-            collisionReceiver.Initialize(this);
         }
 
         if (hud == null)
@@ -321,16 +351,24 @@ public sealed class DeliveryGameManager : MonoBehaviour
         IsRunning = false;
         ClearItems();
 
-        int pay = life > 0 ? basePay + earnedMoneyFromCoins + score * scoreToPayMultiplier + life * lifeBonusPay : 0;
+        int pay = life > 0
+            ? basePay + earnedMoneyFromCoins + score * scoreToPayMultiplier + life * lifeBonusPay
+            : 0;
+
         if (pay > 0)
         {
             ApplyPay(pay);
         }
 
-        string result = life > 0
-            ? $"배달 완료\n점수 {score}\n라이프 {life}\n알바비 +{pay}"
-            : $"배달 실패\n라이프가 모두 깎여 알바비를 받지 못했다.\n점수 {score}";
-        hud.ShowResult(result);
+        LastResultText = life > 0
+            ? $"배달 완료\n\n점수: {score}\n라이프: {life}\n알바비: +{pay}"
+            : $"배달 실패\n\n라이프가 모두 깎였습니다.\n점수: {score}\n알바비: +0";
+
+        if (hud != null)
+            hud.HideResult();
+
+        if (driveController != null)
+            driveController.ShowResult(LastResultText);
     }
 
     private void ApplyPay(int pay)
