@@ -1094,10 +1094,10 @@ MonoBehaviour:
   spawner: {fileID: 82979909}
   hud: {fileID: 0}
   uiFont: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
-  playerPrefab: {fileID: 100000, guid: 812f2ce3160443c589121f28fc842181, type: 3}
-  obstaclePrefab: {fileID: 100000, guid: 822f2ce3160443c589121f28fc842181, type: 3}
-  coinPrefab: {fileID: 100000, guid: 823f2ce3160443c589121f28fc842181, type: 3}
-  starPrefab: {fileID: 100000, guid: 824f2ce3160443c589121f28fc842181, type: 3}
+  playerPrefab: {fileID: 6951027737879103073, guid: 35e9848e2a8d7b4428d26af7a655e1a4, type: 3}
+  obstaclePrefab: {fileID: 236119048152474954, guid: a00cb9b5928a79a40b36411d33533581, type: 3}
+  coinPrefab: {fileID: 5180695350853229532, guid: cab61accf5788934a862908e5eeac30d, type: 3}
+  starPrefab: {fileID: 7794084305160711748, guid: 01aca9eb407ac274e87d7d14e79fbfc4, type: 3}
   laneCount: 4
   playerStartLaneIndex: 1
   lanePadding: 120
@@ -2762,7 +2762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.76837, y: 0}
+  m_AnchoredPosition: {x: -34.76831, y: 0}
   m_SizeDelta: {x: -209.7573, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272394787
@@ -3463,7 +3463,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.768, y: -185}
+  m_AnchoredPosition: {x: -34.767944, y: -185}
   m_SizeDelta: {x: -1503.0417, y: -950.4548}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &556557531
