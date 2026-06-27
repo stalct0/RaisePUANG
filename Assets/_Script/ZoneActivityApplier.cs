@@ -12,8 +12,19 @@ public class ZoneActivityApplier : MonoBehaviour
     [SerializeField] private RuntimeAnimatorController lectureController = null;
     [SerializeField] private RuntimeAnimatorController teamProjectController = null;
 
+    [Header("Animation State Names")]
+    [SerializeField] private string idleStateName = "idle1";
+    [SerializeField] private string drinkStateName = "drink";
+    [SerializeField] private string lectureStateName = "lecture";
+    [SerializeField] private string teamProjectStateName = "teamproj";
+
+    [Header("Blocked Interaction")]
+    [Tooltip("스테이터스가 부족해서 zone 상호작용을 못할 때 재생할 idle 계열 state 이름. 실제 Animator state가 init1이면 여기에 init1을 넣으세요.")]
+    [SerializeField] private string blockedStateName = "idle1";
+
     private float statTickTimer;
     private ZoneType appliedAnimationZone = ZoneType.None;
+    private bool appliedBlockedAnimation;
     private ZoneType appliedStatZone = ZoneType.None;
     private ZoneSpriteSwitcher[] zoneSpriteSwitchers;
 
@@ -28,9 +39,12 @@ public class ZoneActivityApplier : MonoBehaviour
             return;
 
         ZoneType currentZone = ZoneManager.Instance.CurrentZone;
+        CampusLifeStatDelta delta = GetDelta(currentZone);
+        bool canInteract = CanInteractWithZone(delta);
 
-        UpdatePlayerAnimation(currentZone);
-        ApplyCurrentZoneActivityOverTime(currentZone);
+        SetZoneInteractionAllowed(currentZone, canInteract);
+        UpdatePlayerAnimation(currentZone, canInteract);
+        ApplyCurrentZoneActivityOverTime(currentZone, delta, canInteract);
     }
 
     private void RefreshZoneSpriteSwitchers()
@@ -38,7 +52,49 @@ public class ZoneActivityApplier : MonoBehaviour
         zoneSpriteSwitchers = FindObjectsOfType<ZoneSpriteSwitcher>();
     }
 
-    private void ApplyCurrentZoneActivityOverTime(ZoneType zone)
+    private bool CanInteractWithZone(CampusLifeStatDelta delta)
+    {
+        if (delta.IsZero)
+            return true;
+
+        if (CampusLifeGameManager.Instance == null)
+            return true;
+
+        return CampusLifeGameManager.Instance.CanApplyDelta(delta, out _);
+    }
+
+    private void SetZoneInteractionAllowed(ZoneType zone, bool allowed)
+    {
+        ZoneSpriteSwitcher switcher = GetZoneSpriteSwitcher(zone);
+
+        if (switcher != null)
+            switcher.SetInteractionAllowed(allowed);
+    }
+
+    private ZoneSpriteSwitcher GetZoneSpriteSwitcher(ZoneType zone)
+    {
+        if (zone == ZoneType.None)
+            return null;
+
+        if (zoneSpriteSwitchers == null || zoneSpriteSwitchers.Length == 0)
+            RefreshZoneSpriteSwitchers();
+
+        if (zoneSpriteSwitchers == null)
+            return null;
+
+        foreach (ZoneSpriteSwitcher switcher in zoneSpriteSwitchers)
+        {
+            if (switcher == null)
+                continue;
+
+            if (switcher.ZoneType == zone)
+                return switcher;
+        }
+
+        return null;
+    }
+
+    private void ApplyCurrentZoneActivityOverTime(ZoneType zone, CampusLifeStatDelta delta, bool canInteract)
     {
         if (appliedStatZone != zone)
         {
@@ -46,9 +102,7 @@ public class ZoneActivityApplier : MonoBehaviour
             statTickTimer = 0f;
         }
 
-        CampusLifeStatDelta delta = GetDelta(zone);
-
-        if (delta.IsZero)
+        if (delta.IsZero || !canInteract)
         {
             statTickTimer = 0f;
             return;
@@ -67,34 +121,53 @@ public class ZoneActivityApplier : MonoBehaviour
         CampusLifeGameManager.Instance.TryApplyContinuousActivity(GetActivityName(zone), delta);
     }
 
-    private void UpdatePlayerAnimation(ZoneType zone)
+    private void UpdatePlayerAnimation(ZoneType zone, bool canInteract)
     {
-        if (appliedAnimationZone == zone)
+        bool shouldUseBlockedAnimation = IsActivityZone(zone) && !canInteract;
+
+        if (appliedAnimationZone == zone && appliedBlockedAnimation == shouldUseBlockedAnimation)
             return;
 
-        bool success = false;
+        bool success;
 
-        switch (zone)
+        if (shouldUseBlockedAnimation)
         {
-            case ZoneType.Drink:
-                success = SetPlayerAnimation(drinkController, "drink");
-                break;
+            success = SetPlayerAnimation(idleController, blockedStateName);
+        }
+        else
+        {
+            switch (zone)
+            {
+                case ZoneType.Drink:
+                    success = SetPlayerAnimation(drinkController, drinkStateName);
+                    break;
 
-            case ZoneType.Classroom:
-                success = SetPlayerAnimation(lectureController, "lecture");
-                break;
+                case ZoneType.Classroom:
+                    success = SetPlayerAnimation(lectureController, lectureStateName);
+                    break;
 
-            case ZoneType.TeamProjectRoom:
-                success = SetPlayerAnimation(teamProjectController, "teamproj");
-                break;
+                case ZoneType.TeamProjectRoom:
+                    success = SetPlayerAnimation(teamProjectController, teamProjectStateName);
+                    break;
 
-            default:
-                success = SetPlayerAnimation(idleController, "idle1");
-                break;
+                default:
+                    success = SetPlayerAnimation(idleController, idleStateName);
+                    break;
+            }
         }
 
         if (success)
+        {
             appliedAnimationZone = zone;
+            appliedBlockedAnimation = shouldUseBlockedAnimation;
+        }
+    }
+
+    private bool IsActivityZone(ZoneType zone)
+    {
+        return zone == ZoneType.Drink ||
+               zone == ZoneType.Classroom ||
+               zone == ZoneType.TeamProjectRoom;
     }
 
     private bool SetPlayerAnimation(RuntimeAnimatorController controller, string stateName)
@@ -149,25 +222,12 @@ public class ZoneActivityApplier : MonoBehaviour
 
     private int GetZoneLevel(ZoneType zone)
     {
-        if (zone == ZoneType.None)
+        ZoneSpriteSwitcher switcher = GetZoneSpriteSwitcher(zone);
+
+        if (switcher == null)
             return 1;
 
-        if (zoneSpriteSwitchers == null || zoneSpriteSwitchers.Length == 0)
-            RefreshZoneSpriteSwitchers();
-
-        if (zoneSpriteSwitchers == null)
-            return 1;
-
-        foreach (ZoneSpriteSwitcher switcher in zoneSpriteSwitchers)
-        {
-            if (switcher == null)
-                continue;
-
-            if (switcher.ZoneType == zone)
-                return Mathf.Clamp(switcher.CurrentLevel, 1, 3);
-        }
-
-        return 1;
+        return Mathf.Clamp(switcher.CurrentLevel, 1, 3);
     }
 
     private CampusLifeStatDelta GetDrinkDelta(int level)
