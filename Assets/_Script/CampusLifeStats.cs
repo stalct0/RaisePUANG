@@ -30,6 +30,32 @@ public class CampusLifeStats
         Clamp();
     }
 
+    public CampusLifeStatDelta ApplyAvailable(CampusLifeStatDelta delta)
+    {
+        CampusLifeStatDelta appliedDelta = new CampusLifeStatDelta
+        {
+            money = GetApplicableDelta(money, delta.money),
+            condition = GetApplicableDelta(condition, delta.condition),
+            grades = GetApplicableDelta(grades, delta.grades),
+            relationship = GetApplicableDelta(relationship, delta.relationship)
+        };
+
+        Apply(appliedDelta);
+
+        return appliedDelta;
+    }
+
+    private int GetApplicableDelta(int currentValue, int delta)
+    {
+        if (delta >= 0)
+            return delta;
+
+        if (currentValue <= 0)
+            return 0;
+
+        return delta;
+    }
+
     public void Clamp()
     {
         money = Mathf.Max(0, money);

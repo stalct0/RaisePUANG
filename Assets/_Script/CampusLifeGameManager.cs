@@ -124,6 +124,22 @@ public class CampusLifeGameManager : MonoBehaviour
         return true;
     }
 
+    public bool TryApplyContinuousActivity(string activityName, CampusLifeStatDelta delta)
+    {
+        if (currentPhase != GamePhase.Playing && currentPhase != GamePhase.MiniGame)
+            return false;
+
+        CampusLifeStatDelta appliedDelta = currentStats.ApplyAvailable(delta);
+
+        if (appliedDelta.IsZero)
+            return false;
+
+        dialogue = BuildActivityDialogue(activityName, appliedDelta);
+        NotifyChanged();
+
+        return true;
+    }
+
     public bool CanApplyDelta(CampusLifeStatDelta delta, out string failReason)
     {
         if (currentStats.money + delta.money < 0)
