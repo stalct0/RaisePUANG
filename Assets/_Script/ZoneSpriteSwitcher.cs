@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class ZoneSpriteSwitcher : MonoBehaviour
 {
+    [Header("Zone")]
+    [SerializeField] private ZoneType zoneType = ZoneType.None;
+
     [Header("Renderer")]
     [SerializeField] private SpriteRenderer targetRenderer;
 
@@ -16,12 +19,16 @@ public class ZoneSpriteSwitcher : MonoBehaviour
     [SerializeField] private Sprite activeStage2;
 
     [Header("Evolution")]
-    [SerializeField] private float secondsPerEvolution = 180f; // 3분
+    [SerializeField] private float secondsPerEvolution = 180f;
     [SerializeField] private string playerTag = "Player";
 
     private bool isPlayerInside;
     private float accumulatedInsideTime;
     private int evolutionStage;
+
+    public ZoneType ZoneType => zoneType;
+    public int CurrentLevel => evolutionStage + 1;
+    public float AccumulatedInsideTime => accumulatedInsideTime;
 
     private void Awake()
     {
@@ -44,14 +51,13 @@ public class ZoneSpriteSwitcher : MonoBehaviour
 
         accumulatedInsideTime += Time.deltaTime;
 
-        if (accumulatedInsideTime >= secondsPerEvolution)
+        while (accumulatedInsideTime >= secondsPerEvolution && evolutionStage < 2)
         {
             accumulatedInsideTime -= secondsPerEvolution;
             evolutionStage++;
-
             ApplyCurrentSprite();
 
-            Debug.Log($"{gameObject.name} evolved to stage {evolutionStage}");
+            Debug.Log($"[ZoneSpriteSwitcher] {gameObject.name} evolved to level {CurrentLevel}.", this);
         }
     }
 
@@ -78,9 +84,7 @@ public class ZoneSpriteSwitcher : MonoBehaviour
         if (targetRenderer == null)
             return;
 
-        Sprite nextSprite = isPlayerInside
-            ? GetActiveSprite()
-            : GetNormalSprite();
+        Sprite nextSprite = isPlayerInside ? GetActiveSprite() : GetNormalSprite();
 
         if (nextSprite != null)
             targetRenderer.sprite = nextSprite;
@@ -93,9 +97,9 @@ public class ZoneSpriteSwitcher : MonoBehaviour
             case 0:
                 return normalStage0;
             case 1:
-                return normalStage1;
+                return normalStage1 != null ? normalStage1 : normalStage0;
             case 2:
-                return normalStage2;
+                return normalStage2 != null ? normalStage2 : normalStage1 != null ? normalStage1 : normalStage0;
             default:
                 return normalStage2;
         }
@@ -108,11 +112,11 @@ public class ZoneSpriteSwitcher : MonoBehaviour
             case 0:
                 return activeStage0 != null ? activeStage0 : normalStage0;
             case 1:
-                return activeStage1 != null ? activeStage1 : normalStage1;
+                return activeStage1 != null ? activeStage1 : GetNormalSprite();
             case 2:
-                return activeStage2 != null ? activeStage2 : normalStage2;
+                return activeStage2 != null ? activeStage2 : GetNormalSprite();
             default:
-                return activeStage2 != null ? activeStage2 : normalStage2;
+                return activeStage2 != null ? activeStage2 : GetNormalSprite();
         }
     }
 }
