@@ -1,76 +1,113 @@
 using System.Collections;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class NovelSceneManager : MonoBehaviour
 {
-    [Header("--- 대사 데이터 에셋 ---")]
-    public DialogueData dialogueData;
+    [Header("Dialogue Data")]
+    [SerializeField] private DialogueData startDialogueData;
 
-    [Header("--- UI 컴포넌트 (TMP) ---")]
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI dialogueText;
+    [Header("Panel")]
+    [SerializeField] private GameObject datingPanel;
+    [SerializeField] private GameObject dimPanel;
 
-    [Header("--- 선택지 시스템 UI ---")]
-    public GameObject choicePanel;
-    public Button choiceButton1;
-    public Button choiceButton2;
-    public TextMeshProUGUI choiceText1;
-    public TextMeshProUGUI choiceText2;
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI dialogueText;
 
-    [Header("--- 선택지 분기용 대사 데이터 (기존 씬 호환용) ---")]
-    public DialogueData nextDialogueA;
-    public DialogueData nextDialogueB;
+    [Header("Choices")]
+    [SerializeField] private GameObject choicePanel;
+    [SerializeField] private Button choiceButton1;
+    [SerializeField] private Button choiceButton2;
+    [SerializeField] private TextMeshProUGUI choiceText1;
+    [SerializeField] private TextMeshProUGUI choiceText2;
 
-    [Header("--- 연출 설정 ---")]
-    public float typingSpeed = 0.035f;
-    public string defaultEndName = "System";
-    [TextArea(2, 4)] public string defaultEndSentence = "오늘의 이야기는 여기까지다.";
+    [Header("Close")]
+    [SerializeField] private Button closeButton;
 
-    [Header("--- 한글 폰트 보정 ---")]
-    public TMP_FontAsset koreanFontAsset;
-    public bool applyKoreanFontOnStart = true;
-    public int koreanFontSize = 32;
+    [Header("Typing")]
+    [SerializeField] private float typingSpeed = 0.035f;
 
-    private static readonly string[] KoreanFontNames =
-    {
-        "Malgun Gothic",
-        "맑은 고딕",
-        "Noto Sans CJK KR",
-        "Noto Sans KR",
-        "Apple SD Gothic Neo",
-        "Arial Unicode MS"
-    };
+    [Header("End Message")]
+    [SerializeField] private string defaultEndName = "System";
+    [TextArea(2, 4)]
+    [SerializeField] private string defaultEndSentence = "오늘의 이야기는 여기까지다.";
 
+    private DialogueData currentDialogueData;
     private int currentLineIndex;
     private bool isTyping;
-    private string completeSentence = string.Empty;
     private bool isChoiceTime;
+    private bool isEnd;
+    private string completeSentence = "";
 
-    private void Awake()
-    {
-        if (applyKoreanFontOnStart)
-        {
-            ApplyKoreanFontToSceneTexts();
-        }
-    }
+    private Coroutine typingCoroutine;
 
     private void Start()
     {
-        HideChoices();
+        if (datingPanel != null)
+            datingPanel.SetActive(false);
+
+        if (choicePanel != null)
+            choicePanel.SetActive(false);
+
+        if (closeButton != null)
+            closeButton.onClick.AddListener(CloseDating);
+    }
+
+    private void OnDestroy()
+    {
+        if (closeButton != null)
+            closeButton.onClick.RemoveListener(CloseDating);
+    }
+
+    public void OpenDating()
+    {
+        OpenDating(startDialogueData);
+    }
+
+    public void OpenDating(DialogueData dialogueData)
+    {
+        if (dialogueData == null)
+        {
+            Debug.LogError("DialogueData가 없습니다.");
+            return;
+        }
+
+        if (CampusLifeGameManager.Instance == null)
+        {
+            Debug.LogError("CampusLifeGameManager가 없습니다.");
+            return;
+        }
+
+        if (!CampusLifeGameManager.Instance.IsPlaying)
+            return;
+
+        CampusLifeGameManager.Instance.EnterMiniGame();
+
+        if (dimPanel != null)
+            dimPanel.SetActive(true);
+
+        if (datingPanel != null)
+            datingPanel.SetActive(true);
+
         StartDialogue(dialogueData);
     }
 
     public void OnClickDialogWindow()
     {
-        if (isChoiceTime) return;
+        if (isChoiceTime)
+            return;
+
+        if (isEnd)
+        {
+            CloseDating();
+            return;
+        }
 
         if (isTyping)
         {
-            StopAllCoroutines();
-            dialogueText.text = completeSentence;
-            isTyping = false;
+            FinishTypingImmediately();
             return;
         }
 
@@ -78,13 +115,17 @@ public class NovelSceneManager : MonoBehaviour
         ShowNextDialogue();
     }
 
-    public void StartDialogue(DialogueData data)
+    public void StartDialogue(DialogueData dialogueData)
     {
-        dialogueData = data;
+        currentDialogueData = dialogueData;
         currentLineIndex = 0;
+        isEnd = false;
+
         HideChoices();
 
-        if (dialogueData == null || dialogueData.lines == null || dialogueData.lines.Length == 0)
+        if (currentDialogueData == null ||
+            currentDialogueData.lines == null ||
+            currentDialogueData.lines.Length == 0)
         {
             ShowEndMessage();
             return;
@@ -95,24 +136,36 @@ public class NovelSceneManager : MonoBehaviour
 
     private void ShowNextDialogue()
     {
-        if (dialogueData == null || currentLineIndex >= dialogueData.lines.Length)
+        if (currentDialogueData == null ||
+            currentLineIndex >= currentDialogueData.lines.Length)
         {
             TriggerChoiceSituation();
             return;
         }
 
-        DialogueLine currentLine = dialogueData.lines[currentLineIndex];
-        nameText.text = currentLine.name;
+        DialogueLine currentLine = currentDialogueData.lines[currentLineIndex];
+
+        if (nameText != null)
+            nameText.text = currentLine.name;
+
         completeSentence = currentLine.sentence;
 
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(completeSentence));
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
+        typingCoroutine = StartCoroutine(TypeSentence(completeSentence));
     }
 
     private void TriggerChoiceSituation()
     {
-        DialogueData choiceA = dialogueData != null && dialogueData.nextDialogueA != null ? dialogueData.nextDialogueA : nextDialogueA;
-        DialogueData choiceB = dialogueData != null && dialogueData.nextDialogueB != null ? dialogueData.nextDialogueB : nextDialogueB;
+        if (currentDialogueData == null)
+        {
+            ShowEndMessage();
+            return;
+        }
+
+        DialogueData choiceA = currentDialogueData.nextDialogueA;
+        DialogueData choiceB = currentDialogueData.nextDialogueB;
 
         if (choiceA == null && choiceB == null)
         {
@@ -121,18 +174,34 @@ public class NovelSceneManager : MonoBehaviour
         }
 
         isChoiceTime = true;
-        choicePanel.SetActive(true);
-        ConfigureChoice(choiceButton1, choiceText1, dialogueData != null ? dialogueData.choiceTextA : string.Empty, choiceA);
-        ConfigureChoice(choiceButton2, choiceText2, dialogueData != null ? dialogueData.choiceTextB : string.Empty, choiceB);
+
+        if (choicePanel != null)
+            choicePanel.SetActive(true);
+
+        ConfigureChoice(choiceButton1, choiceText1, currentDialogueData.choiceTextA, choiceA);
+        ConfigureChoice(choiceButton2, choiceText2, currentDialogueData.choiceTextB, choiceB);
     }
 
-    private void ConfigureChoice(Button button, TextMeshProUGUI label, string text, DialogueData nextDialogue)
+    private void ConfigureChoice(
+        Button button,
+        TextMeshProUGUI label,
+        string choiceText,
+        DialogueData nextDialogue)
     {
-        bool isAvailable = nextDialogue != null;
-        button.gameObject.SetActive(isAvailable);
-        if (!isAvailable) return;
+        if (button == null || label == null)
+            return;
 
-        label.text = string.IsNullOrWhiteSpace(text) ? nextDialogue.name : text;
+        bool available = nextDialogue != null;
+
+        button.gameObject.SetActive(available);
+
+        if (!available)
+            return;
+
+        label.text = string.IsNullOrWhiteSpace(choiceText)
+            ? "선택"
+            : choiceText;
+
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => OnSelectChoice(nextDialogue));
     }
@@ -141,7 +210,7 @@ public class NovelSceneManager : MonoBehaviour
     {
         if (selectedDialogue == null)
         {
-            Debug.LogError("연결된 다음 대사 파일(DialogueData)이 없습니다!");
+            Debug.LogError("선택지에 연결된 DialogueData가 없습니다.");
             return;
         }
 
@@ -151,71 +220,97 @@ public class NovelSceneManager : MonoBehaviour
 
     private void ApplyDialogueReward(DialogueData selectedDialogue)
     {
-        if (GameCenter.Instance == null) return;
+        if (CampusLifeGameManager.Instance == null)
+            return;
 
-        GameCenter.Instance.ChangeStatus(
-            selectedDialogue.moneyChange,
-            selectedDialogue.conditionChange,
-            selectedDialogue.gradeChange,
-            selectedDialogue.friendshipChange
-        );
+        CampusLifeStatDelta delta = new CampusLifeStatDelta
+        {
+            money = selectedDialogue.moneyChange,
+            condition = selectedDialogue.conditionChange,
+            grades = selectedDialogue.gradeChange,
+            relationship = selectedDialogue.friendshipChange
+        };
+
+        CampusLifeGameManager.Instance.TryApplyActivity("연애", delta);
     }
 
     private void HideChoices()
     {
         isChoiceTime = false;
-        if (choicePanel != null) choicePanel.SetActive(false);
+
+        if (choicePanel != null)
+            choicePanel.SetActive(false);
     }
 
     private void ShowEndMessage()
     {
         HideChoices();
-        StopAllCoroutines();
-        nameText.text = defaultEndName;
-        dialogueText.text = defaultEndSentence;
+
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
+        if (nameText != null)
+            nameText.text = defaultEndName;
+
         completeSentence = defaultEndSentence;
+
+        if (dialogueText != null)
+            dialogueText.text = defaultEndSentence;
+
         isTyping = false;
+        isEnd = true;
     }
 
-    private void ApplyKoreanFontToSceneTexts()
+    private void FinishTypingImmediately()
     {
-        TMP_FontAsset fontAsset = koreanFontAsset != null ? koreanFontAsset : CreateKoreanFontAsset();
-        if (fontAsset == null)
-        {
-            Debug.LogWarning("한글 표시용 OS 폰트를 찾지 못했습니다. TMP Font Asset에 한글 폰트를 직접 연결해 주세요.");
-            return;
-        }
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
 
-        TextMeshProUGUI[] texts = FindObjectsOfType<TextMeshProUGUI>(true);
-        foreach (TextMeshProUGUI text in texts)
-        {
-            text.font = fontAsset;
-            text.SetAllDirty();
-        }
-    }
+        if (dialogueText != null)
+            dialogueText.text = completeSentence;
 
-    private TMP_FontAsset CreateKoreanFontAsset()
-    {
-        Font osFont = Font.CreateDynamicFontFromOSFont(KoreanFontNames, koreanFontSize);
-        if (osFont == null) return null;
-
-        TMP_FontAsset fontAsset = TMP_FontAsset.CreateFontAsset(osFont);
-        fontAsset.atlasPopulationMode = AtlasPopulationMode.Dynamic;
-        fontAsset.name = osFont.name + " TMP Dynamic";
-        return fontAsset;
+        isTyping = false;
     }
 
     private IEnumerator TypeSentence(string sentence)
     {
         isTyping = true;
-        dialogueText.text = string.Empty;
+
+        if (dialogueText != null)
+            dialogueText.text = "";
 
         foreach (char letter in sentence)
         {
-            dialogueText.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
+            if (dialogueText != null)
+                dialogueText.text += letter;
+
+            yield return new WaitForSecondsRealtime(typingSpeed);
         }
 
         isTyping = false;
+    }
+
+    public void CloseDating()
+    {
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
+        HideChoices();
+
+        if (datingPanel != null)
+            datingPanel.SetActive(false);
+
+        if (dimPanel != null)
+            dimPanel.SetActive(false);
+
+        if (CampusLifeGameManager.Instance != null &&
+            CampusLifeGameManager.Instance.IsMiniGame)
+        {
+            CampusLifeGameManager.Instance.ExitMiniGame();
+        }
+
+        isTyping = false;
+        isChoiceTime = false;
+        isEnd = false;
     }
 }
