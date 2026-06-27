@@ -2,6 +2,8 @@ using UnityEngine;
 
 public sealed class HeartSpawnManager : MonoBehaviour
 {
+    public DatingIntroController datingIntroController;
+    
     [Header("--- References ---")]
     public HeartPickup heartPrefab;
     public Transform player;
@@ -75,6 +77,10 @@ public sealed class HeartSpawnManager : MonoBehaviour
         currentHeart = null;
         respawnTimer = respawnDelay;
         if (arrowIndicator != null) arrowIndicator.Hide();
+        if (datingIntroController != null)
+        {
+            datingIntroController.OpenDatingIntro();
+        }
     }
 
     public void NotifyHeartExpired(HeartPickup heart)

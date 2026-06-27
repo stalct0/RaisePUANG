@@ -312,17 +312,15 @@ public class NovelSceneManager : MonoBehaviour
 
     private void CompleteDate()
     {
-        if (currentDialogueData.storyKind == NovelStoryKind.Date &&
-            DatingProgressManager.Instance != null)
+        string resultText = "오늘 데이트는 무난하게 지나간 것 같다.";
+
+        if (DatingProgressManager.Instance != null)
         {
-            DatingProgressManager.Instance.CompleteDate(
-                currentDialogueData.datingCharacter,
-                currentDialogueData.datingLocation,
-                pendingAffection
-            );
+            DatingProgressManager.Instance.CompleteDate(pendingAffection);
+            resultText = DatingProgressManager.Instance.GetTodayDateResultText(pendingAffection);
         }
 
-        ShowSystemMessage("System", GetTodayDateResultText(pendingAffection));
+        ShowSystemMessage("System", resultText);
         isEnd = true;
     }
 
@@ -519,5 +517,22 @@ public class NovelSceneManager : MonoBehaviour
         isChoiceTime = false;
         isEnd = false;
         pendingAffection = 0;
+    }
+    public void OpenDatingFromIntro(DialogueData data)
+    {
+        if (data == null) return;
+
+        currentDialogueData = data;
+        pendingAffection = 0;
+        isOpen = true;
+
+        dialogueLog.Clear();
+        CloseLog();
+        StopAuto();
+
+        if (datingPanel != null)
+            datingPanel.SetActive(true);
+
+        StartScene(data.startSceneId);
     }
 }

@@ -77,10 +77,10 @@ public class UIManager : MonoBehaviour
     {
         CampusLifeStats stats = gameManager.Stats;
 
-        moneyText.text = $"돈: {stats.money}";
-        conditionText.text = $"컨디션: {stats.condition}";
-        gradesText.text = $"성적: {stats.grades}";
-        relationshipText.text = $"친구관계: {stats.relationship}";
+        moneyText.text = $"{stats.money}";
+        conditionText.text = $"{stats.condition}";
+        gradesText.text = $"{stats.grades}";
+        relationshipText.text = $"{stats.relationship}";
         semesterText.text = $"학기: {gameManager.GetSemesterName()}";
 
         RefreshTimeBar();
