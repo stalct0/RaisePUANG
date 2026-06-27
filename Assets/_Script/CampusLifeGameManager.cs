@@ -129,12 +129,18 @@ public class CampusLifeGameManager : MonoBehaviour
         if (currentPhase != GamePhase.Playing && currentPhase != GamePhase.MiniGame)
             return false;
 
-        CampusLifeStatDelta appliedDelta = currentStats.ApplyAvailable(delta);
-
-        if (appliedDelta.IsZero)
+        if (delta.IsZero)
             return false;
 
-        dialogue = BuildActivityDialogue(activityName, appliedDelta);
+        if (!CanApplyDelta(delta, out string failReason))
+        {
+            dialogue = $"{activityName} 실패: {failReason}";
+            NotifyChanged();
+            return false;
+        }
+
+        currentStats.Apply(delta);
+        dialogue = BuildActivityDialogue(activityName, delta);
         NotifyChanged();
 
         return true;

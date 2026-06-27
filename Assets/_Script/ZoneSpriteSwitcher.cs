@@ -23,12 +23,14 @@ public class ZoneSpriteSwitcher : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
 
     private bool isPlayerInside;
+    private bool interactionAllowed = true;
     private float accumulatedInsideTime;
     private int evolutionStage;
 
     public ZoneType ZoneType => zoneType;
     public int CurrentLevel => evolutionStage + 1;
     public float AccumulatedInsideTime => accumulatedInsideTime;
+    public bool InteractionAllowed => interactionAllowed;
 
     private void Awake()
     {
@@ -44,6 +46,9 @@ public class ZoneSpriteSwitcher : MonoBehaviour
     private void Update()
     {
         if (!isPlayerInside)
+            return;
+
+        if (!interactionAllowed)
             return;
 
         if (evolutionStage >= 2)
@@ -76,6 +81,16 @@ public class ZoneSpriteSwitcher : MonoBehaviour
             return;
 
         isPlayerInside = false;
+        interactionAllowed = true;
+        ApplyCurrentSprite();
+    }
+
+    public void SetInteractionAllowed(bool allowed)
+    {
+        if (interactionAllowed == allowed)
+            return;
+
+        interactionAllowed = allowed;
         ApplyCurrentSprite();
     }
 
@@ -84,7 +99,7 @@ public class ZoneSpriteSwitcher : MonoBehaviour
         if (targetRenderer == null)
             return;
 
-        Sprite nextSprite = isPlayerInside ? GetActiveSprite() : GetNormalSprite();
+        Sprite nextSprite = isPlayerInside && interactionAllowed ? GetActiveSprite() : GetNormalSprite();
 
         if (nextSprite != null)
             targetRenderer.sprite = nextSprite;
