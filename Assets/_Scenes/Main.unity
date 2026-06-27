@@ -347,6 +347,7 @@ GameObject:
   - component: {fileID: 18229349}
   - component: {fileID: 18229351}
   - component: {fileID: 18229352}
+  - component: {fileID: 18229353}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -555,6 +556,21 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
+--- !u!114 &18229353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18229345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87efa66e572a48c438bfac7c013272a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatPopupSpawner
+  popupPrefab: {fileID: 3539571521131356274, guid: 57fff99fe420a4142bc4d843b575de86, type: 3}
+  target: {fileID: 18229348}
+  offset: {x: 0, y: 0.75, z: 0}
 --- !u!1 &22878896
 GameObject:
   m_ObjectHideFlags: 0
@@ -30073,6 +30089,7 @@ MonoBehaviour:
   lectureStateName: lecture
   teamProjectStateName: teamproj
   blockedStateName: idle1
+  statPopupSpawner: {fileID: 18229353}
 --- !u!4 &1862396849
 Transform:
   m_ObjectHideFlags: 0
