@@ -1501,6 +1501,148 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &279850341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 279850342}
+  - component: {fileID: 279850346}
+  - component: {fileID: 279850345}
+  - component: {fileID: 279850344}
+  - component: {fileID: 279850343}
+  m_Layer: 5
+  m_Name: DeliveryGameArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &279850342
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279850341}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.9639599, y: 1.9639599, z: 1.9639599}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 643045675}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.00068665, y: 0.00066376}
+  m_SizeDelta: {x: 506.7, y: 476.05}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &279850343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279850341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9a1de8eb614a6d85d9a8e2f6990e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliverySpawner
+  minSpawnInterval: 0.1
+  maxSpawnInterval: 0.3
+  obstacleChance: 0.55
+  coinChance: 0.35
+  starChance: 0.35
+  starCooldown: 5
+  obstacleFallSpeed: 520
+  coinFallSpeed: 420
+  starFallSpeed: 600
+--- !u!114 &279850344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279850341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d2b2189f3744ada06425e7e65575c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliveryGameManager
+  playArea: {fileID: 279850342}
+  spawner: {fileID: 279850343}
+  hud: {fileID: 0}
+  uiFont: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
+  playerPrefab: {fileID: 100000, guid: 812f2ce3160443c589121f28fc842181, type: 3}
+  obstaclePrefab: {fileID: 100000, guid: 822f2ce3160443c589121f28fc842181, type: 3}
+  coinPrefab: {fileID: 100000, guid: 823f2ce3160443c589121f28fc842181, type: 3}
+  starPrefab: {fileID: 100000, guid: 824f2ce3160443c589121f28fc842181, type: 3}
+  laneCount: 4
+  playerStartLaneIndex: 1
+  lanePadding: 120
+  playerMoveLerpSpeed: 16
+  minSpawnInterval: 0.1
+  maxSpawnInterval: 0.4
+  obstacleChance: 0.63
+  coinChance: 0.35
+  starChance: 0.05
+  obstacleFallSpeed: 520
+  coinFallSpeed: 420
+  starFallSpeed: 460
+  startLife: 3
+  gameDuration: 45
+  scorePerCoin: 10
+  moneyPerCoin: 100
+  basePay: 500
+  scoreToPayMultiplier: 20
+  lifeBonusPay: 300
+  minInvincibleSeconds: 5
+  maxInvincibleSeconds: 10
+  startOnPlay: 1
+  playerSize: {x: 72, y: 72}
+  itemSize: {x: 56, y: 56}
+--- !u!114 &279850345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279850341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.08, g: 0.11, b: 0.16, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &279850346
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279850341}
+  m_CullTransparentMesh: 1
 --- !u!1 &312432945
 GameObject:
   m_ObjectHideFlags: 0
@@ -3227,7 +3369,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &643045675
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3239,7 +3381,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 279850342}
   m_Father: {fileID: 1096351388}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5486,6 +5629,7 @@ GameObject:
   - component: {fileID: 1096351388}
   - component: {fileID: 1096351390}
   - component: {fileID: 1096351389}
+  - component: {fileID: 1096351391}
   m_Layer: 5
   m_Name: MiniGameRoot
   m_TagString: Untagged
@@ -5599,6 +5743,23 @@ MonoBehaviour:
   strongConditionCost: -4
   decentConditionCost: -5
   scrapeConditionCost: -6
+--- !u!114 &1096351391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096351387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd7447d46468934397e0c14fa87f803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriveMiniGameController
+  dimPanel: {fileID: 871706794}
+  drivePanel: {fileID: 643045674}
+  deliveryGameManager: {fileID: 279850344}
+  debugOpenKey: 36
+  closeKey: 60
 --- !u!1 &1107233088
 GameObject:
   m_ObjectHideFlags: 0
@@ -28728,6 +28889,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4731ce0a869d1d4a962e4265f710dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZoneActivityApplier
+  statTickInterval: 1
+  playerAnimator: {fileID: 0}
+  idleController: {fileID: 0}
+  drinkController: {fileID: 0}
+  lectureController: {fileID: 0}
+  teamProjectController: {fileID: 0}
 --- !u!4 &1862396849
 Transform:
   m_ObjectHideFlags: 0
