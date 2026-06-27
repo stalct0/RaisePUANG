@@ -1,25 +1,43 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class DriveMiniGameController : MonoBehaviour
 {
-    [Header("UI")]
+    [SerializeField] private TMP_Text resultText;
+    
+    [Header("Common")]
     [SerializeField] private GameObject dimPanel;
     [SerializeField] private GameObject drivePanel;
 
+    [Header("Views")]
+    [SerializeField] private GameObject introView;
+    [SerializeField] private GameObject gameView;
+    [SerializeField] private GameObject resultView;
+    
     [Header("Game")]
+    [SerializeField] private GameObject deliveryGameArea;
     [SerializeField] private DeliveryGameManager deliveryGameManager;
-
+    
+    [Header("Buttons")]
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button closeButton;
+    
     [Header("Debug")]
     [SerializeField] private Key debugOpenKey = Key.V;
-    [SerializeField] private Key closeKey = Key.Escape;
 
     private bool isOpen;
 
     private void Start()
     {
-        if (drivePanel != null)
-            drivePanel.SetActive(false);
+        if (startButton != null)
+            startButton.onClick.AddListener(StartMiniGame);
+
+        if (closeButton != null)
+            closeButton.onClick.AddListener(CloseMiniGame);
+
+        CloseImmediate();
     }
 
     private void Update()
@@ -27,56 +45,83 @@ public class DriveMiniGameController : MonoBehaviour
 #if UNITY_EDITOR
         if (!isOpen && Keyboard.current != null && Keyboard.current[debugOpenKey].wasPressedThisFrame)
         {
-            OpenDriveMiniGame();
+            OpenMiniGame();
         }
 #endif
-
-        if (isOpen && Keyboard.current != null && Keyboard.current[closeKey].wasPressedThisFrame)
-        {
-            CloseDriveMiniGame();
-        }
     }
 
-    public void OpenDriveMiniGame()
+    public void OpenMiniGame()
     {
-        if (isOpen) return;
-
-        if (CampusLifeGameManager.Instance == null)
-            return;
-
-        if (!CampusLifeGameManager.Instance.IsPlaying)
-            return;
+        if (CampusLifeGameManager.Instance == null) return;
+        if (!CampusLifeGameManager.Instance.IsPlaying) return;
 
         isOpen = true;
 
         CampusLifeGameManager.Instance.EnterMiniGame();
 
-        if (dimPanel != null)
-            dimPanel.SetActive(true);
+        dimPanel.SetActive(true);
+        drivePanel.SetActive(true);
 
-        if (drivePanel != null)
-            drivePanel.SetActive(true);
+        introView.SetActive(true);
+        gameView.SetActive(false);
+        resultView.SetActive(false);
+
+        closeButton.gameObject.SetActive(false);
+    }
+
+    private void StartMiniGame()
+    {
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(true);
+        if (resultView != null) resultView.SetActive(false);
+
+        if (deliveryGameArea != null)
+            deliveryGameArea.SetActive(true);
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
 
         if (deliveryGameManager != null)
             deliveryGameManager.StartGame();
     }
 
-    public void CloseDriveMiniGame()
+    public void ShowResult(string result)
     {
-        if (!isOpen) return;
+        if (deliveryGameArea != null)
+            deliveryGameArea.SetActive(false);
 
-        isOpen = false;
+        if (gameView != null)
+            gameView.SetActive(false);
 
-        if (drivePanel != null)
-            drivePanel.SetActive(false);
+        if (resultView != null)
+            resultView.SetActive(true);
 
-        if (dimPanel != null)
-            dimPanel.SetActive(false);
+        if (resultText != null)
+            resultText.text = result;
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(true);
+    }
+    
+    private void CloseMiniGame()
+    {
+        CloseImmediate();
 
         if (CampusLifeGameManager.Instance != null &&
             CampusLifeGameManager.Instance.IsMiniGame)
         {
             CampusLifeGameManager.Instance.ExitMiniGame();
         }
+    }
+
+    private void CloseImmediate()
+    {
+        isOpen = false;
+
+        if (dimPanel != null) dimPanel.SetActive(false);
+        if (drivePanel != null) drivePanel.SetActive(false);
+        if (introView != null) introView.SetActive(false);
+        if (gameView != null) gameView.SetActive(false);
+        if (resultView != null) resultView.SetActive(false);
     }
 }
