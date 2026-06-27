@@ -19,8 +19,7 @@ public sealed class DeliveryFallingItem : MonoBehaviour
 
     private void Update()
     {
-        RectTransform.anchoredPosition += Vector2.down * (fallSpeed * Time.deltaTime);
-
+        RectTransform.anchoredPosition += Vector2.down * (fallSpeed * Time.unscaledDeltaTime);
         if (playArea != null && RectTransform.anchoredPosition.y < -playArea.rect.height * 0.5f - 120f)
         {
             manager.NotifyItemMissed(this);
