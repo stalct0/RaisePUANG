@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public enum GamePhase
 {
@@ -18,6 +21,14 @@ public class CampusLifeGameManager : MonoBehaviour
     private CampusLifeStats semesterStartStats = new CampusLifeStats();
     private CampusLifeStatDelta lastSemesterDelta;
     private string lastSemesterSummaryText;
+    
+    private string finalEndingName;
+    private string finalEndingDescription;
+    private EndingType finalEndingType;
+
+    public string FinalEndingName => finalEndingName;
+    public string FinalEndingDescription => finalEndingDescription;
+    public EndingType FinalEndingType => finalEndingType;
     
     [Header("Semester")]
     [SerializeField] private int maxSemester = 8;
@@ -255,6 +266,9 @@ public class CampusLifeGameManager : MonoBehaviour
         currentSemester++;
         currentTime = 0f;
         currentPhase = GamePhase.Playing;
+        
+        if (SemesterBuffManager.Instance != null)
+            SemesterBuffManager.Instance.ClearSemesterBuffs();
 
         semesterStartStats = currentStats.Clone();
 
@@ -272,13 +286,19 @@ public class CampusLifeGameManager : MonoBehaviour
 
     private void FinishGame()
     {
+        if (EndingManager.Instance != null)
+        {
+            EndingManager.Instance.TriggerNormalEnding();
+            return;
+        }
+
         currentPhase = GamePhase.Finished;
-
-        dialogue =
-            "8학기 종료. 대학생활이 끝났다.\n" +
-            $"최종 결과: {GetEndingName()}\n\n" +
-            "SPACE를 눌러 다시 시작";
-
+        Time.timeScale = 0f;
+        NotifyChanged();
+    }
+    public void SetFinishedByEnding()
+    {
+        currentPhase = GamePhase.Finished;
         Time.timeScale = 0f;
         NotifyChanged();
     }
@@ -390,5 +410,60 @@ public class CampusLifeGameManager : MonoBehaviour
             return "이번 학기는 큰 변화 없이 지나갔다.";
 
         return "이번 학기는 전반적으로 손해가 컸다.";
+    }
+    
+    public void TriggerEnding(EndingType type, string endingName, string description)
+    {
+        currentPhase = GamePhase.Finished;
+
+        finalEndingType = type;
+        finalEndingName = endingName;
+        finalEndingDescription = description;
+
+        dialogue =
+            $"{endingName}\n\n" +
+            $"{description}\n\n" +
+            "SPACE를 눌러 다시 시작";
+
+        Time.timeScale = 0f;
+        NotifyChanged();
+    }
+    private void DebugSetZoneLevel(ZoneType zoneType, int level)
+    {
+        ZoneSpriteSwitcher[] switchers = FindObjectsByType<ZoneSpriteSwitcher>(
+            FindObjectsSortMode.None);
+
+        foreach (ZoneSpriteSwitcher switcher in switchers)
+        {
+            if (switcher.ZoneType == zoneType)
+            {
+                switcher.DebugSetLevel(level);
+                return;
+            }
+        }
+    }
+    
+    [ContextMenu("DEBUG -> Jump To 4-2")]
+    public void DebugJumpTo42()
+    {
+        currentSemester = 8;
+        currentTime = 0f;
+        currentPhase = GamePhase.Playing;
+
+// 원하는 테스트용 스탯
+        currentStats.money = 200;
+        currentStats.condition = 80;
+        currentStats.grades = 120;
+        currentStats.relationship = 60;
+
+// 구역 레벨도 테스트용으로
+        DebugSetZoneLevel(ZoneType.Classroom, 3);
+        DebugSetZoneLevel(ZoneType.Drink, 2);
+        DebugSetZoneLevel(ZoneType.TeamProjectRoom, 1);
+        DebugSetZoneLevel(ZoneType.Work, 3);
+
+        semesterStartStats = currentStats.Clone();
+
+        NotifyChanged();
     }
 }

@@ -134,4 +134,25 @@ public class ZoneSpriteSwitcher : MonoBehaviour
                 return activeStage2 != null ? activeStage2 : GetNormalSprite();
         }
     }
+    public void ForceLevelUp()
+    {
+        if (evolutionStage >= 2)
+            return;
+
+        evolutionStage++;
+        accumulatedInsideTime = 0f;
+        ApplyCurrentSprite();
+
+        Debug.Log($"[ZoneSpriteSwitcher] {gameObject.name} force level up to {CurrentLevel}.", this);
+    }
+    
+    public void DebugSetLevel(int level)
+    {
+        level = Mathf.Clamp(level, 1, 3);
+
+        evolutionStage = level - 1;
+        accumulatedInsideTime = 0f;
+
+        ApplyCurrentSprite();
+    }
 }

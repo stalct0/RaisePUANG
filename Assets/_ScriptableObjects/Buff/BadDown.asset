@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cccd6cb7a443a9b4285ba84a96fd6f9d, type: 3}
+  m_Name: BadDown
+  m_EditorClassIdentifier: Assembly-CSharp::SemesterBuff
+  title: "\uD300\uC5D0 \uC2B9\uAC1D\uBC16\uC5D0 \uC5C6\uB2E4"
+  description: "\uD300\uD50C \uD6A8\uC728 \uD06C\uAC8C \uAC10\uC18C"
+  grade: 0
+  effectType: 0
+  targetZone: 3
+  targetStat: 3
+  multiplier: 0.25
+  instantAmount: 0
+  duration: 0

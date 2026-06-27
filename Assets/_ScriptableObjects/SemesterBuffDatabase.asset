@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50c36cfb708a6a459d9942282af510a, type: 3}
+  m_Name: SemesterBuffDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::SemesterBuffDatabase
+  goodBuffs:
+  - {fileID: 11400000, guid: e3c47568833c9584197e36ebadc24493, type: 2}
+  - {fileID: 11400000, guid: 9382f17e28b09a641a6796c810004be6, type: 2}
+  - {fileID: 11400000, guid: 282c30aea7d50244a8f5b2a43e2eaa5b, type: 2}
+  - {fileID: 11400000, guid: 75b5b9e3656cd0a4299f859e6f2433b4, type: 2}
+  - {fileID: 11400000, guid: 523477968015a694ca5f453868d9cd6f, type: 2}
+  - {fileID: 11400000, guid: bb08f25136111c945b764170c7887705, type: 2}
+  - {fileID: 11400000, guid: 65624d00a1a417a4e873782e007dac40, type: 2}
+  midBuffs:
+  - {fileID: 11400000, guid: b20bbb9443a514e429b20177143a3af0, type: 2}
+  - {fileID: 11400000, guid: 52b1f652e9fe21c4d99d18740b415559, type: 2}
+  - {fileID: 11400000, guid: 5b25c2d39772466499212151d5041da2, type: 2}
+  - {fileID: 11400000, guid: dc857b18536717e4191ccae51f0d7ebb, type: 2}
+  - {fileID: 11400000, guid: faf22b21d752b8347876a3555de6430f, type: 2}
+  midDebuffs:
+  - {fileID: 11400000, guid: b8cee8e5edb045d408bb9151bd549468, type: 2}
+  - {fileID: 11400000, guid: 3720f8b8c26c12a449ac862ff32b35cc, type: 2}
+  - {fileID: 11400000, guid: 38fe581002c61154a87a74640d5c6180, type: 2}
+  - {fileID: 11400000, guid: 69973e78ca0fec14b91aee4039c36806, type: 2}
+  - {fileID: 11400000, guid: b1646d960e1ac1a40b3928790d819bec, type: 2}
+  badDebuffs:
+  - {fileID: 11400000, guid: 6159e4dfcac50a444bc53d6a085b262c, type: 2}
+  - {fileID: 11400000, guid: 6395b92e10bd442438b56c2ca6642aad, type: 2}
+  - {fileID: 11400000, guid: f8c1ca53496f5cd4ba2faf0e457babb5, type: 2}

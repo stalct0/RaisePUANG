@@ -238,20 +238,31 @@ public class ZoneActivityApplier : MonoBehaviour
     {
         int level = GetZoneLevel(zone);
 
+        CampusLifeStatDelta delta;
+
         switch (zone)
         {
             case ZoneType.Drink:
-                return GetDrinkDelta(level);
+                delta = GetDrinkDelta(level);
+                break;
 
             case ZoneType.Classroom:
-                return GetLectureDelta(level);
+                delta = GetLectureDelta(level);
+                break;
 
             case ZoneType.TeamProjectRoom:
-                return GetTeamProjectDelta(level);
+                delta = GetTeamProjectDelta(level);
+                break;
 
             default:
-                return new CampusLifeStatDelta();
+                delta = new CampusLifeStatDelta();
+                break;
         }
+
+        if (SemesterBuffManager.Instance != null)
+            delta = SemesterBuffManager.Instance.ApplyZoneBuffs(zone, delta);
+
+        return delta;
     }
 
     private int GetZoneLevel(ZoneType zone)

@@ -34,6 +34,10 @@ public class ZoneManager : MonoBehaviour
         {
             TryOpenWorkIntro();
         }
+        if (EndingManager.Instance != null)
+        {
+            EndingManager.Instance.NotifyZoneEntered(zone);
+        }
     }
 
     public void ExitZone(ZoneType zone)

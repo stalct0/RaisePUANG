@@ -74,6 +74,9 @@ public sealed class DatingProgressManager : MonoBehaviour
         if (currentDateIndex > MaxDateIndex)
         {
             datingEnded = true;
+
+            if (EndingManager.Instance != null)
+                EndingManager.Instance.TriggerTrueLoveEnding();
         }
     }
 

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57f1dcd140dc20e4793a820c69161b0e, type: 3}
+  m_Name: normal_social_butterfly
+  m_EditorClassIdentifier: Assembly-CSharp::EndingData
+  endingId: normal_social_butterfly
+  endingName: "\uD575\uC778\uC2F8"
+  description: "\uB2F9\uC2E0\uC758 \uB300\uD559\uC0DD\uD65C\uC740 \uB450 \uB2E8\uC5B4\uB85C
+    \uC694\uC57D\uB429\uB2C8\uB2E4. \uBC14\uB85C \uC220\uACFC \uCE5C\uAD6C\uC774\uC8E0.
+    \uB9C9\uCC28\uB97C \uB193\uCCD0 \uB3D9\uC774 \uD2C0 \uB54C\uAE4C\uC9C0 \uC220\uC744
+    \uB9C8\uC2DC\uAC70\uB098, \uAE38\uBC14\uB2E5\uC5D0 \uB110\uBE0C\uB7EC\uC838 \uC7A0\uC744
+    \uC790\uAC70\uB098. \uC5B4\uB5BB\uAC8C \uBCF4\uBA74 \uB300\uD559\uC0DD\uC77C
+    \uB54C\uBC16\uC5D0 \uD560 \uC218 \uC5C6\uB294 \uACBD\uD5D8\uC774\uC5C8\uC744
+    \uAC83\uC785\uB2C8\uB2E4. \uB2F9\uC2E0\uC758 \uAC04\uAC74\uAC15\uC5D0 \uBA85\uBCF5\uC744
+    \uBE55\uB2C8\uB2E4."
+  endingType: 0
+  endingImage: {fileID: 0}
+  showGirlfriendOverlay: 0

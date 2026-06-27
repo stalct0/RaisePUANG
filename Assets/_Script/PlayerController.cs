@@ -46,7 +46,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 targetVelocity = input * maxSpeed;
+        float speedMultiplier = 1f;
+
+        if (SemesterBuffManager.Instance != null)
+            speedMultiplier = SemesterBuffManager.Instance.MoveSpeedMultiplier;
+
+        Vector2 targetVelocity = input * maxSpeed * speedMultiplier;
 
         float accel = input.sqrMagnitude > 0.01f ? acceleration : deceleration;
 

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57f1dcd140dc20e4793a820c69161b0e, type: 3}
+  m_Name: normal_entrepreneur_ceo
+  m_EditorClassIdentifier: Assembly-CSharp::EndingData
+  endingId: normal_entrepreneur_ceo
+  endingName: "\uC559\uD2B8\uB808\uD504\uB808\uB108\uC2ED \uC2DC\uB300\uC758 CEO"
+  description: "\uC5EC\uB290 \uB0A0\uACFC \uB2E4\uB984\uC5C6\uC774 \uC624\uD1A0\uBC14\uC774\uB97C
+    \uBAB0\uB358 \uB2F9\uC2E0\uC740 \uBB38\uB4DD \uAE68\uB2EC\uC558\uC2B5\uB2C8\uB2E4,
+    \uBC30\uB2EC\uC774\uB77C\uB294 \uAC8C \uC0DD\uAC01\uBCF4\uB2E4 \uB354 \uB300\uB2E8\uD55C
+    \uC0AC\uC5C5 \uC544\uC774\uD15C\uC774 \uB420 \uC218 \uC788\uB2E4\uB294 \uC0AC\uC2E4\uC744\uC694.
+    \uB2F9\uC2E0\uC740 \uD559\uAD50\uC5D0\uC11C \uBC30\uC6B4 \uAE30\uC5C5\uAC00\uC801
+    \uC790\uC9C8\uACFC \uC9C0\uC2DD, \uADF8\uB9AC\uACE0 \uC9C1\uC811 \uB3C4\uB85C
+    \uC704\uB97C \uB2EC\uB9B0 \uACBD\uD5D8\uC744 \uCD1D\uB3D9\uC6D0\uD558\uC5EC \uC9C1\uC811
+    \uBC30\uB2EC\uC758 \uB9CC\uC871 CEO\uAC00 \uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB2F9\uC2E0\uC740
+    \uB124\uCE74\uB77C\uCFE0\uBC30\uB2F9\uD1A0\uB97C \uB118\uC5B4\uC124 \uBC30\uCE74\uB77C\uCFE0\uB124\uB2F9\uD1A0\uC758
+    \uC2DC\uB300\uB97C \uC5F4 \uAC83\uC785\uB2C8\uB2E4."
+  endingType: 0
+  endingImage: {fileID: 0}
+  showGirlfriendOverlay: 0

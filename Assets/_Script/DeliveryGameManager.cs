@@ -354,7 +354,12 @@ public sealed class DeliveryGameManager : MonoBehaviour
         int pay = life > 0
             ? basePay + earnedMoneyFromCoins + score * scoreToPayMultiplier + life * lifeBonusPay
             : 0;
-
+        
+        bool success = life > 0;
+        if (success && WorkZoneProgressManager.Instance != null)
+        {
+            WorkZoneProgressManager.Instance.RegisterDeliverySuccess();
+        }
         if (pay > 0)
         {
             ApplyPay(pay);
@@ -371,16 +376,21 @@ public sealed class DeliveryGameManager : MonoBehaviour
             driveController.ShowResult(LastResultText);
     }
 
-    private void ApplyPay(int pay)
+    private void ApplyPay(int basePay)
     {
+        int level = GetWorkZoneLevel();
+
+        int finalPay = basePay * level;
+        int conditionCost = -5 * level;
+
         if (CampusLifeGameManager.Instance != null)
         {
             CampusLifeGameManager.Instance.TryApplyActivity(
-                "배달 알바",
+                $"배달 알바 Lv.{level}",
                 new CampusLifeStatDelta
                 {
-                    money = pay,
-                    condition = -5
+                    money = finalPay,
+                    condition = conditionCost
                 }
             );
         }
@@ -425,5 +435,18 @@ public sealed class DeliveryGameManager : MonoBehaviour
 
         activeItems.Remove(item);
         Destroy(item.gameObject);
+    }
+    
+    private int GetWorkZoneLevel()
+    {
+        ZoneSpriteSwitcher[] switchers = FindObjectsOfType<ZoneSpriteSwitcher>();
+
+        foreach (ZoneSpriteSwitcher switcher in switchers)
+        {
+            if (switcher != null && switcher.ZoneType == ZoneType.Work)
+                return Mathf.Clamp(switcher.CurrentLevel, 1, 3);
+        }
+
+        return 1;
     }
 }

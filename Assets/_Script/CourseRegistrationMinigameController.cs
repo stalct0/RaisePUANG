@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class CourseRegistrationMinigameController : MonoBehaviour
 {
     public static CourseRegistrationMinigameController Instance { get; private set; }
-
+    [Header("Reward Selection")]
+    [SerializeField] private SemesterBuffSelectionUI buffSelectionUI;
+    
     [Header("Panel")]
     [SerializeField] private GameObject dimPanel;
     [SerializeField] private GameObject courseRegistrationPanel;
@@ -42,8 +44,12 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
     [Header("Result UI")]
     [SerializeField] private TMP_Text resultText;
-    [SerializeField] private Button closeButton;
-
+    [SerializeField] private Button rewardButton1;
+    [SerializeField] private Button rewardButton2;
+    [SerializeField] private Button rewardButton3;
+    [SerializeField] private TMP_Text rewardButtonText1;
+    [SerializeField] private TMP_Text rewardButtonText2;
+    [SerializeField] private TMP_Text rewardButtonText3;
     [Header("Debug")]
     [SerializeField] private Key debugOpenKey = Key.R;
     [SerializeField] private Key closeKey = Key.Escape;
@@ -86,7 +92,8 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     private float cueShownAt;
     private float totalReactionTime;
     private float bestReactionTime = float.MaxValue;
-
+    
+    private SemesterBuff[] currentRewardChoices;
     public bool IsOpen => isOpen;
 
     private void Awake()
@@ -139,9 +146,6 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (startButton != null)
             startButton.onClick.RemoveListener(StartSession);
-
-        if (closeButton != null)
-            closeButton.onClick.RemoveListener(Close);
     }
 
     private void CacheCellImages()
@@ -170,9 +174,6 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     {
         if (startButton != null)
             startButton.onClick.AddListener(StartSession);
-
-        if (closeButton != null)
-            closeButton.onClick.AddListener(Close);
 
         HideCellButtonLabels();
 
@@ -295,9 +296,6 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (introView != null) introView.SetActive(true);
         if (gameView != null) gameView.SetActive(false);
         if (resultView != null) resultView.SetActive(false);
-
-        if (closeButton != null)
-            closeButton.gameObject.SetActive(false);
         
         SetCellsInteractable(false);
         HideCellButtonLabels();
@@ -320,9 +318,6 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (introView != null) introView.SetActive(false);
         if (gameView != null) gameView.SetActive(true);
         if (resultView != null) resultView.SetActive(false);
-
-        if (closeButton != null)
-            closeButton.gameObject.SetActive(false);
 
         SetCellsInteractable(true);
         ResetCells();
@@ -488,32 +483,25 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         SetCellsInteractable(false);
 
-        CampusLifeStatDelta reward = BuildRewardDelta();
-
-        bool applied = CampusLifeGameManager.Instance != null &&
-                       CampusLifeGameManager.Instance.TryApplyActivity("수강신청", reward);
+        BuffGrade grade = GetResultGrade();
 
         if (introView != null) introView.SetActive(false);
         if (gameView != null) gameView.SetActive(false);
         if (resultView != null) resultView.SetActive(true);
-
-        if (closeButton != null)
-            closeButton.gameObject.SetActive(true);
 
         if (resultText != null)
         {
             resultText.text =
                 $"수강신청 결과\n\n" +
                 $"성공: {successCount}/{roundsPerSession}\n" +
-                $"실패: {missCount}\n" +
-                $"성적: +{reward.grades}\n" +
-                $"컨디션: {reward.condition}\n\n" +
+                $"실패: {missCount}\n\n" +
                 GetPerformanceText() + "\n\n" +
-                (applied ? "결과가 적용되었습니다." : "결과 적용 실패.") + "\n\n" +
-                "닫기 버튼을 눌러 돌아가기";
+                "하나를 선택하세요.";
         }
-    }
 
+        if (buffSelectionUI != null)
+            buffSelectionUI.Open(grade, this);
+    }
     private CampusLifeStatDelta BuildRewardDelta()
     {
         if (successCount >= 6)
@@ -692,8 +680,31 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
         if (resultView != null)
             resultView.SetActive(false);
-
-        if (closeButton != null)
-            closeButton.gameObject.SetActive(false);
     }
+    
+    private BuffGrade GetResultGrade()
+    {
+        if (successCount >= 6)
+            return BuffGrade.Good;
+
+        if (successCount >= 4)
+            return BuffGrade.MidBuff;
+
+        if (successCount >= 2)
+            return BuffGrade.MidDebuff;
+
+        return BuffGrade.Bad;
+    }
+    
+    public void CloseAfterRewardSelected()
+    {
+        CloseImmediate();
+
+        if (CampusLifeGameManager.Instance != null &&
+            CampusLifeGameManager.Instance.IsMiniGame)
+        {
+            CampusLifeGameManager.Instance.ExitMiniGame();
+        }
+    }
+    
 }
