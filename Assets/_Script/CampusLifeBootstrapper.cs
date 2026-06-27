@@ -19,9 +19,9 @@ public static class CampusLifeBootstrapper
             manager = runtimeRoot.AddComponent<CampusLifeGameManager>();
         }
 
-        if (Object.FindFirstObjectByType<CampusLifeHud>() == null)
+        if (!ShouldShowCampusLifeHud())
         {
-            manager.gameObject.AddComponent<CampusLifeHud>();
+            RemoveCampusLifeHud();
         }
     }
 
@@ -29,6 +29,21 @@ public static class CampusLifeBootstrapper
     {
         Scene activeScene = SceneManager.GetActiveScene();
         return activeScene.name == "Simulator" || Object.FindFirstObjectByType<NovelSceneManager>() != null;
+    }
+
+    private static bool ShouldShowCampusLifeHud()
+    {
+        Scene activeScene = SceneManager.GetActiveScene();
+        CampusLifeHud[] huds = Object.FindObjectsByType<CampusLifeHud>(FindObjectsSortMode.None);
+        foreach (CampusLifeHud hud in huds)
+        {
+            if (hud.gameObject.scene == activeScene)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void RemoveCampusLifeHud()

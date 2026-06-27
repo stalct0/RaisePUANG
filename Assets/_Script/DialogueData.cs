@@ -14,6 +14,13 @@ public struct DialogueLine
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Create New Dialogue")]
 public class DialogueData : ScriptableObject
 {
+    [Header("--- 스토리 타입 ---")]
+    public NovelStoryKind storyKind = NovelStoryKind.Normal;
+    public DatingCharacter datingCharacter = DatingCharacter.None;
+    public DatingLocation datingLocation = DatingLocation.None;
+    public bool completesDate;
+    public bool completesMeeting;
+
     [Header("--- 이 스토리가 시작될 때 변화할 스탯 값 ---")]
     public int moneyChange;
     public int conditionChange;
@@ -29,8 +36,10 @@ public class DialogueData : ScriptableObject
     [Header("--- 선택지 ---")]
     public string choiceTextA;
     public DialogueData nextDialogueA;
+    public int choiceAffectionA;
     public string choiceTextB;
     public DialogueData nextDialogueB;
+    public int choiceAffectionB;
 
     public bool HasChoices => nextDialogueA != null || nextDialogueB != null;
 }

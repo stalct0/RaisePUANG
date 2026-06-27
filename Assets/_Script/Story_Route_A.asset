@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14ba248080591843a816c52cec034f3, type: 3}
   m_Name: Story_Route_A
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  storyKind: 0
+  datingCharacter: 0
+  datingLocation: 0
+  completesDate: 0
+  completesMeeting: 0
   moneyChange: -5000
   conditionChange: -15
   gradeChange: 0
@@ -29,5 +34,7 @@ MonoBehaviour:
     backgroundName: ""
   choiceTextA: ""
   nextDialogueA: {fileID: 0}
+  choiceAffectionA: 0
   choiceTextB: ""
   nextDialogueB: {fileID: 0}
+  choiceAffectionB: 0
