@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d401083a199170458488724cf385cd2, type: 3}
   m_Name: DatingRouteDatabase
   m_EditorClassIdentifier: Assembly-CSharp::DatingRouteDatabase
-  entries: []
+  entries:
+  - character: 1
+    dateIndex: 0
+    dialogueData: {fileID: 0}
+  - character: 0
+    dateIndex: 0
+    dialogueData: {fileID: 0}

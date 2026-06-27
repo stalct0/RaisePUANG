@@ -1988,6 +1988,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 212016101}
+  - component: {fileID: 212016102}
   m_Layer: 0
   m_Name: DatingProgressManager
   m_TagString: Untagged
@@ -2010,6 +2011,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1263699691}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &212016102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212016100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda7106aee66e2c40b82f86889293896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DatingProgressManager
+  routeDatabase: {fileID: 0}
+  selectedGirlfriend: 0
+  currentDateIndex: 1
+  totalDateCount: 0
+  datingEnded: 0
 --- !u!1 &221048309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2527,6 +2545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b3ac31fa12448f80e12319a9cc996e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartSpawnManager
+  datingIntroController: {fileID: 0}
   heartPrefab: {fileID: 100004, guid: 11df54568da944dba7270ef1a4337b29, type: 3}
   player: {fileID: 18229348}
   targetCamera: {fileID: 827432331}
@@ -31110,6 +31129,7 @@ GameObject:
   - component: {fileID: 2113151050}
   - component: {fileID: 2113151049}
   - component: {fileID: 2113151048}
+  - component: {fileID: 2113151051}
   m_Layer: 5
   m_Name: MiniGameRoot
   m_TagString: Untagged
@@ -31248,6 +31268,25 @@ MonoBehaviour:
   strongConditionCost: -4
   decentConditionCost: -5
   scrapeConditionCost: -6
+--- !u!114 &2113151051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2113151046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c9aad2fa18e25443b1aa9291bbf6064, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DatingIntroController
+  dimPanel: {fileID: 0}
+  datingIntroPanel: {fileID: 0}
+  titleText: {fileID: 0}
+  descriptionText: {fileID: 0}
+  yesButton: {fileID: 0}
+  noButton: {fileID: 0}
+  novelSceneManager: {fileID: 0}
 --- !u!1 &2115574065
 GameObject:
   m_ObjectHideFlags: 0
