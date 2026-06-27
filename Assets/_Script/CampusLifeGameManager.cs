@@ -112,6 +112,10 @@ public class CampusLifeGameManager : MonoBehaviour
 
         if (!CanApplyDelta(delta, out string failReason))
         {
+            Debug.Log(
+                $"[CampusLifeGameManager] Activity '{activityName}' failed before applying stats: {failReason}. " +
+                $"Delta was {FormatDeltaForLog(delta)}.",
+                this);
             dialogue = $"{activityName} 실패: {failReason}";
             NotifyChanged();
             return false;
@@ -119,6 +123,7 @@ public class CampusLifeGameManager : MonoBehaviour
 
         currentStats.Apply(delta);
         dialogue = BuildActivityDialogue(activityName, delta);
+        Debug.Log($"[CampusLifeGameManager] Activity '{activityName}' applied: {FormatDeltaForLog(delta)}.", this);
         NotifyChanged();
 
         return true;
@@ -127,13 +132,23 @@ public class CampusLifeGameManager : MonoBehaviour
     public bool TryApplyContinuousActivity(string activityName, CampusLifeStatDelta delta)
     {
         if (currentPhase != GamePhase.Playing && currentPhase != GamePhase.MiniGame)
+        {
+            Debug.Log($"[CampusLifeGameManager] Continuous activity '{activityName}' ignored because phase is {currentPhase}.", this);
             return false;
+        }
 
         if (delta.IsZero)
+        {
+            Debug.Log($"[CampusLifeGameManager] Continuous activity '{activityName}' ignored because delta is zero.", this);
             return false;
+        }
 
         if (!CanApplyDelta(delta, out string failReason))
         {
+            Debug.Log(
+                $"[CampusLifeGameManager] Continuous activity '{activityName}' failed before applying stats: {failReason}. " +
+                $"Delta was {FormatDeltaForLog(delta)}.",
+                this);
             dialogue = $"{activityName} 실패: {failReason}";
             NotifyChanged();
             return false;
@@ -141,6 +156,7 @@ public class CampusLifeGameManager : MonoBehaviour
 
         currentStats.Apply(delta);
         dialogue = BuildActivityDialogue(activityName, delta);
+        Debug.Log($"[CampusLifeGameManager] Continuous activity '{activityName}' applied: {FormatDeltaForLog(delta)}.", this);
         NotifyChanged();
 
         return true;
@@ -302,6 +318,11 @@ public class CampusLifeGameManager : MonoBehaviour
             result += $"\n친구관계 {(delta.relationship > 0 ? "+" : "")}{delta.relationship}";
 
         return result;
+    }
+
+    private string FormatDeltaForLog(CampusLifeStatDelta delta)
+    {
+        return $"money={delta.money}, condition={delta.condition}, grades={delta.grades}, relationship={delta.relationship}";
     }
 
     private void NotifyChanged()
