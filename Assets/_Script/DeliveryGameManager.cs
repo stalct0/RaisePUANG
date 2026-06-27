@@ -46,8 +46,6 @@ public sealed class DeliveryGameManager : MonoBehaviour
 
     [Header("--- Runtime Options ---")]
     public bool startOnPlay = true;
-    public bool applyRewardToGameCenter = true;
-    public bool applyRewardToCampusLife = false;
 
     [Header("--- Visual Settings ---")]
     public Vector2 playerSize = new Vector2(72f, 72f);
@@ -337,14 +335,16 @@ public sealed class DeliveryGameManager : MonoBehaviour
 
     private void ApplyPay(int pay)
     {
-        if (applyRewardToGameCenter && GameCenter.Instance != null)
+        if (CampusLifeGameManager.Instance != null)
         {
-            GameCenter.Instance.ChangeStatus(pay, 0, 0, 0);
-        }
-
-        if (applyRewardToCampusLife && CampusLifeGameManager.Instance != null)
-        {
-            CampusLifeGameManager.Instance.TryApplyActivityResult("Delivery", new CampusLifeStatDelta { money = pay });
+            CampusLifeGameManager.Instance.TryApplyActivity(
+                "배달 알바",
+                new CampusLifeStatDelta
+                {
+                    money = pay,
+                    condition = -5
+                }
+            );
         }
     }
 
