@@ -22,6 +22,9 @@ public class ZoneActivityApplier : MonoBehaviour
     [Tooltip("스테이터스가 부족해서 zone 상호작용을 못할 때 재생할 idle 계열 state 이름. 실제 Animator state가 init1이면 여기에 init1을 넣으세요.")]
     [SerializeField] private string blockedStateName = "idle1";
 
+    [Header("Stat Popup")]
+    [SerializeField] private StatPopupSpawner statPopupSpawner;
+
     private float statTickTimer;
     private ZoneType appliedAnimationZone = ZoneType.None;
     private bool appliedBlockedAnimation;
@@ -31,6 +34,14 @@ public class ZoneActivityApplier : MonoBehaviour
     private void Awake()
     {
         RefreshZoneSpriteSwitchers();
+
+        if (statPopupSpawner == null)
+        {
+            Debug.LogError(
+                $"[ZoneActivityApplier] {gameObject.name}: StatPopupSpawner is not assigned. " +
+                "Assign the Player's StatPopupSpawner in the Inspector.",
+                this);
+        }
     }
 
     private void Update()
@@ -116,9 +127,32 @@ public class ZoneActivityApplier : MonoBehaviour
         statTickTimer -= statTickInterval;
 
         if (CampusLifeGameManager.Instance == null)
+        {
+            Debug.LogError($"[ZoneActivityApplier] {gameObject.name}: CampusLifeGameManager.Instance is null.", this);
             return;
+        }
 
-        CampusLifeGameManager.Instance.TryApplyContinuousActivity(GetActivityName(zone), delta);
+        string activityName = GetActivityName(zone);
+        bool applied = CampusLifeGameManager.Instance.TryApplyContinuousActivity(activityName, delta);
+
+        if (!applied)
+        {
+            Debug.Log($"[ZoneActivityApplier] {activityName} stat tick was not applied. No popup will be shown.", this);
+            return;
+        }
+
+        Debug.Log($"[ZoneActivityApplier] Applied {activityName}: {FormatDeltaForLog(delta)}", this);
+
+        if (statPopupSpawner == null)
+        {
+            Debug.LogError(
+                $"[ZoneActivityApplier] {gameObject.name}: Stat tick succeeded, but StatPopupSpawner is not assigned. " +
+                "Assign the Player's StatPopupSpawner in the Inspector.",
+                this);
+            return;
+        }
+
+        statPopupSpawner.ShowDelta(delta);
     }
 
     private void UpdatePlayerAnimation(ZoneType zone, bool canInteract)
@@ -341,5 +375,10 @@ public class ZoneActivityApplier : MonoBehaviour
             default:
                 return "Idle";
         }
+    }
+
+    private string FormatDeltaForLog(CampusLifeStatDelta delta)
+    {
+        return $"money={delta.money}, condition={delta.condition}, grades={delta.grades}, relationship={delta.relationship}";
     }
 }

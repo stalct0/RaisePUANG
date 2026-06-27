@@ -346,6 +346,7 @@ GameObject:
   - component: {fileID: 18229349}
   - component: {fileID: 18229351}
   - component: {fileID: 18229352}
+  - component: {fileID: 18229353}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -554,6 +555,21 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
+--- !u!114 &18229353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18229345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87efa66e572a48c438bfac7c013272a5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StatPopupSpawner
+  popupPrefab: {fileID: 3539571521131356274, guid: 57fff99fe420a4142bc4d843b575de86, type: 3}
+  target: {fileID: 18229348}
+  offset: {x: 0, y: 0.75, z: 0}
 --- !u!1 &42856080
 GameObject:
   m_ObjectHideFlags: 0
@@ -27914,7 +27930,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 14.48, y: 10.86}
+    oldSize: {x: 22.225424, y: 21.319998}
     newSize: {x: 14.48, y: 10.86}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -27971,7 +27987,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5240227779472430109, guid: 8a5534d8300639d4281324edea8ae7dd, type: 3}
+  m_Sprite: {fileID: 2737580827627814240, guid: 2ea54cbe493f42a4faaba3f2f6a09feb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -28744,6 +28760,12 @@ MonoBehaviour:
   drinkController: {fileID: 9100000, guid: c616a07af110284438fd3ff6f9b826ce, type: 2}
   lectureController: {fileID: 9100000, guid: 10f698baf1f5133478df70bc3abdb0a2, type: 2}
   teamProjectController: {fileID: 9100000, guid: b44b527e54e0bf440b6826ad59f0d4cf, type: 2}
+  idleStateName: idle1
+  drinkStateName: drink
+  lectureStateName: lecture
+  teamProjectStateName: teamproj
+  blockedStateName: idle1
+  statPopupSpawner: {fileID: 18229353}
 --- !u!4 &1862396849
 Transform:
   m_ObjectHideFlags: 0
