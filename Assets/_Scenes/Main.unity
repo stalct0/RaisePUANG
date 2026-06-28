@@ -2300,6 +2300,10 @@ MonoBehaviour:
   currentDateIndex: 1
   totalDateCount: 0
   datingEnded: 0
+  currentSemesterDateCount: 0
+  previousSemesterDateCount: 0
+  firstRomanceEventCompleted: 0
+  romanceSystemLocked: 0
 --- !u!1 &221048309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,7 +2804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d662f5c14974ce7adea1bb643bc81d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartArrowIndicator
-  canvas: {fileID: 0}
+  canvas: {fileID: 85715985}
   arrowSprite: {fileID: 5453183695961380441, guid: 6bcc7ef4b21d7444c8dc71aeccc3cece, type: 3}
   arrowSize: {x: 300, y: 300}
   edgePadding: 42
@@ -2821,17 +2825,15 @@ MonoBehaviour:
   player: {fileID: 18229348}
   targetCamera: {fileID: 827432331}
   arrowIndicator: {fileID: 271056805}
-  novelSceneManager: {fileID: 0}
+  novelSceneManager: {fileID: 2113151049}
   spawnMin: {x: -19, y: -21}
   spawnMax: {x: 26, y: 15}
   minDistanceFromPlayer: 5
   autoFindForbiddenZones: 1
   forbiddenZoneColliders: []
   forbiddenZoneRenderers: []
-  spawnOnStart: 1
-  respawnDelay: 20
-  heartDisplaySeconds: 20
-  collectGraceSeconds: 10
+  heartDisplaySeconds: 7
+  collectGraceSeconds: 1
 --- !u!4 &271056807
 Transform:
   m_ObjectHideFlags: 0
@@ -3721,8 +3723,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.768, y: -185}
-  m_SizeDelta: {x: -1503.0417, y: -950.4548}
+  m_AnchoredPosition: {x: 783.54785, y: -384.24347}
+  m_SizeDelta: {x: -1566.1373, y: -768.9418}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &556557531
 MonoBehaviour:
@@ -3737,7 +3739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5622,7 +5624,7 @@ Transform:
   m_GameObject: {fileID: 827432329}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.9, y: -17.9, z: -10}
+  m_LocalPosition: {x: 3, y: -0.8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33584,7 +33586,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -33645,8 +33647,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.89331, y: 0}
-  m_SizeDelta: {x: 277.7866, y: 50}
+  m_AnchoredPosition: {x: 0.000045776, y: -0.00006485}
+  m_SizeDelta: {x: 362.7405, y: 311.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2091656338
 GameObject:

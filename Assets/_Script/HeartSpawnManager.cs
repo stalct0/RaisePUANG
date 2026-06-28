@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class HeartSpawnManager : MonoBehaviour
@@ -19,14 +20,18 @@ public sealed class HeartSpawnManager : MonoBehaviour
     public Collider2D[] forbiddenZoneColliders;
     public Renderer[] forbiddenZoneRenderers;
 
-    [Header("Timing")]
-    public bool spawnOnStart = true;
-    public float respawnDelay = 20f;
+    [Header("Heart Lifetime")]
     public float heartDisplaySeconds = 20f;
     public float collectGraceSeconds = 10f;
 
     private HeartPickup currentHeart;
-    private float respawnTimer;
+
+    private int scheduledSemester = -1;
+    private readonly List<float> spawnTimes = new();
+    private int nextSpawnIndex;
+    
+    private bool firstHeartSpawned;
+    private bool firstHeartFailed;
 
     private void Start()
     {
@@ -38,24 +43,28 @@ public sealed class HeartSpawnManager : MonoBehaviour
 
         if (autoFindForbiddenZones)
             FindForbiddenZones();
-
-        if (spawnOnStart)
-        {
-            SpawnHeart();
-        }
-        else
-        {
-            respawnTimer = respawnDelay;
-        }
     }
 
     private void Update()
     {
-        if (CampusLifeGameManager.Instance != null &&
-            !CampusLifeGameManager.Instance.IsPlaying)
+        if (CampusLifeGameManager.Instance == null)
+            return;
+
+        if (!CampusLifeGameManager.Instance.IsPlaying)
+            return;
+
+        if (DatingProgressManager.Instance != null &&
+            DatingProgressManager.Instance.RomanceSystemLocked)
         {
             return;
         }
+
+        HandleFirstSemesterRequiredHeart();
+
+        if (CampusLifeGameManager.Instance.CurrentSemester == 1)
+            return;
+
+        UpdateSemesterSchedule();
 
         if (currentHeart != null)
         {
@@ -68,10 +77,74 @@ public sealed class HeartSpawnManager : MonoBehaviour
         if (arrowIndicator != null)
             arrowIndicator.Hide();
 
-        respawnTimer -= Time.deltaTime;
+        TrySpawnBySchedule();
+    }
 
-        if (respawnTimer <= 0f)
-            SpawnHeart();
+    private void UpdateSemesterSchedule()
+    {
+        int currentSemester = CampusLifeGameManager.Instance.CurrentSemester;
+
+        if (scheduledSemester == currentSemester)
+            return;
+
+        scheduledSemester = currentSemester;
+        nextSpawnIndex = 0;
+        spawnTimes.Clear();
+
+        int spawnCount = GetHeartSpawnCountForSemester(currentSemester);
+
+        if (spawnCount <= 0)
+            return;
+
+        float duration = CampusLifeGameManager.Instance.SemesterDuration;
+
+        if (spawnCount == 1)
+        {
+            spawnTimes.Add(Random.Range(0f, duration));
+        }
+        else if (spawnCount == 2)
+        {
+            spawnTimes.Add(Random.Range(0f, duration * 0.5f));
+            spawnTimes.Add(Random.Range(duration * 0.5f, duration));
+        }
+
+        spawnTimes.Sort();
+
+        Debug.Log($"[HeartSpawnManager] Semester {currentSemester}, Heart Spawn Count: {spawnCount}");
+    }
+
+    private int GetHeartSpawnCountForSemester(int semester)
+    {
+        // 1-1
+        if (semester <= 1)
+            return 0;
+
+        // 1-2, 2-1
+        if (semester == 2 || semester == 3)
+            return 2;
+
+        // 2-2부터
+        if (DatingProgressManager.Instance == null)
+            return 2;
+
+        int previousSemesterDateCount = DatingProgressManager.Instance.PreviousSemesterDateCount;
+
+        return previousSemesterDateCount >= 2 ? 1 : 2;
+    }
+
+    private void TrySpawnBySchedule()
+    {
+        if (nextSpawnIndex >= spawnTimes.Count)
+            return;
+
+        float currentTime = CampusLifeGameManager.Instance.CurrentTime;
+        float targetTime = spawnTimes[nextSpawnIndex];
+
+        if (currentTime < targetTime)
+            return;
+
+        SpawnHeart();
+        nextSpawnIndex++;
     }
 
     public void NotifyHeartCollected(HeartPickup heart)
@@ -80,22 +153,31 @@ public sealed class HeartSpawnManager : MonoBehaviour
 
         Destroy(currentHeart.gameObject);
         currentHeart = null;
-        respawnTimer = respawnDelay;
 
         if (arrowIndicator != null)
             arrowIndicator.Hide();
 
-        if (novelSceneManager != null)
+        if (novelSceneManager == null)
+            return;
+
+        if (CampusLifeGameManager.Instance != null &&
+            CampusLifeGameManager.Instance.CurrentSemester == 1)
+        {
+            novelSceneManager.OpenRequiredFirstRomanceIntro(DatingCharacter.ChildhoodFriend);
+        }
+        else
+        {
             novelSceneManager.OpenDatingIntro();
+        }
     }
 
     public void NotifyHeartExpired(HeartPickup heart)
     {
-        if (heart != currentHeart) return;
+        if (heart != currentHeart)
+            return;
 
         Destroy(currentHeart.gameObject);
         currentHeart = null;
-        respawnTimer = respawnDelay;
 
         if (arrowIndicator != null)
             arrowIndicator.Hide();
@@ -103,13 +185,16 @@ public sealed class HeartSpawnManager : MonoBehaviour
 
     private void SpawnHeart()
     {
-        if (heartPrefab == null || player == null) return;
+        if (heartPrefab == null || player == null)
+            return;
 
         Vector2 spawnPosition = FindSpawnPosition();
 
         currentHeart = Instantiate(heartPrefab, spawnPosition, Quaternion.identity);
         currentHeart.name = "HeartPickup";
         currentHeart.Initialize(this, heartDisplaySeconds, collectGraceSeconds);
+
+        Debug.Log("[HeartSpawnManager] Heart Spawned.");
     }
 
     private Vector2 FindSpawnPosition()
@@ -134,9 +219,7 @@ public sealed class HeartSpawnManager : MonoBehaviour
             }
 
             if (!forbidden && Vector2.Distance(candidate, playerPosition) >= minDistanceFromPlayer)
-            {
                 return candidate;
-            }
         }
 
         return hasFallback ? fallback : playerPosition;
@@ -146,10 +229,8 @@ public sealed class HeartSpawnManager : MonoBehaviour
     {
         if (forbiddenZoneColliders != null)
         {
-            for (int i = 0; i < forbiddenZoneColliders.Length; i++)
+            foreach (Collider2D zone in forbiddenZoneColliders)
             {
-                Collider2D zone = forbiddenZoneColliders[i];
-
                 if (zone != null && zone.bounds.Contains(position))
                     return true;
             }
@@ -157,10 +238,8 @@ public sealed class HeartSpawnManager : MonoBehaviour
 
         if (forbiddenZoneRenderers != null)
         {
-            for (int i = 0; i < forbiddenZoneRenderers.Length; i++)
+            foreach (Renderer zone in forbiddenZoneRenderers)
             {
-                Renderer zone = forbiddenZoneRenderers[i];
-
                 if (zone != null && zone.bounds.Contains(position))
                     return true;
             }
@@ -194,5 +273,65 @@ public sealed class HeartSpawnManager : MonoBehaviour
     {
         GameObject obj = GameObject.Find(objectName);
         return obj != null ? obj.GetComponent<Renderer>() : null;
+    }
+    private void HandleFirstSemesterRequiredHeart()
+    {
+        if (DatingProgressManager.Instance == null)
+            return;
+
+        if (DatingProgressManager.Instance.FirstRomanceEventCompleted)
+            return;
+
+        if (DatingProgressManager.Instance.RomanceSystemLocked)
+            return;
+
+        if (CampusLifeGameManager.Instance.CurrentSemester != 1)
+            return;
+
+        float currentTime = CampusLifeGameManager.Instance.CurrentTime;
+        float duration = CampusLifeGameManager.Instance.SemesterDuration;
+
+        if (!firstHeartSpawned && currentTime >= duration / 3f)
+        {
+            SpawnHeart();
+            firstHeartSpawned = true;
+        }
+
+        if (firstHeartSpawned &&
+            currentHeart != null &&
+            currentTime >= duration)
+        {
+            DatingProgressManager.Instance.LockRomanceSystem();
+            Destroy(currentHeart.gameObject);
+            currentHeart = null;
+
+            if (arrowIndicator != null)
+                arrowIndicator.Hide();
+        }
+    }
+    public void NotifySemesterEnded()
+    {
+        if (CampusLifeGameManager.Instance == null)
+            return;
+
+        if (CampusLifeGameManager.Instance.CurrentSemester != 1)
+            return;
+
+        if (DatingProgressManager.Instance == null)
+            return;
+
+        if (!DatingProgressManager.Instance.FirstRomanceEventCompleted)
+        {
+            DatingProgressManager.Instance.LockRomanceSystem();
+
+            if (currentHeart != null)
+            {
+                Destroy(currentHeart.gameObject);
+                currentHeart = null;
+            }
+
+            if (arrowIndicator != null)
+                arrowIndicator.Hide();
+        }
     }
 }

@@ -15,9 +15,18 @@ public sealed class DatingProgressManager : MonoBehaviour
     [Header("Progress")]
     [SerializeField] private int totalDateCount;
     [SerializeField] private bool datingEnded;
+    [SerializeField] private int currentSemesterDateCount;
+    [SerializeField] private int previousSemesterDateCount;
+    
+    [Header("First Romance Event")]
+    [SerializeField] private bool firstRomanceEventCompleted;
+    [SerializeField] private bool romanceSystemLocked;
 
+    public bool FirstRomanceEventCompleted => firstRomanceEventCompleted;
+    public bool RomanceSystemLocked => romanceSystemLocked;
+    
     private readonly Dictionary<DatingCharacter, int> affectionByCharacter = new();
-
+    public int PreviousSemesterDateCount => previousSemesterDateCount;
     public DatingCharacter SelectedGirlfriend => selectedGirlfriend;
     public int CurrentDateIndex => currentDateIndex;
     public int TotalDateCount => totalDateCount;
@@ -70,7 +79,8 @@ public sealed class DatingProgressManager : MonoBehaviour
 
         totalDateCount++;
         currentDateIndex++;
-
+        currentSemesterDateCount++;
+        
         if (currentDateIndex > MaxDateIndex)
         {
             datingEnded = true;
@@ -105,7 +115,11 @@ public sealed class DatingProgressManager : MonoBehaviour
     {
         currentDateIndex = 1;
         totalDateCount = 0;
+        currentSemesterDateCount = 0;
+        previousSemesterDateCount = 0;
         datingEnded = false;
+        firstRomanceEventCompleted = false;
+        romanceSystemLocked = false;
 
         affectionByCharacter.Clear();
         EnsureAffectionKeys();
@@ -143,4 +157,29 @@ public sealed class DatingProgressManager : MonoBehaviour
             selectedGirlfriend,
             currentDateIndex);
     }
+    public void StartNextSemester()
+    {
+        previousSemesterDateCount = currentSemesterDateCount;
+        currentSemesterDateCount = 0;
+    }
+    public void CompleteFirstRomanceEvent(DatingCharacter girlfriend)
+    {
+        if (firstRomanceEventCompleted)
+            return;
+
+        if (girlfriend == DatingCharacter.None)
+            girlfriend = DatingCharacter.ChildhoodFriend;
+
+        selectedGirlfriend = girlfriend;
+        firstRomanceEventCompleted = true;
+    }
+
+    public void LockRomanceSystem()
+    {
+        if (firstRomanceEventCompleted)
+            return;
+
+        romanceSystemLocked = true;
+    }
+    
 }

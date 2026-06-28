@@ -22,6 +22,9 @@ public class NovelSceneManager : MonoBehaviour
     [Header("Intro Buttons")]
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
+    
+    private bool isRequiredDatingIntro;
+    private DatingCharacter pendingFirstGirlfriend = DatingCharacter.None;
 
     [Header("Visual Images")]
     [SerializeField] private Image backgroundImage;
@@ -126,31 +129,15 @@ public class NovelSceneManager : MonoBehaviour
         if (closeButton != null) closeButton.onClick.RemoveListener(CloseDating);
         if (logCloseButton != null) logCloseButton.onClick.RemoveListener(CloseLog);
     }
-
-    public void OpenDatingIntro()
-    {
-        if (CampusLifeGameManager.Instance == null) return;
-        if (!CampusLifeGameManager.Instance.IsPlaying) return;
-
-        isOpen = true;
-        CampusLifeGameManager.Instance.EnterMiniGame();
-
-        if (dimPanel != null) dimPanel.SetActive(true);
-        if (datingPanel != null) datingPanel.SetActive(true);
-
-        if (introView != null) introView.SetActive(true);
-        if (gameView != null) gameView.SetActive(false);
-
-        HideChoices();
-        CloseLog();
-        StopAuto();
-
-        if (closeButton != null)
-            closeButton.gameObject.SetActive(false);
-    }
-
+    
     private void OnClickYes()
     {
+        if (isRequiredDatingIntro)
+        {
+            if (DatingProgressManager.Instance != null)
+                DatingProgressManager.Instance.CompleteFirstRomanceEvent(pendingFirstGirlfriend);
+        }
+        
         if (DatingProgressManager.Instance == null) return;
 
         if (!DatingProgressManager.Instance.CanStartDate(out string reason))
@@ -174,9 +161,11 @@ public class NovelSceneManager : MonoBehaviour
 
     private void OnClickNo()
     {
+        if (isRequiredDatingIntro)
+            return;
+
         CloseDating();
     }
-
     private void StartDating(DialogueData data)
     {
         currentDialogueData = data;
@@ -580,5 +569,51 @@ public class NovelSceneManager : MonoBehaviour
         isAutoMode = false;
         isLogOpen = false;
         pendingAffection = 0;
+    }
+    
+    public void OpenRequiredFirstRomanceIntro(DatingCharacter girlfriend)
+    {
+        if (CampusLifeGameManager.Instance == null) return;
+        if (!CampusLifeGameManager.Instance.IsPlaying) return;
+
+        isRequiredDatingIntro = true;
+        pendingFirstGirlfriend = girlfriend;
+
+        isOpen = true;
+        CampusLifeGameManager.Instance.EnterMiniGame();
+
+        if (dimPanel != null) dimPanel.SetActive(true);
+        if (datingPanel != null) datingPanel.SetActive(true);
+        if (introView != null) introView.SetActive(true);
+        if (gameView != null) gameView.SetActive(false);
+
+        if (noButton != null)
+            noButton.gameObject.SetActive(false);
+
+        if (yesButton != null)
+            yesButton.gameObject.SetActive(true);
+    }
+
+    public void OpenDatingIntro()
+    {
+        if (CampusLifeGameManager.Instance == null) return;
+        if (!CampusLifeGameManager.Instance.IsPlaying) return;
+
+        isRequiredDatingIntro = false;
+        pendingFirstGirlfriend = DatingCharacter.None;
+
+        isOpen = true;
+        CampusLifeGameManager.Instance.EnterMiniGame();
+
+        if (dimPanel != null) dimPanel.SetActive(true);
+        if (datingPanel != null) datingPanel.SetActive(true);
+        if (introView != null) introView.SetActive(true);
+        if (gameView != null) gameView.SetActive(false);
+
+        if (noButton != null)
+            noButton.gameObject.SetActive(true);
+
+        if (yesButton != null)
+            yesButton.gameObject.SetActive(true);
     }
 }
