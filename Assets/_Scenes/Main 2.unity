@@ -1058,6 +1058,7 @@ MonoBehaviour:
   timeBarFill: {fileID: 578273975}
   dialoguePanel: {fileID: 556557529}
   dialogueText: {fileID: 2064487474}
+  dialogueWarningColor: {r: 1, g: 0, b: 0, a: 1}
   semesterResultPanel: {fileID: 272394785}
   semesterResultText: {fileID: 1275722289}
 --- !u!114 &85715983

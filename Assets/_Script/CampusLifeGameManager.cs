@@ -44,6 +44,7 @@ public class CampusLifeGameManager : MonoBehaviour
 
     [Header("Dialogue")]
     [SerializeField] private string dialogue = "푸앙이가 대학생활을 시작했다.";
+    [SerializeField] private bool isDialogueWarning;
     
     public CampusLifeStatDelta LastSemesterDelta => lastSemesterDelta;
     public string LastSemesterSummaryText => lastSemesterSummaryText;
@@ -59,6 +60,7 @@ public class CampusLifeGameManager : MonoBehaviour
     public float SemesterDuration => semesterDuration;
     public CampusLifeStats Stats => currentStats;
     public string Dialogue => dialogue;
+    public bool IsDialogueWarning => isDialogueWarning;
     public GamePhase CurrentPhase => currentPhase;
 
     public bool IsPlaying => currentPhase == GamePhase.Playing;
@@ -119,7 +121,7 @@ public class CampusLifeGameManager : MonoBehaviour
         currentStats.Clamp();
         semesterStartStats = currentStats.Clone();
         
-        dialogue = "1-1 시작. 푸앙이가 청룡탕에서 깨어났다.";
+        SetDialogue("1-1 시작. 푸앙이가 청룡탕에서 깨어났다.");
 
         Time.timeScale = 1f;
         NotifyChanged();
@@ -136,13 +138,13 @@ public class CampusLifeGameManager : MonoBehaviour
                 $"[CampusLifeGameManager] Activity '{activityName}' failed before applying stats: {failReason}. " +
                 $"Delta was {FormatDeltaForLog(delta)}.",
                 this);
-            dialogue = $"{activityName} 실패: {failReason}";
+            SetDialogue($"{activityName} 실패: {failReason}", true);
             NotifyChanged();
             return false;
         }
 
         currentStats.Apply(delta);
-        dialogue = BuildActivityDialogue(activityName, delta);
+        SetDialogue(BuildActivityDialogue(activityName, delta));
         Debug.Log($"[CampusLifeGameManager] Activity '{activityName}' applied: {FormatDeltaForLog(delta)}.", this);
         NotifyChanged();
 
@@ -169,13 +171,13 @@ public class CampusLifeGameManager : MonoBehaviour
                 $"[CampusLifeGameManager] Continuous activity '{activityName}' failed before applying stats: {failReason}. " +
                 $"Delta was {FormatDeltaForLog(delta)}.",
                 this);
-            dialogue = $"{activityName} 실패: {failReason}";
+            SetDialogue($"{activityName} 실패: {failReason}", true);
             NotifyChanged();
             return false;
         }
 
         currentStats.Apply(delta);
-        dialogue = BuildActivityDialogue(activityName, delta);
+        SetDialogue(BuildActivityDialogue(activityName, delta));
         Debug.Log($"[CampusLifeGameManager] Continuous activity '{activityName}' applied: {FormatDeltaForLog(delta)}.", this);
         NotifyChanged();
 
@@ -244,13 +246,13 @@ public class CampusLifeGameManager : MonoBehaviour
         currentTime = semesterDuration;
         currentPhase = GamePhase.SemesterResult;
 
-        dialogue =
+        SetDialogue(
             $"{GetSemesterName(currentSemester)} 종료\n" +
             $"현재 돈: {currentStats.money}\n" +
             $"컨디션: {currentStats.condition}\n" +
             $"성적: {currentStats.grades}\n" +
             $"친구관계: {currentStats.relationship}\n\n" +
-            "SPACE를 눌러 계속하기";
+            "SPACE를 눌러 계속하기");
 
         Time.timeScale = 0f;
         NotifyChanged();
@@ -276,7 +278,7 @@ public class CampusLifeGameManager : MonoBehaviour
 
         semesterStartStats = currentStats.Clone();
 
-        dialogue = $"{GetSemesterName(currentSemester)} 시작.";
+        SetDialogue($"{GetSemesterName(currentSemester)} 시작.");
 
         Time.timeScale = 1f;
         NotifyChanged();
@@ -427,13 +429,19 @@ public class CampusLifeGameManager : MonoBehaviour
         finalEndingName = endingName;
         finalEndingDescription = description;
 
-        dialogue =
+        SetDialogue(
             $"{endingName}\n\n" +
             $"{description}\n\n" +
-            "SPACE를 눌러 다시 시작";
+            "SPACE를 눌러 다시 시작");
 
         Time.timeScale = 0f;
         NotifyChanged();
+    }
+
+    private void SetDialogue(string message, bool warning = false)
+    {
+        dialogue = message;
+        isDialogueWarning = warning;
     }
     private void DebugSetZoneLevel(ZoneType zoneType, int level)
     {
