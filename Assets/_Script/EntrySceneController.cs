@@ -30,7 +30,13 @@ public class EntrySceneController : MonoBehaviour
     [SerializeField] private Button creditsExitButton = null;
     [SerializeField] private string creditsNames =
         "\uAE40\uC2B9\uD658   \uAE40\uC5F0\uC6B1   \uB958\uC900\uC131   \uBC15\uD61C\uC724   \uD0DC\uAC15\uD638";
-
+    
+    [Header("Collection")]
+    [SerializeField] private GameObject collectionPanel = null;
+    [SerializeField] private Button collectionButton = null;
+    [SerializeField] private Button collectionExitButton = null;
+    [SerializeField] private EndingCollectionUI endingCollectionUI = null;
+    
     private void Awake()
     {
         ValidateReferences();
@@ -60,12 +66,13 @@ public class EntrySceneController : MonoBehaviour
         SceneManager.LoadScene(gameSceneName);
     }
 
-    public void ShowMainMenu()
-    {
-        SetPanelActive(mainMenuPanel, true, nameof(mainMenuPanel));
-        SetPanelActive(settingsPanel, false, nameof(settingsPanel));
-        SetPanelActive(creditsPanel, false, nameof(creditsPanel));
-    }
+public void ShowMainMenu()
+{
+    SetPanelActive(mainMenuPanel, true, nameof(mainMenuPanel));
+    SetPanelActive(settingsPanel, false, nameof(settingsPanel));
+    SetPanelActive(creditsPanel, false, nameof(creditsPanel));
+    SetPanelActive(collectionPanel, false, nameof(collectionPanel));
+}
 
     public void ShowSettings()
     {
@@ -108,6 +115,11 @@ public class EntrySceneController : MonoBehaviour
 
         if (volumeSlider != null)
             volumeSlider.onValueChanged.AddListener(SetVolume);
+        if (collectionButton != null)
+            collectionButton.onClick.AddListener(ShowCollection);
+
+        if (collectionExitButton != null)
+            collectionExitButton.onClick.AddListener(ShowMainMenu);
     }
 
     private void UnregisterButtonEvents()
@@ -129,8 +141,22 @@ public class EntrySceneController : MonoBehaviour
 
         if (volumeSlider != null)
             volumeSlider.onValueChanged.RemoveListener(SetVolume);
-    }
+        if (collectionButton != null)
+            collectionButton.onClick.RemoveListener(ShowCollection);
 
+        if (collectionExitButton != null)
+            collectionExitButton.onClick.RemoveListener(ShowMainMenu);
+    }
+    public void ShowCollection()
+    {
+        SetPanelActive(mainMenuPanel, false, nameof(mainMenuPanel));
+        SetPanelActive(settingsPanel, false, nameof(settingsPanel));
+        SetPanelActive(creditsPanel, false, nameof(creditsPanel));
+        SetPanelActive(collectionPanel, true, nameof(collectionPanel));
+
+        if (endingCollectionUI != null)
+            endingCollectionUI.Open();
+    }
     private void ApplyVolume(float volume, bool save)
     {
         float clampedVolume = Mathf.Clamp01(volume);

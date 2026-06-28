@@ -27937,7 +27937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
-  zoneType: 0
+  zoneType: 1
   targetRenderer: {fileID: 1297219762}
   normalStage0: {fileID: -3569598491518835125, guid: 3088885982f273142956375815d7dc13, type: 3}
   normalStage1: {fileID: 5385184218159158020, guid: f6cf31dd736d07547a1de3e2d0b7f57f, type: 3}
@@ -29750,7 +29750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
-  zoneType: 0
+  zoneType: 3
   targetRenderer: {fileID: 1538773791}
   normalStage0: {fileID: -3522581051014955390, guid: c092154ca4791db45955b20a10dfab3d, type: 3}
   normalStage1: {fileID: -7455894926585587318, guid: e70d20b22fef1df4eb0e13455746d67d, type: 3}
@@ -30476,7 +30476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fefe50265ae9d4eb79122e66d43ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZoneSpriteSwitcher
-  zoneType: 0
+  zoneType: 2
   targetRenderer: {fileID: 1607226088}
   normalStage0: {fileID: -843074986478297697, guid: f39691402e5af794090de854bca94771, type: 3}
   normalStage1: {fileID: -4392859014898721624, guid: a478f8f47bae6124f9b61a26d4d6800f, type: 3}

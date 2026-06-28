@@ -67,7 +67,7 @@ public class EndingManager : MonoBehaviour
             return;
 
         endingTriggered = true;
-
+        EndingCollectionManager.UnlockEnding(endingId);
         if (CampusLifeGameManager.Instance != null)
             CampusLifeGameManager.Instance.SetFinishedByEnding();
 
