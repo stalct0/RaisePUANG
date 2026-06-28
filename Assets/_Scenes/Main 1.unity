@@ -666,7 +666,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: "\uC2DC\uC791\uD558\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
@@ -2300,6 +2300,10 @@ MonoBehaviour:
   currentDateIndex: 1
   totalDateCount: 0
   datingEnded: 0
+  currentSemesterDateCount: 0
+  previousSemesterDateCount: 0
+  firstRomanceEventCompleted: 0
+  romanceSystemLocked: 0
 --- !u!1 &221048309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,8 +2628,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2828,8 +2832,6 @@ MonoBehaviour:
   autoFindForbiddenZones: 1
   forbiddenZoneColliders: []
   forbiddenZoneRenderers: []
-  spawnOnStart: 1
-  respawnDelay: 20
   heartDisplaySeconds: 20
   collectGraceSeconds: 10
 --- !u!4 &271056807
@@ -2882,7 +2884,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.76837, y: 0}
+  m_AnchoredPosition: {x: -34.76831, y: 0}
   m_SizeDelta: {x: -209.7573, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272394787
@@ -2989,8 +2991,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3721,7 +3723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.768, y: -185}
+  m_AnchoredPosition: {x: -34.767944, y: -185}
   m_SizeDelta: {x: -1503.0417, y: -950.4548}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &556557531
@@ -6430,15 +6432,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08649645, g: 0, b: 0.5849056, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -308686136496446920, guid: 144936fd3b79dd64eb1a0a3db865bd0f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -6831,7 +6833,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: "\uC218\uAC15 \uC2E0\uCCAD \uB2F9\uC77C\uB0A0\uC774\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
   m_sharedMaterial: {fileID: -2490887100183925445, guid: fd5ebe944adcf8546b8f1950292bd64a, type: 2}
@@ -6840,8 +6842,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -29971,7 +29973,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: "\uC218\uAC15 \uC2E0\uCCAD \uBC84\uD2BC\uC744 \uB193\uCE58\uC9C0 \uB9D0\uACE0
+    \uC804\uBD80 \uB204\uB974\uC790!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
   m_sharedMaterial: {fileID: -3159930956298957060, guid: 202f86abed0951f47acdbd88761befe0, type: 2}
@@ -29980,8 +29983,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -31527,8 +31530,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -34016,6 +34019,14 @@ MonoBehaviour:
   maxCueDelay: 1.8
   reactionWindow: 0.9
   resultPause: 0.55
+  useProgressiveDifficulty: 1
+  finalReactionWindow: 0.38
+  enableFakeCue: 1
+  fakeCueChance: 0.35
+  fakeCueDuration: 0.16
+  fakeCueGapMin: 0.1
+  fakeCueGapMax: 0.28
+  avoidRepeatingSameCell: 1
   excellentGradesReward: 15
   strongGradesReward: 10
   decentGradesReward: 6
