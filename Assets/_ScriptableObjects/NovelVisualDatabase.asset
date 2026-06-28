@@ -13,12 +13,40 @@ MonoBehaviour:
   m_Name: NovelVisualDatabase
   m_EditorClassIdentifier: Assembly-CSharp::NovelVisualDatabase
   backgrounds:
-  - backgroundId: amuse
+  - backgroundId: Dating_amuse
     sprite: {fileID: 7288899504962793135, guid: a28dc61a00000a44392f2b742cfc02e7, type: 3}
-  - backgroundId: aquarium
+  - backgroundId: Dating_aquarium
+    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_catcafe
+    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_pond
+    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_rooftop
+    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_theater_inside
+    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_theater_outside
     sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
   appearances:
-  - appearanceId: YR_dummy
-    sprite: {fileID: -6819170261242767782, guid: 26bf40f8a08d4c843a2d10091c06afad, type: 3}
-  - appearanceId: MJ_dummy
-    sprite: {fileID: -3153848061173189192, guid: 84188cf50e81f5f429d7648666bb9777, type: 3}
+  - appearanceId: Dating_Miyoko_angry
+    sprite: {fileID: 3775307202423781309, guid: 542c1dd516147654388387af3ce4bc2a, type: 3}
+  - appearanceId: Dating_Miyoko_default
+    sprite: {fileID: -6137118455606952963, guid: 6503df373451b5e42b14e22fe4895443, type: 3}
+  - appearanceId: Dating_Miyoko_smile
+    sprite: {fileID: 273782220466808371, guid: 6b2ecf6993f285d4fbecabbe34a2b7b1, type: 3}
+  - appearanceId: Dating_Tsumugi_angry
+    sprite: {fileID: -2406887022638329857, guid: 8f0f42f7fa962c1408885b10303ae8df, type: 3}
+  - appearanceId: Dating_Tsumugi_default
+    sprite: {fileID: -8902054998773324565, guid: 3d4938d678af91e4d8bdaf801ae675ff, type: 3}
+  - appearanceId: Dating_Tsumugi_smile
+    sprite: {fileID: -2983619607664996753, guid: 08f3bd97c59d52249b69ac24e249c784, type: 3}
+  - appearanceId: Dating_Tsumugi_surprised
+    sprite: {fileID: -921852127717895991, guid: 3ce3ae4f5988293439b82960df49f2c5, type: 3}
+  - appearanceId: Dating_Yuuka_default
+    sprite: {fileID: 2231360437014837313, guid: ccfecd3ea06757d46adc9dff7d11c8e5, type: 3}
+  - appearanceId: Dating_Yuuka_embarrassed
+    sprite: {fileID: 2457387585648748305, guid: ef304b5cc4cbe2742a76330f65a6c78e, type: 3}
+  - appearanceId: Dating_Yuuka_smile
+    sprite: {fileID: -1960848753342969660, guid: aaebe6f43f09bb04eb32f658d4ff8725, type: 3}
+  - appearanceId: Dating_Yuuka_surprised
+    sprite: {fileID: 8459627884660253911, guid: 198a98d50c4f98f478b0c27587590404, type: 3}

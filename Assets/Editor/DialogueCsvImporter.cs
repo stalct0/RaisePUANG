@@ -21,16 +21,23 @@ public static class DialogueCsvImporter
         public string choiceA;
         public int nextA;
         public int affectionA;
+        public DatingCharacter girlfriendA;
 
         public string choiceB;
         public int nextB;
         public int affectionB;
+        public DatingCharacter girlfriendB;
+
+        public string choiceC;
+        public int nextC;
+        public int affectionC;
+        public DatingCharacter girlfriendC;
 
         public int moneyChange;
         public int conditionChange;
         public int gradeChange;
         public int friendshipChange;
-        
+
         public string backgroundId;
         public string centerAppearanceId;
         public string leftAppearanceId;
@@ -138,10 +145,16 @@ public static class DialogueCsvImporter
             List<Row> sceneRows = pair.Value;
             sceneRows.Sort((a, b) => a.order.CompareTo(b.order));
 
-            DialogueScene scene = new DialogueScene();
-            scene.sceneId = sceneId;
-            scene.nextSceneA = -1;
-            scene.nextSceneB = -1;
+            DialogueScene scene = new DialogueScene
+            {
+                sceneId = sceneId,
+                nextSceneA = -1,
+                nextSceneB = -1,
+                nextSceneC = -1,
+                girlfriendA = DatingCharacter.None,
+                girlfriendB = DatingCharacter.None,
+                girlfriendC = DatingCharacter.None
+            };
 
             List<DialogueLine> lines = new List<DialogueLine>();
 
@@ -172,10 +185,17 @@ public static class DialogueCsvImporter
                     scene.choiceTextA = row.choiceA;
                     scene.nextSceneA = row.nextA;
                     scene.affectionA = row.affectionA;
+                    scene.girlfriendA = row.girlfriendA;
 
                     scene.choiceTextB = row.choiceB;
                     scene.nextSceneB = row.nextB;
                     scene.affectionB = row.affectionB;
+                    scene.girlfriendB = row.girlfriendB;
+
+                    scene.choiceTextC = row.choiceC;
+                    scene.nextSceneC = row.nextC;
+                    scene.affectionC = row.affectionC;
+                    scene.girlfriendC = row.girlfriendC;
                 }
                 else if (IsType(row.type, "End"))
                 {
@@ -209,13 +229,20 @@ public static class DialogueCsvImporter
         row.speaker = Get(raw, "Speaker");
         row.text = Get(raw, "Text");
 
-        row.choiceA = Get(raw, "ChoiceA");
+        row.choiceA = GetAny(raw, "ChoiceA", "ChoiceTextA");
         row.nextA = GetInt(raw, "NextSceneA", -1);
         row.affectionA = GetInt(raw, "AffectionA", 0);
+        row.girlfriendA = GetEnum(raw, "GirlfriendA", DatingCharacter.None);
 
-        row.choiceB = Get(raw, "ChoiceB");
+        row.choiceB = GetAny(raw, "ChoiceB", "ChoiceTextB");
         row.nextB = GetInt(raw, "NextSceneB", -1);
         row.affectionB = GetInt(raw, "AffectionB", 0);
+        row.girlfriendB = GetEnum(raw, "GirlfriendB", DatingCharacter.None);
+
+        row.choiceC = GetAny(raw, "ChoiceC", "ChoiceTextC");
+        row.nextC = GetInt(raw, "NextSceneC", -1);
+        row.affectionC = GetInt(raw, "AffectionC", 0);
+        row.girlfriendC = GetEnum(raw, "GirlfriendC", DatingCharacter.None);
 
         row.moneyChange = GetInt(raw, "MoneyChange", 0);
         row.conditionChange = GetInt(raw, "ConditionChange", 0);
@@ -227,10 +254,12 @@ public static class DialogueCsvImporter
         row.datingLocation = GetEnum(raw, "DatingLocation", DatingLocation.None);
 
         row.completesDate = GetBool(raw, "CompletesDate", false);
+
         row.backgroundId = Get(raw, "BackgroundId");
         row.centerAppearanceId = Get(raw, "CenterAppearanceId");
         row.leftAppearanceId = Get(raw, "LeftAppearanceId");
         row.rightAppearanceId = Get(raw, "RightAppearanceId");
+
         return row;
     }
 
@@ -305,17 +334,7 @@ public static class DialogueCsvImporter
                 row.Add(cell);
                 cell = "";
 
-                bool hasContent = false;
-                for (int j = 0; j < row.Count; j++)
-                {
-                    if (!string.IsNullOrWhiteSpace(row[j]))
-                    {
-                        hasContent = true;
-                        break;
-                    }
-                }
-
-                if (hasContent)
+                if (HasContent(row))
                     table.Add(row);
 
                 row = new List<string>();
@@ -328,25 +347,39 @@ public static class DialogueCsvImporter
 
         row.Add(cell);
 
-        bool finalHasContent = false;
-        for (int j = 0; j < row.Count; j++)
-        {
-            if (!string.IsNullOrWhiteSpace(row[j]))
-            {
-                finalHasContent = true;
-                break;
-            }
-        }
-
-        if (finalHasContent)
+        if (HasContent(row))
             table.Add(row);
 
         return table;
     }
 
+    private static bool HasContent(List<string> row)
+    {
+        for (int i = 0; i < row.Count; i++)
+        {
+            if (!string.IsNullOrWhiteSpace(row[i]))
+                return true;
+        }
+
+        return false;
+    }
+
     private static string Get(Dictionary<string, string> row, string key)
     {
         return row.TryGetValue(key, out string value) ? value.Trim() : "";
+    }
+
+    private static string GetAny(Dictionary<string, string> row, params string[] keys)
+    {
+        foreach (string key in keys)
+        {
+            string value = Get(row, key);
+
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        return "";
     }
 
     private static int GetInt(Dictionary<string, string> row, string key, int defaultValue)
@@ -374,9 +407,13 @@ public static class DialogueCsvImporter
     {
         string value = Get(row, key);
 
+        if (string.IsNullOrWhiteSpace(value))
+            return defaultValue;
+
         if (Enum.TryParse(value, true, out T result))
             return result;
 
+        Debug.LogWarning($"[DialogueCsvImporter] Enum parse failed. Key={key}, Value={value}");
         return defaultValue;
     }
 

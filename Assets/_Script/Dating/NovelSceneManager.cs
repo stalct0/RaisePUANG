@@ -40,9 +40,11 @@ public class NovelSceneManager : MonoBehaviour
     [SerializeField] private GameObject choicePanel;
     [SerializeField] private Button choiceButton1;
     [SerializeField] private Button choiceButton2;
+    [SerializeField] private Button choiceButton3;
     [SerializeField] private TextMeshProUGUI choiceText1;
     [SerializeField] private TextMeshProUGUI choiceText2;
-
+    [SerializeField] private TextMeshProUGUI choiceText3;
+    
     [Header("Buttons")]
     [SerializeField] private Button nextButton;
     [SerializeField] private Button logButton;
@@ -132,26 +134,29 @@ public class NovelSceneManager : MonoBehaviour
     
     private void OnClickYes()
     {
-        if (isRequiredDatingIntro)
-        {
-            if (DatingProgressManager.Instance != null)
-                DatingProgressManager.Instance.CompleteFirstRomanceEvent(pendingFirstGirlfriend);
-        }
-        
         if (DatingProgressManager.Instance == null) return;
 
-        if (!DatingProgressManager.Instance.CanStartDate(out string reason))
-        {
-            Debug.Log(reason);
-            CloseDating();
-            return;
-        }
+        DialogueData data;
 
-        DialogueData data = DatingProgressManager.Instance.GetCurrentDialogue();
+        if (isRequiredDatingIntro)
+        {
+            data = DatingProgressManager.Instance.FirstMeetingDialogue;
+        }
+        else
+        {
+            if (!DatingProgressManager.Instance.CanStartDate(out string reason))
+            {
+                Debug.Log(reason);
+                CloseDating();
+                return;
+            }
+
+            data = DatingProgressManager.Instance.GetCurrentDialogue();
+        }
 
         if (data == null)
         {
-            Debug.LogError("현재 데이트 DialogueData가 없습니다.");
+            Debug.LogError("현재 실행할 DialogueData가 없습니다.");
             CloseDating();
             return;
         }
@@ -330,25 +335,42 @@ public class NovelSceneManager : MonoBehaviour
         if (choicePanel != null)
             choicePanel.SetActive(true);
 
-        ConfigureChoice(choiceButton1, choiceText1, currentScene.choiceTextA, currentScene.nextSceneA, currentScene.affectionA);
-        ConfigureChoice(choiceButton2, choiceText2, currentScene.choiceTextB, currentScene.nextSceneB, currentScene.affectionB);
+        ConfigureChoice(choiceButton1, choiceText1, currentScene.choiceTextA, currentScene.nextSceneA, currentScene.affectionA, currentScene.girlfriendA);
+        ConfigureChoice(choiceButton2, choiceText2, currentScene.choiceTextB, currentScene.nextSceneB, currentScene.affectionB, currentScene.girlfriendB);
+        ConfigureChoice(choiceButton3, choiceText3, currentScene.choiceTextC, currentScene.nextSceneC, currentScene.affectionC, currentScene.girlfriendC);
     }
 
-    private void ConfigureChoice(Button button, TextMeshProUGUI label, string text, int nextSceneId, int affection)
+    private void ConfigureChoice(
+        Button button,
+        TextMeshProUGUI label,
+        string text,
+        int nextSceneId,
+        int affection,
+        DatingCharacter girlfriend)
     {
-        if (button == null || label == null) return;
+        if (button == null || label == null)
+            return;
 
-        bool available = nextSceneId >= 0;
+        bool available = !string.IsNullOrWhiteSpace(text) && nextSceneId >= 0;
         button.gameObject.SetActive(available);
 
-        if (!available) return;
+        if (!available)
+            return;
 
-        label.text = string.IsNullOrWhiteSpace(text) ? "선택" : text;
+        label.text = text;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {
             pendingAffection += affection;
+
+            if (girlfriend != DatingCharacter.None &&
+                DatingProgressManager.Instance != null)
+            {
+                DatingProgressManager.Instance.SetGirlfriend(girlfriend);
+                DatingProgressManager.Instance.CompleteFirstRomanceEvent(girlfriend);
+            }
+
             StartScene(nextSceneId);
         });
     }

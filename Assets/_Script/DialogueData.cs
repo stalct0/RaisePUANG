@@ -28,11 +28,18 @@ public class DialogueScene
     public string choiceTextA;
     public int nextSceneA = -1;
     public int affectionA;
+    public DatingCharacter girlfriendA = DatingCharacter.None;
 
     public string choiceTextB;
     public int nextSceneB = -1;
     public int affectionB;
+    public DatingCharacter girlfriendB = DatingCharacter.None;
 
+    public string choiceTextC;
+    public int nextSceneC = -1;
+    public int affectionC;
+    public DatingCharacter girlfriendC = DatingCharacter.None;
+    
     public int moneyChange;
     public int conditionChange;
     public int gradeChange;

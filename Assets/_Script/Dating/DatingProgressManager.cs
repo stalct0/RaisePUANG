@@ -22,6 +22,10 @@ public sealed class DatingProgressManager : MonoBehaviour
     [SerializeField] private bool firstRomanceEventCompleted;
     [SerializeField] private bool romanceSystemLocked;
 
+    [Header("First Meeting")]
+    [SerializeField] private DialogueData firstMeetingDialogue;
+
+    public DialogueData FirstMeetingDialogue => firstMeetingDialogue;
     public bool FirstRomanceEventCompleted => firstRomanceEventCompleted;
     public bool RomanceSystemLocked => romanceSystemLocked;
     
