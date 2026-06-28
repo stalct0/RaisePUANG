@@ -43,10 +43,6 @@ public static class DialogueCsvImporter
         public string leftAppearanceId;
         public string rightAppearanceId;
 
-        public NovelStoryKind storyKind;
-        public DatingCharacter datingCharacter;
-        public DatingLocation datingLocation;
-
         public bool completesDate;
     }
 
@@ -73,7 +69,7 @@ public static class DialogueCsvImporter
         EnsureOutputFolder();
 
         List<Dictionary<string, string>> rawRows = ParseCsv(csvText);
-        List<Row> rows = new List<Row>();
+        List<Row> rows = new();
 
         foreach (Dictionary<string, string> raw in rawRows)
         {
@@ -85,7 +81,7 @@ public static class DialogueCsvImporter
             rows.Add(row);
         }
 
-        Dictionary<string, List<Row>> rowsByDateId = new Dictionary<string, List<Row>>();
+        Dictionary<string, List<Row>> rowsByDateId = new();
 
         foreach (Row row in rows)
         {
@@ -122,12 +118,7 @@ public static class DialogueCsvImporter
         asset.dialogueId = dateId;
         asset.startSceneId = 0;
 
-        Row first = rows[0];
-        asset.storyKind = first.storyKind;
-        asset.datingCharacter = first.datingCharacter;
-        asset.datingLocation = first.datingLocation;
-
-        Dictionary<int, List<Row>> rowsByScene = new Dictionary<int, List<Row>>();
+        Dictionary<int, List<Row>> rowsByScene = new();
 
         foreach (Row row in rows)
         {
@@ -137,7 +128,7 @@ public static class DialogueCsvImporter
             rowsByScene[row.sceneId].Add(row);
         }
 
-        List<DialogueScene> scenes = new List<DialogueScene>();
+        List<DialogueScene> scenes = new();
 
         foreach (KeyValuePair<int, List<Row>> pair in rowsByScene)
         {
@@ -156,7 +147,7 @@ public static class DialogueCsvImporter
                 girlfriendC = DatingCharacter.None
             };
 
-            List<DialogueLine> lines = new List<DialogueLine>();
+            List<DialogueLine> lines = new();
 
             foreach (Row row in sceneRows)
             {
@@ -219,46 +210,42 @@ public static class DialogueCsvImporter
 
     private static Row ParseRow(Dictionary<string, string> raw)
     {
-        Row row = new Row();
+        Row row = new();
 
-        row.dateId = Get(raw, "DateID");
-        row.sceneId = GetInt(raw, "SceneID", 0);
-        row.order = GetInt(raw, "Order", 0);
-        row.type = Get(raw, "Type");
+        row.dateId = GetAny(raw, "DateID", "DateId", "DialogueID", "DialogueId");
+        row.sceneId = GetIntAny(raw, 0, "SceneID", "SceneId");
+        row.order = GetIntAny(raw, 0, "Order");
+        row.type = GetAny(raw, "Type");
 
-        row.speaker = Get(raw, "Speaker");
-        row.text = Get(raw, "Text");
+        row.speaker = GetAny(raw, "Speaker");
+        row.text = GetAny(raw, "Text", "Dialogue", "Line");
 
         row.choiceA = GetAny(raw, "ChoiceA", "ChoiceTextA");
-        row.nextA = GetInt(raw, "NextSceneA", -1);
-        row.affectionA = GetInt(raw, "AffectionA", 0);
-        row.girlfriendA = GetEnum(raw, "GirlfriendA", DatingCharacter.None);
+        row.nextA = GetIntAny(raw, -1, "NextSceneA");
+        row.affectionA = GetIntAny(raw, 0, "AffectionA");
+        row.girlfriendA = GetEnumAny(raw, DatingCharacter.None, "GirlfriendA");
 
         row.choiceB = GetAny(raw, "ChoiceB", "ChoiceTextB");
-        row.nextB = GetInt(raw, "NextSceneB", -1);
-        row.affectionB = GetInt(raw, "AffectionB", 0);
-        row.girlfriendB = GetEnum(raw, "GirlfriendB", DatingCharacter.None);
+        row.nextB = GetIntAny(raw, -1, "NextSceneB");
+        row.affectionB = GetIntAny(raw, 0, "AffectionB");
+        row.girlfriendB = GetEnumAny(raw, DatingCharacter.None, "GirlfriendB");
 
         row.choiceC = GetAny(raw, "ChoiceC", "ChoiceTextC");
-        row.nextC = GetInt(raw, "NextSceneC", -1);
-        row.affectionC = GetInt(raw, "AffectionC", 0);
-        row.girlfriendC = GetEnum(raw, "GirlfriendC", DatingCharacter.None);
+        row.nextC = GetIntAny(raw, -1, "NextSceneC");
+        row.affectionC = GetIntAny(raw, 0, "AffectionC");
+        row.girlfriendC = GetEnumAny(raw, DatingCharacter.None, "GirlfriendC");
 
-        row.moneyChange = GetInt(raw, "MoneyChange", 0);
-        row.conditionChange = GetInt(raw, "ConditionChange", 0);
-        row.gradeChange = GetInt(raw, "GradeChange", 0);
-        row.friendshipChange = GetInt(raw, "FriendshipChange", 0);
+        row.moneyChange = GetIntAny(raw, 0, "MoneyChange", "MoneyCange");
+        row.conditionChange = GetIntAny(raw, 0, "ConditionChange", "ConditionCange");
+        row.gradeChange = GetIntAny(raw, 0, "GradeChange", "GradesChange", "GradeCange");
+        row.friendshipChange = GetIntAny(raw, 0, "FriendshipChange", "FriendshipCange", "RelationshipChange");
 
-        row.storyKind = GetEnum(raw, "StoryKind", NovelStoryKind.Normal);
-        row.datingCharacter = GetEnum(raw, "DatingCharacter", DatingCharacter.None);
-        row.datingLocation = GetEnum(raw, "DatingLocation", DatingLocation.None);
+        row.backgroundId = GetAny(raw, "BackgroundId", "BackgroundID", "Background");
+        row.centerAppearanceId = GetAny(raw, "CenterAppearanceId", "CenterAppearanceID", "CenterVisualId", "CenterVisualID");
+        row.leftAppearanceId = GetAny(raw, "LeftAppearanceId", "LeftAppearanceID", "LeftVisualId", "LeftVisualID");
+        row.rightAppearanceId = GetAny(raw, "RightAppearanceId", "RightAppearanceID", "RightApeearanceID", "RightVisualId", "RightVisualID");
 
-        row.completesDate = GetBool(raw, "CompletesDate", false);
-
-        row.backgroundId = Get(raw, "BackgroundId");
-        row.centerAppearanceId = Get(raw, "CenterAppearanceId");
-        row.leftAppearanceId = Get(raw, "LeftAppearanceId");
-        row.rightAppearanceId = Get(raw, "RightAppearanceId");
+        row.completesDate = GetBoolAny(raw, false, "CompletesDate", "CompleteDate");
 
         return row;
     }
@@ -266,7 +253,7 @@ public static class DialogueCsvImporter
     private static List<Dictionary<string, string>> ParseCsv(string csvText)
     {
         List<List<string>> table = ReadCsvTable(csvText);
-        List<Dictionary<string, string>> rows = new List<Dictionary<string, string>>();
+        List<Dictionary<string, string>> rows = new();
 
         if (table.Count <= 1)
             return rows;
@@ -280,7 +267,7 @@ public static class DialogueCsvImporter
             if (values.Count == 0)
                 continue;
 
-            Dictionary<string, string> row = new Dictionary<string, string>();
+            Dictionary<string, string> row = new();
 
             for (int h = 0; h < headers.Count; h++)
             {
@@ -299,8 +286,8 @@ public static class DialogueCsvImporter
 
     private static List<List<string>> ReadCsvTable(string text)
     {
-        List<List<string>> table = new List<List<string>>();
-        List<string> row = new List<string>();
+        List<List<string>> table = new();
+        List<string> row = new();
 
         bool inQuotes = false;
         string cell = "";
@@ -355,9 +342,9 @@ public static class DialogueCsvImporter
 
     private static bool HasContent(List<string> row)
     {
-        for (int i = 0; i < row.Count; i++)
+        foreach (string cell in row)
         {
-            if (!string.IsNullOrWhiteSpace(row[i]))
+            if (!string.IsNullOrWhiteSpace(cell))
                 return true;
         }
 
@@ -382,38 +369,50 @@ public static class DialogueCsvImporter
         return "";
     }
 
-    private static int GetInt(Dictionary<string, string> row, string key, int defaultValue)
+    private static int GetIntAny(Dictionary<string, string> row, int defaultValue, params string[] keys)
     {
-        string value = Get(row, key);
+        foreach (string key in keys)
+        {
+            string value = Get(row, key);
 
-        if (int.TryParse(value, out int result))
-            return result;
+            if (int.TryParse(value, out int result))
+                return result;
+        }
 
         return defaultValue;
     }
 
-    private static bool GetBool(Dictionary<string, string> row, string key, bool defaultValue)
+    private static bool GetBoolAny(Dictionary<string, string> row, bool defaultValue, params string[] keys)
     {
-        string value = Get(row, key).ToLower();
+        foreach (string key in keys)
+        {
+            string value = Get(row, key).ToLower();
 
-        if (string.IsNullOrWhiteSpace(value))
-            return defaultValue;
+            if (string.IsNullOrWhiteSpace(value))
+                continue;
 
-        return value == "true" || value == "1" || value == "yes" || value == "y";
+            return value == "true" || value == "1" || value == "yes" || value == "y";
+        }
+
+        return defaultValue;
     }
 
-    private static T GetEnum<T>(Dictionary<string, string> row, string key, T defaultValue)
+    private static T GetEnumAny<T>(Dictionary<string, string> row, T defaultValue, params string[] keys)
         where T : struct
     {
-        string value = Get(row, key);
+        foreach (string key in keys)
+        {
+            string value = Get(row, key);
 
-        if (string.IsNullOrWhiteSpace(value))
-            return defaultValue;
+            if (string.IsNullOrWhiteSpace(value))
+                continue;
 
-        if (Enum.TryParse(value, true, out T result))
-            return result;
+            if (Enum.TryParse(value, true, out T result))
+                return result;
 
-        Debug.LogWarning($"[DialogueCsvImporter] Enum parse failed. Key={key}, Value={value}");
+            Debug.LogWarning($"[DialogueCsvImporter] Enum parse failed. Key={key}, Value={value}");
+        }
+
         return defaultValue;
     }
 

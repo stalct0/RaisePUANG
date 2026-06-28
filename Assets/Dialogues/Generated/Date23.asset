@@ -21,9 +21,17 @@ MonoBehaviour:
   - sceneId: 3
     lines:
     - speaker: "\uB098"
+      text: "\"\uC73C\uC73C, \uBC24 \uB418\uB2C8\uAE4C \uC625\uC0C1\uC740 \uBC14\uB78C
+        \uC5C4\uCCAD \uBD80\uB124. \uBBF8\uC694\uCF54, \uC548 \uCD94\uC6CC?\""
+      backgroundId: Dating_rooftop
+      puangAppearanceId: 
+      centerAppearanceId: 
+      leftAppearanceId: 
+      rightAppearanceId: 
+    - speaker: "\uB098"
       text: "(\uC57C\uACBD\uC744 \uBCF4\uBA70 \uBA38\uB9AC\uCE74\uB77D\uC744 \uADC0
         \uB4A4\uB85C \uB118\uAE30\uB2E4\uAC00 \uB0A0 \uC2A5 \uCCD0\uB2E4\uBCF8\uB2E4)"
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -33,9 +41,9 @@ MonoBehaviour:
         \uC870\uC6A9\uD558\uACE0 \uBA38\uB9AC \uC2DD\uD788\uAE30 \uC88B\uC544\uC11C
         \uC790\uC8FC \uC624\uAC70\uB4E0. \uC218\uC11D \uC785\uD559\uACFC \uACFC\uB300\uB77C\uB294
         \uD0C0\uC774\uD2C0\uC774 \uAC00\uB054\uC740 \uC880 \uBB34\uAC70\uC6B0\uB2C8\uAE4C\u2026\u2026.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_default
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
@@ -44,16 +52,16 @@ MonoBehaviour:
         \uB54C \uBCF4\uB2C8\uAE4C \uCE94\uCEE4\uD53C \uC628\uB3C4\uB85C \uBCFC \uC2DD\uD788\uACE0
         \uC788\uB354\uB9CC, \uC544\uC9C1\uB3C4 \uACFC\uBD80\uD558 \uC548 \uD480\uB9B0
         \uAC70 \uC544\uB0D0?\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uBBF8\uC694\uCF54"
       text: "\"\uB108, \uB108 \uC9C4\uC9DC\u2026\u2026!\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_angry
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uBBF8\uC694\uCF54"
@@ -62,9 +70,9 @@ MonoBehaviour:
         \uBABB \uB9CC\uB4E4\uC9C0, \uB10C? \uB0B4\uAC00 \uBC14\uBCF4\uC9C0, \uB108
         \uAC19\uC740 \uD5C8\uB2F9\uD55C\uD14C \uBB34\uC2A8 \uC18D\uB9C8\uC74C\uC744
         \uD138\uC5B4\uB193\uACA0\uB2E4\uACE0\u2026\u2026.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_default
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
@@ -72,16 +80,16 @@ MonoBehaviour:
         \uD63C\uC790 \uB2E4 \uC9CA\uC5B4\uC9C0\uB824\uACE0 \uD558\uC9C0 \uB9C8. \uD798\uB4E4\uBA74
         \uB098\uD55C\uD14C \uCE33\uCF54\uBBF8 \uAC78\uBA74\uC11C \uD480\uB358\uAC00.
         \uB09C \uC5B8\uC81C\uB4E0 \uBC1B\uC544\uC904 \uC218 \uC788\uC73C\uB2C8\uAE4C.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uBBF8\uC694\uCF54"
       text: "\"\u2026\u2026.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_default
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uBBF8\uC694\uCF54"
@@ -89,7 +97,7 @@ MonoBehaviour:
         \uB54C\uBB38\uC5D0 \uAC00\uB298\uAC8C \uB5A8\uB9AC\uB294 \uC5B4\uAE68\uB97C
         \uC6C0\uCE20\uB824) \"\uB9D0\uC740 \uC798\uD558\uB124\u2026\u2026. \uBC1B\uC544\uC8FC\uAE34
         \uBB58 \uBC1B\uC544\uC900\uB2E4\uACE0\u2026\u2026.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -99,22 +107,22 @@ MonoBehaviour:
         \uC0B4\uD3EC\uC2DC \uB36E\uC5B4\uC8FC\uBA70) \"\uCDA5\uC9C0? \uB0B4 \uC628\uAE30\uB77C\uB3C4
         \uBE4C\uB824\uC904\uAC8C. \uBBF8\uC694\uCF54, \uB124 \uBB34\uAC70\uC6B4 \uC9D0\u2026\u2026
         \uC774\uC81C \uB0B4\uAC00 \uAC19\uC774 \uC9CA\uC5B4\uC9C8\uAC8C.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uBBF8\uC694\uCF54"
       text: "\"\u2026\u2026\uBB50\uC57C, \uC9C4\uC9DC.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_default
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
       text: "\"\uC5B4\uB77C, \uC774\uBC88\uC5D4 \uC548 \uB54C\uB9AC\uB124? \uC6EC\uC77C\uC774\uB0D0,
         \uACFC\uB300\uC655\uB2D8?\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -123,9 +131,9 @@ MonoBehaviour:
       text: "\"\uC2DC, \uC2DC\uB044\uB7EC\uC6CC\u2026\u2026! \uC0AC\uB78C\uC774 \uAC04\uB9CC\uC5D0
         \uC9C4\uC9C0\uD558\uAC8C \uBD84\uC704\uAE30 \uC7A1\uACE0 \uB4E4\uC5B4\uC624\uB2C8\uAE4C\u2026\u2026
         \uBC18\uCE59\uC774\uC796\uC544, \uBC14\uBCF4\uC57C.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_smile
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
@@ -135,7 +143,7 @@ MonoBehaviour:
         \uC5B4\uB9B0 \uB4EF\uD574. \uB9E4\uC11C\uC6E0\uB358 \uB208\uBE5B\uC740 \uC5B4\uB514
         \uAC00\uACE0, \uB09C\uAC04\uC5D0 \uAE30\uB300\uC5B4 \uC11C \uC788\uB294 \uB124
         \uC606\uC790\uB9AC\uB85C \uC2AC\uADF8\uBA38\uB2C8 \uB2E4\uAC00\uC628\uB2E4.)"
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -146,9 +154,9 @@ MonoBehaviour:
         \uD558\uACE0, \uC774\uB984 \uB54C\uBB38\uC5D0 \uB180\uB9AC\uAE30\uB098 \uD558\uACE0\u2026\u2026.
         \uC544\uBB34\uB3C4 \uB0B4 \uC18D\uB9C8\uC74C \uAC19\uC740 \uAC74 \uC548 \uAD81\uAE08\uD574\uD558\uB294
         \uC904 \uC54C\uC558\uB2E8 \uB9D0\uC774\uC57C.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_smile
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
@@ -156,7 +164,7 @@ MonoBehaviour:
         \uBB50\uB4E0, \uCE33\uCF54\uBBF8 \uAC78\uBA74\uC11C \uD22C\uB35C\uAC70\uB9AC\uB294
         \uC9C4\uC9DC \uB124 \uBAA8\uC2B5\uC774 \uC81C\uC77C \uADC0\uC5EC\uC6B0\uB2C8\uAE4C
         \uAC71\uC815 \uB9C8.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -165,7 +173,7 @@ MonoBehaviour:
       text: "(\uB0B4 \uB9D0\uC5D0 \uD53C\uC2DD \uC6C3\uC74C\uC744 \uD130\uB728\uB9AC\uB354\uB2C8,
         \uC774\uB0B4 \uBC14\uB78C\uC744 \uD551\uACC4 \uC0BC\uC544 \uB0B4 \uC5B4\uAE68\uC5D0
         \uC790\uAE30 \uBA38\uB9AC\uB97C \uC2AC\uBA70\uC2DC \uAE30\uB300\uC5B4 \uC640.)"
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -175,14 +183,14 @@ MonoBehaviour:
         \uB124 \uB9D0\uC5D0 \uC18D\uC544\uC904\uAC8C. \uB0B4 \uC9D0, \uAC19\uC774
         \uC9CA\uC5B4\uC9C4\uB2E4\uACE0 \uD55C \uAC70\u2026\u2026 \uC808\uB300\uB85C
         \uBB3C\uB974\uAE30 \uC5C6\uAE30\uC57C?\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_smile
       leftAppearanceId: 
       rightAppearanceId: 
     - speaker: "\uB098"
       text: "\"\uB2F9\uC5F0\uD558\uC9C0.\""
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
       centerAppearanceId: 
       leftAppearanceId: 
@@ -195,9 +203,9 @@ MonoBehaviour:
         \uC190\uB05D\uC774, \uD478\uC559\uC774\uC758 \uC628\uAE30\uB97C \uBC1B\uC544
         \uC138\uC0C1\uC5D0\uC11C \uAC00\uC7A5 \uB530\uB73B\uD558\uAC8C \uB179\uC544\uB0B4\uB9AC\uAE30
         \uC2DC\uC791\uD55C\uB2E4.)"
-      backgroundId: 
+      backgroundId: Dating_rooftop
       puangAppearanceId: 
-      centerAppearanceId: 
+      centerAppearanceId: Dating_Miyoko_smile
       leftAppearanceId: 
       rightAppearanceId: 
     hasChoice: 0
@@ -217,4 +225,4 @@ MonoBehaviour:
     conditionChange: 0
     gradeChange: 0
     friendshipChange: 0
-    completesDate: 0
+    completesDate: 1

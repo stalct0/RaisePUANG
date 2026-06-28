@@ -15,28 +15,28 @@ MonoBehaviour:
   entries:
   - character: 1
     dateIndex: 1
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: b5286ed1d0ebaa245b3ddd47869b8815, type: 2}
   - character: 1
     dateIndex: 2
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: 3219ed56d8b199e4fb8a9c8e7581254c, type: 2}
   - character: 1
     dateIndex: 3
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: 5de4407bb2f2d974a9f2842db2c81028, type: 2}
   - character: 2
     dateIndex: 1
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: 2ee74ef81389c7549b84c6f02b7c624d, type: 2}
   - character: 2
     dateIndex: 2
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: 051e4f904cb270d40979198c6752963f, type: 2}
   - character: 2
     dateIndex: 3
-    dialogueData: {fileID: 0}
+    dialogueData: {fileID: 11400000, guid: 23c521e078be9b8428e5208f27f4a05c, type: 2}
   - character: 3
-    dateIndex: 0
-    dialogueData: {fileID: 0}
+    dateIndex: 1
+    dialogueData: {fileID: 11400000, guid: c2552ce4bd6b91a45bd5520175632a04, type: 2}
   - character: 3
-    dateIndex: 0
-    dialogueData: {fileID: 0}
+    dateIndex: 2
+    dialogueData: {fileID: 11400000, guid: b5edf6817513ec444bd27d13409bd872, type: 2}
   - character: 3
-    dateIndex: 0
-    dialogueData: {fileID: 0}
+    dateIndex: 3
+    dialogueData: {fileID: 11400000, guid: a42d602d2b2068a41a66a91d0eb17c16, type: 2}
