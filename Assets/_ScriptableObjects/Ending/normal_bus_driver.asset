@@ -21,6 +21,6 @@ MonoBehaviour:
     \uD574\uC57C \uD560 \uC77C\uC744, \uB2F9\uC2E0\uC774 \uD560 \uC218 \uC788\uB294
     \uC77C\uC744 \uD588\uC2B5\uB2C8\uB2E4. \uB2F9\uC2E0\uC758 \uCE5C\uAD6C\uB4E4\uC740
     \uB2F9\uC2E0\uC744 \uC774\uB807\uAC8C \uBD80\uB974\uB354\uAD70\uC694, \"\uBC84\uC2A4\uAE30\uC0AC\"\uB77C\uACE0."
-  endingType: 1
-  endingImage: {fileID: 0}
+  endingType: 0
+  endingImage: {fileID: -4910296637632400045, guid: b559627fb5a38764ab617da02dfe5f7a, type: 3}
   showGirlfriendOverlay: 0

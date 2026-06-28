@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class EndingCollectionSlot : MonoBehaviour
 {
+    [Header("Ending ID")]
+    [SerializeField] private string endingId;
+
     [Header("UI")]
     [SerializeField] private Image endingImage;
     [SerializeField] private TMP_Text endingNameText;
@@ -12,12 +15,17 @@ public class EndingCollectionSlot : MonoBehaviour
     [SerializeField] private Sprite lockedSprite;
     [SerializeField] private string lockedName = "???";
 
-    public void SetData(EndingData endingData)
+    public void Refresh(EndingDatabase database)
     {
+        if (database == null)
+            return;
+
+        EndingData endingData = database.GetEnding(endingId);
+
         if (endingData == null)
             return;
 
-        bool seen = EndingCollectionManager.HasSeenEnding(endingData.endingId);
+        bool seen = EndingCollectionManager.HasSeenEnding(endingId);
 
         if (endingImage != null)
         {

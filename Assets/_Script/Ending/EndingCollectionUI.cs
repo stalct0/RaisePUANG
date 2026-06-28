@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,22 +40,15 @@ public class EndingCollectionUI : MonoBehaviour
 
     private void Refresh()
     {
-        if (endingDatabase == null || endingDatabase.endings == null)
+        if (slots == null)
             return;
 
-        for (int i = 0; i < slots.Length; i++)
+        foreach (EndingCollectionSlot slot in slots)
         {
-            if (slots[i] == null)
+            if (slot == null)
                 continue;
 
-            if (i >= endingDatabase.endings.Length)
-            {
-                slots[i].gameObject.SetActive(false);
-                continue;
-            }
-
-            slots[i].gameObject.SetActive(true);
-            slots[i].SetData(endingDatabase.endings[i]);
+            slot.Refresh(endingDatabase);
         }
     }
 }
