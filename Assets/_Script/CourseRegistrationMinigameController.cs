@@ -56,10 +56,25 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
     [Header("Rules")]
     [SerializeField] private int roundsPerSession = 7;
-    [SerializeField] private float minCueDelay = 0.65f;
-    [SerializeField] private float maxCueDelay = 1.8f;
-    [SerializeField] private float reactionWindow = 0.9f;
-    [SerializeField] private float resultPause = 0.55f;
+    [SerializeField] private float minCueDelay = 0.45f;
+    [SerializeField] private float maxCueDelay = 1.25f;
+    [SerializeField] private float reactionWindow = 0.75f;
+    [SerializeField] private float resultPause = 0.38f;
+
+    [Header("Difficulty")]
+    [Tooltip("켜면 라운드가 진행될수록 클릭 제한 시간이 finalReactionWindow까지 줄어듭니다.")]
+    [SerializeField] private bool useProgressiveDifficulty = true;
+    [Tooltip("마지막 라운드의 클릭 제한 시간입니다. reactionWindow보다 작을수록 뒤로 갈수록 어려워집니다.")]
+    [SerializeField] private float finalReactionWindow = 0.38f;
+    [Tooltip("켜면 실제 클릭 칸이 나오기 전에 가짜 클릭 칸이 잠깐 깜빡입니다. 누르면 실패 처리됩니다.")]
+    [SerializeField] private bool enableFakeCue = true;
+    [Range(0f, 1f)]
+    [SerializeField] private float fakeCueChance = 0.35f;
+    [SerializeField] private float fakeCueDuration = 0.16f;
+    [SerializeField] private float fakeCueGapMin = 0.10f;
+    [SerializeField] private float fakeCueGapMax = 0.28f;
+    [Tooltip("켜면 같은 칸이 연속으로 나오는 빈도를 줄입니다.")]
+    [SerializeField] private bool avoidRepeatingSameCell = true;
 
     [Header("Rewards")]
     [SerializeField] private int excellentGradesReward = 15;
@@ -85,6 +100,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     private bool roundResolved;
 
     private int activeCellIndex = -1;
+    private int lastActiveCellIndex = -1;
     private int roundsPlayed;
     private int successCount;
     private int missCount;
@@ -363,17 +379,51 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         if (!isOpen || sessionComplete)
             yield break;
 
-        activeCellIndex = Random.Range(0, cellImages.Length);
+        if (ShouldShowFakeCue())
+        {
+            int fakeCueIndex = PickCellIndex(lastActiveCellIndex);
+            SetCellSprite(fakeCueIndex, clickSprite);
+
+            if (statusText != null)
+                statusText.text = $"{attempt}/{roundsPerSession}: 낚시 조심!";
+
+            float fakeCueEndsAt = Time.unscaledTime + fakeCueDuration;
+            while (!roundResolved && Time.unscaledTime < fakeCueEndsAt)
+            {
+                yield return null;
+            }
+
+            if (roundResolved)
+                yield break;
+
+            SetCellSprite(fakeCueIndex, waitSprite);
+
+            float fakeCueGap = Random.Range(fakeCueGapMin, fakeCueGapMax);
+            yield return new WaitForSecondsRealtime(fakeCueGap);
+
+            if (!isOpen || sessionComplete)
+                yield break;
+
+            activeCellIndex = PickCellIndex(fakeCueIndex);
+        }
+        else
+        {
+            activeCellIndex = PickCellIndex(lastActiveCellIndex);
+        }
+
+        lastActiveCellIndex = activeCellIndex;
         SetCellSprite(activeCellIndex, clickSprite);
 
         waitingForCue = false;
         waitingForClick = true;
         cueShownAt = Time.unscaledTime;
 
+        float currentReactionWindow = GetCurrentReactionWindow();
+
         if (statusText != null)
             statusText.text = $"{attempt}/{roundsPerSession}: 지금 클릭!";
 
-        float timeoutAt = cueShownAt + reactionWindow;
+        float timeoutAt = cueShownAt + currentReactionWindow;
 
         while (!roundResolved && Time.unscaledTime < timeoutAt)
         {
@@ -387,6 +437,44 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
             ResolveRound(false, "늦었습니다. 자리가 찼습니다.", 0f);
         }
+    }
+
+    private bool ShouldShowFakeCue()
+    {
+        return enableFakeCue &&
+               cellImages != null &&
+               cellImages.Length > 1 &&
+               Random.value < fakeCueChance;
+    }
+
+    private int PickCellIndex(int avoidIndex)
+    {
+        if (cellImages == null || cellImages.Length == 0)
+            return -1;
+
+        if (!avoidRepeatingSameCell || cellImages.Length == 1 || avoidIndex < 0)
+            return Random.Range(0, cellImages.Length);
+
+        int picked = Random.Range(0, cellImages.Length);
+        for (int i = 0; i < 8 && picked == avoidIndex; i++)
+        {
+            picked = Random.Range(0, cellImages.Length);
+        }
+
+        return picked;
+    }
+
+    private float GetCurrentReactionWindow()
+    {
+        float maxWindow = Mathf.Max(0.05f, reactionWindow);
+
+        if (!useProgressiveDifficulty || roundsPerSession <= 1)
+            return maxWindow;
+
+        float minWindow = Mathf.Clamp(finalReactionWindow, 0.05f, maxWindow);
+        float progress = Mathf.Clamp01((float)roundsPlayed / Mathf.Max(1, roundsPerSession - 1));
+
+        return Mathf.Lerp(maxWindow, minWindow, progress);
     }
 
     private void OnCellClicked(int index)
@@ -504,7 +592,9 @@ public class CourseRegistrationMinigameController : MonoBehaviour
     }
     private CampusLifeStatDelta BuildRewardDelta()
     {
-        if (successCount >= 6)
+        float successRate = GetSuccessRate();
+
+        if (successRate >= 0.8f)
         {
             return new CampusLifeStatDelta
             {
@@ -513,7 +603,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             };
         }
 
-        if (successCount >= 4)
+        if (successRate >= 0.55f)
         {
             return new CampusLifeStatDelta
             {
@@ -522,7 +612,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             };
         }
 
-        if (successCount >= 2)
+        if (successRate >= 0.3f)
         {
             return new CampusLifeStatDelta
             {
@@ -540,13 +630,15 @@ public class CourseRegistrationMinigameController : MonoBehaviour
 
     private string GetPerformanceText()
     {
-        if (successCount >= 6)
+        float successRate = GetSuccessRate();
+
+        if (successRate >= 0.8f)
             return "올클에 가까운 시간표를 얻었습니다.";
 
-        if (successCount >= 4)
+        if (successRate >= 0.55f)
             return "괜찮은 시간표를 얻었습니다.";
 
-        if (successCount >= 2)
+        if (successRate >= 0.3f)
             return "애매한 시간표입니다.";
 
         return "수강신청을 망했습니다.";
@@ -561,7 +653,8 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         return
             $"진행: {roundsPlayed}/{roundsPerSession}\n" +
             $"성공: {successCount} / 실패: {missCount}\n" +
-            $"{averageText}";
+            $"{averageText}\n" +
+            $"다음 제한시간: {GetCurrentReactionWindow() * 1000f:0}ms";
     }
 
     private void ResetSession()
@@ -573,6 +666,7 @@ public class CourseRegistrationMinigameController : MonoBehaviour
         roundResolved = false;
 
         activeCellIndex = -1;
+        lastActiveCellIndex = -1;
         roundsPlayed = 0;
         successCount = 0;
         missCount = 0;
@@ -682,20 +776,30 @@ public class CourseRegistrationMinigameController : MonoBehaviour
             resultView.SetActive(false);
     }
     
+    private float GetSuccessRate()
+    {
+        if (roundsPerSession <= 0)
+            return 0f;
+
+        return (float)successCount / roundsPerSession;
+    }
+
     private BuffGrade GetResultGrade()
     {
-        if (successCount >= 6)
+        float successRate = GetSuccessRate();
+
+        if (successRate >= 0.8f)
             return BuffGrade.Good;
 
-        if (successCount >= 4)
+        if (successRate >= 0.55f)
             return BuffGrade.MidBuff;
 
-        if (successCount >= 2)
+        if (successRate >= 0.3f)
             return BuffGrade.MidDebuff;
 
         return BuffGrade.Bad;
     }
-    
+
     public void CloseAfterRewardSelected()
     {
         CloseImmediate();
