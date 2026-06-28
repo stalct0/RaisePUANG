@@ -39,11 +39,11 @@ public sealed class DeliveryGameManager : MonoBehaviour
     [Header("--- Game Rules ---")]
     public int startLife = 3;
     public float gameDuration = 45f;
+    public float restartCooldownSeconds = 30f;
     public int scorePerCoin = 10;
     public int moneyPerCoin = 100;
-    public int basePay = 500;
-    public int scoreToPayMultiplier = 20;
-    public int lifeBonusPay = 300;
+    public int coinPayCapPerLevel = 150;
+    public int lifeBonusPay = 10;
     public float minInvincibleSeconds = 5f;
     public float maxInvincibleSeconds = 10f;
 
@@ -55,6 +55,8 @@ public sealed class DeliveryGameManager : MonoBehaviour
     public Vector2 itemSize = new Vector2(56f, 56f);
 
     public bool IsRunning { get; private set; }
+    public float RestartCooldownRemaining => Mathf.Max(0f, nextStartAllowedTime - Time.unscaledTime);
+    public bool CanStartGame => RestartCooldownRemaining <= 0f;
 
     private readonly List<DeliveryFallingItem> activeItems = new List<DeliveryFallingItem>();
     private DeliveryPlayerController player;
@@ -63,6 +65,7 @@ public sealed class DeliveryGameManager : MonoBehaviour
     private int earnedMoneyFromCoins;
     private float remainingTime;
     private float invincibleRemaining;
+    private float nextStartAllowedTime;
 
     private void Start()
     {
@@ -89,8 +92,18 @@ public sealed class DeliveryGameManager : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public bool StartGame()
     {
+        if (!CanStartGame)
+        {
+            LastResultText = GetRestartCooldownMessage();
+
+            if (driveController != null)
+                driveController.ShowResult(LastResultText);
+
+            return false;
+        }
+
         ClearItems();
         life = startLife;
         score = 0;
@@ -100,6 +113,12 @@ public sealed class DeliveryGameManager : MonoBehaviour
         IsRunning = true;
         hud.HideResult();
         hud.Refresh(life, score, remainingTime, false, 0f);
+        return true;
+    }
+
+    public string GetRestartCooldownMessage()
+    {
+        return $"배달 알바는 {Mathf.CeilToInt(RestartCooldownRemaining)}초 후 다시 할 수 있습니다.";
     }
 
     public void SpawnRandomItem()
@@ -349,12 +368,15 @@ public sealed class DeliveryGameManager : MonoBehaviour
     private void FinishGame()
     {
         IsRunning = false;
+        nextStartAllowedTime = Time.unscaledTime + restartCooldownSeconds;
         ClearItems();
 
-        int pay = life > 0
-            ? basePay + earnedMoneyFromCoins + score * scoreToPayMultiplier + life * lifeBonusPay
-            : 0;
-        
+        int level = GetWorkZoneLevel();
+        int coinPayCap = coinPayCapPerLevel * level;
+        int coinPay = Mathf.Min(earnedMoneyFromCoins, coinPayCap);
+        int lifePay = life * lifeBonusPay;
+        int pay = coinPay + lifePay;
+
         bool success = life > 0;
         if (success && WorkZoneProgressManager.Instance != null)
         {
@@ -366,8 +388,8 @@ public sealed class DeliveryGameManager : MonoBehaviour
         }
 
         LastResultText = life > 0
-            ? $"배달 완료\n\n점수: {score}\n라이프: {life}\n알바비: +{pay}"
-            : $"배달 실패\n\n라이프가 모두 깎였습니다.\n점수: {score}\n알바비: +0";
+            ? $"배달 완료\n\n레벨: {level}\n점수: {score}\n코인 보상: +{coinPay}/{coinPayCap}\n라이프 보너스: +{lifePay}\n알바비: +{pay}"
+            : $"배달 실패\n\n라이프가 모두 깎였습니다.\n레벨: {level}\n점수: {score}\n코인 보상: +{coinPay}/{coinPayCap}\n라이프 보너스: +0\n알바비: +{pay}";
 
         if (hud != null)
             hud.HideResult();
@@ -376,11 +398,9 @@ public sealed class DeliveryGameManager : MonoBehaviour
             driveController.ShowResult(LastResultText);
     }
 
-    private void ApplyPay(int basePay)
+    private void ApplyPay(int pay)
     {
         int level = GetWorkZoneLevel();
-
-        int finalPay = basePay * level;
         int conditionCost = -5 * level;
 
         if (CampusLifeGameManager.Instance != null)
@@ -389,7 +409,7 @@ public sealed class DeliveryGameManager : MonoBehaviour
                 $"배달 알바 Lv.{level}",
                 new CampusLifeStatDelta
                 {
-                    money = finalPay,
+                    money = pay,
                     condition = conditionCost
                 }
             );
