@@ -16,16 +16,20 @@ public class UIManager : MonoBehaviour
     [Header("Dialogue")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private Color dialogueWarningColor = Color.red;
 
     [Header("Semester Result")]
     [SerializeField] private GameObject semesterResultPanel;
     [SerializeField] private TMP_Text semesterResultText;
 
     private CampusLifeGameManager gameManager;
+    private Color defaultDialogueColor = Color.white;
 
     private void Start()
     {
         gameManager = CampusLifeGameManager.Instance;
+        if (dialogueText != null)
+            defaultDialogueColor = dialogueText.color;
 
         if (gameManager != null)
         {
@@ -93,7 +97,10 @@ public class UIManager : MonoBehaviour
     private void RefreshDialogue()
     {
         if (dialogueText != null)
+        {
             dialogueText.text = gameManager.Dialogue;
+            dialogueText.color = gameManager.IsDialogueWarning ? dialogueWarningColor : defaultDialogueColor;
+        }
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(gameManager.IsPlaying);
