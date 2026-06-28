@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57f1dcd140dc20e4793a820c69161b0e, type: 3}
+  m_Name: hidden_old_promise
+  m_EditorClassIdentifier: Assembly-CSharp::EndingData
+  endingId: hidden_old_promise
+  endingName: "\uC5B4\uB9B0 \uC2DC\uC808\uC758 \uC57D\uC18D"
+  description: "\uB2F9\uC2E0\uC740 \uC5B4\uB9B0 \uC2DC\uC808\uC758 \uC57D\uC18D\uC744
+    \uAE30\uC5B5\uD574\uB0C8\uC2B5\uB2C8\uB2E4. \uC9C4\uC2E4\uB41C \uC0AC\uB791\uC740
+    \uC2DC\uAC04\uC744 \uCD08\uC6D4\uD558\uB294 \uBC95\uC774\uC8E0. \uC2ED \uB144
+    \uC804\uC758 \uADF8 \uB0A0\uCC98\uB7FC, \uC55E\uC73C\uB85C\uB3C4 \uB2F9\uC2E0\uC740
+    \uC720\uC6B0\uCE74\uC758 \uC2AC\uD514\uC744 \uB2EC\uB798 \uC8FC\uACA0\uB2E4\uACE0,
+    \uC720\uC6B0\uCE74\uC758 \uC5BC\uAD74\uC5D0\uC11C \uC6C3\uC74C\uC774 \uB5A0\uB098\uC9C0
+    \uC54A\uB3C4\uB85D \uD558\uACA0\uB2E4\uACE0 \uB2E4\uC9D0\uD588\uC2B5\uB2C8\uB2E4."
+  endingType: 1
+  endingImage: {fileID: 1209336167303216656, guid: e00bdaeb554339040ac5a317fe57792a, type: 3}
+  showGirlfriendOverlay: 0

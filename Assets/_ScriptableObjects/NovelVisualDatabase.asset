@@ -25,8 +25,10 @@ MonoBehaviour:
     sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
   - backgroundId: Dating_theater_inside
     sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
-  - backgroundId: Dating_theater_outside
-    sprite: {fileID: 1267171110607946991, guid: 38578124fa5210a4d8725fad922c74c9, type: 3}
+  - backgroundId: Dating_Izakaya
+    sprite: {fileID: -2320918298032519194, guid: 85e5a0be37882d04c9c0f6cd9f037a5a, type: 3}
+  - backgroundId: Dating_amuse_night
+    sprite: {fileID: 1888748783001297570, guid: 750df1e6000ebb547b998c3567ba3286, type: 3}
   appearances:
   - appearanceId: Dating_Miyoko_angry
     sprite: {fileID: 3775307202423781309, guid: 542c1dd516147654388387af3ce4bc2a, type: 3}

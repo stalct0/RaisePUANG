@@ -1,9 +1,0 @@
-﻿DateID,SceneID,Order,Type,Speaker,Text,BackgroundId,CenterAppearanceId,LeftAppearanceId,RightAppearanceId,ChoiceA,NextSceneA,AffectionA,ChoiceB,NextSceneB,AffectionB,MoneyChange,ConditionChange,GradeChange,FriendshipChange,CompletesDate
-Date01,0,0,Dialogue,소꿉친구,오늘 영화 보러 갈래?,aquarium,YR_dummy,,,,,,,,,0,0,0,0,FALSE
-Date01,0,1,Dialogue,푸앙,좋아!,,MJ_dummy,,,,,,,,,0,0,0,0,FALSE
-Date01,0,2,Choice,,,,,,,팝콘을 산다,1,1,그냥 들어간다,2,-1,0,0,0,0,FALSE
-Date01,1,0,Dialogue,소꿉친구,팝콘까지 사주는 거야?,,YR_dummy,,,,,,,,,-5,0,0,2,FALSE
-Date01,1,1,Choice,,,,,,,같이 먹는다,3,1,혼자 먹어,4,-1,0,0,0,0,FALSE
-Date01,2,0,Dialogue,소꿉친구,그래도 영화는 재밌겠다!,,YR_dummy,,,,,,,,,0,0,0,1,TRUE
-Date01,3,0,Dialogue,모범생,우리도 같이 볼래?,cafe,YR_dummy,MJ_dummy,MJ_dummy,,,,,,,0,0,0,3,TRUE
-Date01,4,0,Dialogue,츤데레,흥... 마음대로 해.,,MJ_dummy,,,,,,,,,0,0,0,-2,TRUE

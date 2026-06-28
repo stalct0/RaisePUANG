@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EndingGirlfriendDatabase
   entries:
   - character: 1
-    endingSprite: {fileID: 0}
+    endingSprite: {fileID: 7118760446767410416, guid: 969eb2caeb5241c4089da55a3461fe57, type: 3}
   - character: 2
-    endingSprite: {fileID: 0}
+    endingSprite: {fileID: 7277216518357378725, guid: 8f672a347194fcb48bf8ff0d5ae2b82f, type: 3}
   - character: 3
-    endingSprite: {fileID: 0}
+    endingSprite: {fileID: 6367521861887898915, guid: f17e185574700a84da3e3891f27ec2d9, type: 3}

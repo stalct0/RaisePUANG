@@ -24,4 +24,4 @@ MonoBehaviour:
     \uC878\uC5C5\uC740 \uACE7 \uC0C8\uB85C\uC6B4 \uCD9C\uBC1C\uC774\uB2C8\uAE4C\uC694."
   endingType: 0
   endingImage: {fileID: -2618421143330605488, guid: c0c5df2b9482f1043b6a7ffca1edd692, type: 3}
-  showGirlfriendOverlay: 0
+  showGirlfriendOverlay: 1

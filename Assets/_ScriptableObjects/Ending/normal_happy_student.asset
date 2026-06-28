@@ -21,4 +21,4 @@ MonoBehaviour:
     \uD589\uBCF5. \uADF8\uAC83\uC774 \uBC14\uB85C \uB2F9\uC2E0\uC758 \uCCAD\uCD98\uC774\uC5C8\uC2B5\uB2C8\uB2E4."
   endingType: 0
   endingImage: {fileID: -1092067090192417207, guid: 5dbc3cba5551b434193faf7868b81189, type: 3}
-  showGirlfriendOverlay: 0
+  showGirlfriendOverlay: 1

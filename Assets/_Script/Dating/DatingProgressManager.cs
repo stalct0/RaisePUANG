@@ -5,19 +5,19 @@ public sealed class DatingProgressManager : MonoBehaviour
 {
     public static DatingProgressManager Instance { get; private set; }
 
-    private const int MaxDateIndex = 10;
-    
-    [SerializeField] private DatingRouteDatabase routeDatabase;
+    private const int MaxDateIndex = 3;
+
     [Header("Route")]
+    [SerializeField] private DatingRouteDatabase routeDatabase;
     [SerializeField] private DatingCharacter selectedGirlfriend = DatingCharacter.ChildhoodFriend;
     [SerializeField] private int currentDateIndex = 1;
 
     [Header("Progress")]
     [SerializeField] private int totalDateCount;
-    [SerializeField] private bool datingEnded;
     [SerializeField] private int currentSemesterDateCount;
     [SerializeField] private int previousSemesterDateCount;
-    
+    [SerializeField] private bool datingEnded;
+
     [Header("First Romance Event")]
     [SerializeField] private bool firstRomanceEventCompleted;
     [SerializeField] private bool romanceSystemLocked;
@@ -25,16 +25,21 @@ public sealed class DatingProgressManager : MonoBehaviour
     [Header("First Meeting")]
     [SerializeField] private DialogueData firstMeetingDialogue;
 
-    public DialogueData FirstMeetingDialogue => firstMeetingDialogue;
-    public bool FirstRomanceEventCompleted => firstRomanceEventCompleted;
-    public bool RomanceSystemLocked => romanceSystemLocked;
-    
     private readonly Dictionary<DatingCharacter, int> affectionByCharacter = new();
-    public int PreviousSemesterDateCount => previousSemesterDateCount;
+
+    public DialogueData FirstMeetingDialogue => firstMeetingDialogue;
+
     public DatingCharacter SelectedGirlfriend => selectedGirlfriend;
     public int CurrentDateIndex => currentDateIndex;
     public int TotalDateCount => totalDateCount;
+    public int CurrentSemesterDateCount => currentSemesterDateCount;
+    public int PreviousSemesterDateCount => previousSemesterDateCount;
+
     public bool DatingEnded => datingEnded;
+    public bool FirstRomanceEventCompleted => firstRomanceEventCompleted;
+    public bool RomanceSystemLocked => romanceSystemLocked;
+
+    public int CompletedRegularDateCount => Mathf.Max(0, currentDateIndex - 1);
 
     private void Awake()
     {
@@ -66,12 +71,41 @@ public sealed class DatingProgressManager : MonoBehaviour
         return true;
     }
 
+    public DialogueData GetCurrentDialogue()
+    {
+        if (routeDatabase == null)
+            return null;
+
+        return routeDatabase.GetDialogue(selectedGirlfriend, currentDateIndex);
+    }
+
     public void SetGirlfriend(DatingCharacter character)
     {
         if (character == DatingCharacter.None)
             return;
 
         selectedGirlfriend = character;
+    }
+
+    public void CompleteFirstRomanceEvent(DatingCharacter girlfriend)
+    {
+        if (firstRomanceEventCompleted)
+            return;
+
+        if (girlfriend == DatingCharacter.None)
+            girlfriend = DatingCharacter.ChildhoodFriend;
+
+        selectedGirlfriend = girlfriend;
+        firstRomanceEventCompleted = true;
+        romanceSystemLocked = false;
+    }
+
+    public void LockRomanceSystem()
+    {
+        if (firstRomanceEventCompleted)
+            return;
+
+        romanceSystemLocked = true;
     }
 
     public void CompleteDate(int affectionDelta)
@@ -82,9 +116,9 @@ public sealed class DatingProgressManager : MonoBehaviour
         AddAffection(selectedGirlfriend, affectionDelta);
 
         totalDateCount++;
-        currentDateIndex++;
         currentSemesterDateCount++;
-        
+        currentDateIndex++;
+
         if (currentDateIndex > MaxDateIndex)
         {
             datingEnded = true;
@@ -92,6 +126,12 @@ public sealed class DatingProgressManager : MonoBehaviour
             if (EndingManager.Instance != null)
                 EndingManager.Instance.TriggerTrueLoveEnding();
         }
+    }
+
+    public void StartNextSemester()
+    {
+        previousSemesterDateCount = currentSemesterDateCount;
+        currentSemesterDateCount = 0;
     }
 
     public int GetAffection(DatingCharacter character)
@@ -148,42 +188,6 @@ public sealed class DatingProgressManager : MonoBehaviour
     private void EnsureAffectionKey(DatingCharacter character)
     {
         if (!affectionByCharacter.ContainsKey(character))
-        {
             affectionByCharacter.Add(character, 0);
-        }
     }
-    public DialogueData GetCurrentDialogue()
-    {
-        if (routeDatabase == null)
-            return null;
-
-        return routeDatabase.GetDialogue(
-            selectedGirlfriend,
-            currentDateIndex);
-    }
-    public void StartNextSemester()
-    {
-        previousSemesterDateCount = currentSemesterDateCount;
-        currentSemesterDateCount = 0;
-    }
-    public void CompleteFirstRomanceEvent(DatingCharacter girlfriend)
-    {
-        if (firstRomanceEventCompleted)
-            return;
-
-        if (girlfriend == DatingCharacter.None)
-            girlfriend = DatingCharacter.ChildhoodFriend;
-
-        selectedGirlfriend = girlfriend;
-        firstRomanceEventCompleted = true;
-    }
-
-    public void LockRomanceSystem()
-    {
-        if (firstRomanceEventCompleted)
-            return;
-
-        romanceSystemLocked = true;
-    }
-    
 }

@@ -14,8 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DatingRouteDatabase
   entries:
   - character: 1
+    dateIndex: 1
+    dialogueData: {fileID: 0}
+  - character: 1
+    dateIndex: 2
+    dialogueData: {fileID: 0}
+  - character: 1
+    dateIndex: 3
+    dialogueData: {fileID: 0}
+  - character: 2
+    dateIndex: 1
+    dialogueData: {fileID: 0}
+  - character: 2
+    dateIndex: 2
+    dialogueData: {fileID: 0}
+  - character: 2
+    dateIndex: 3
+    dialogueData: {fileID: 0}
+  - character: 3
     dateIndex: 0
     dialogueData: {fileID: 0}
-  - character: 0
+  - character: 3
+    dateIndex: 0
+    dialogueData: {fileID: 0}
+  - character: 3
     dateIndex: 0
     dialogueData: {fileID: 0}

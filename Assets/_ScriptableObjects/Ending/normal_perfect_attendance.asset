@@ -25,4 +25,4 @@ MonoBehaviour:
     \uBCC0\uD568\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
   endingType: 0
   endingImage: {fileID: 1809019723118422855, guid: bcbb87b080d888548aa8780ae00c4dd5, type: 3}
-  showGirlfriendOverlay: 0
+  showGirlfriendOverlay: 1
