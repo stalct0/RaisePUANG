@@ -76,6 +76,20 @@ public class DriveMiniGameController : MonoBehaviour
 
     private void StartMiniGame()
     {
+        if (deliveryGameManager != null && !deliveryGameManager.CanStartGame)
+        {
+            if (introView != null) introView.SetActive(false);
+            if (gameView != null) gameView.SetActive(false);
+            if (resultView != null) resultView.SetActive(true);
+            if (resultText != null)
+                resultText.text = deliveryGameManager.GetRestartCooldownMessage();
+            if (closeButton != null)
+                closeButton.gameObject.SetActive(true);
+            if (noButton != null)
+                noButton.gameObject.SetActive(false);
+            return;
+        }
+
         if (introView != null) introView.SetActive(false);
         if (gameView != null) gameView.SetActive(true);
         if (resultView != null) resultView.SetActive(false);
@@ -85,7 +99,6 @@ public class DriveMiniGameController : MonoBehaviour
 
         if (closeButton != null)
             closeButton.gameObject.SetActive(false);
-
         if (deliveryGameManager != null)
             deliveryGameManager.StartGame();
         if (noButton != null)

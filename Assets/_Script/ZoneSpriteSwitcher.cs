@@ -19,6 +19,7 @@ public class ZoneSpriteSwitcher : MonoBehaviour
     [SerializeField] private Sprite activeStage2;
 
     [Header("Evolution")]
+    [SerializeField] private bool evolveOverTime = true;
     [SerializeField] private float secondsPerEvolution = 180f;
     [SerializeField] private string playerTag = "Player";
 
@@ -49,6 +50,9 @@ public class ZoneSpriteSwitcher : MonoBehaviour
             return;
 
         if (!interactionAllowed)
+            return;
+
+        if (!evolveOverTime)
             return;
 
         if (evolutionStage >= 2)
