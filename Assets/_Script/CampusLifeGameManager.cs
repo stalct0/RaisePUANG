@@ -235,6 +235,10 @@ public class CampusLifeGameManager : MonoBehaviour
 
     private void ShowSemesterResult()
     {
+        HeartSpawnManager heartManager = FindFirstObjectByType<HeartSpawnManager>();
+        if (heartManager != null)
+            heartManager.NotifySemesterEnded();
+        
         lastSemesterDelta = CalculateSemesterDelta();
         lastSemesterSummaryText = BuildSemesterSummaryText(lastSemesterDelta);
         currentTime = semesterDuration;
@@ -282,6 +286,9 @@ public class CampusLifeGameManager : MonoBehaviour
 
         if (courseRegistrationMinigame != null)
             courseRegistrationMinigame.Open();
+        
+        if (DatingProgressManager.Instance != null)
+            DatingProgressManager.Instance.StartNextSemester();
     }
 
     private void FinishGame()
